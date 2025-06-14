@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Trash2, GripVertical, Video, FileText, HelpCircle, Upload, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -175,7 +174,6 @@ const CurriculumBuilder = () => {
                                 value={lecture.title}
                                 onChange={(e) => updateLecture(section.id, lecture.id, 'title', e.target.value)}
                                 placeholder="Lecture title"
-                                size="sm"
                               />
                             </div>
                             
@@ -186,7 +184,7 @@ const CurriculumBuilder = () => {
                                   value={lecture.type}
                                   onValueChange={(value) => updateLecture(section.id, lecture.id, 'type', value)}
                                 >
-                                  <SelectTrigger size="sm">
+                                  <SelectTrigger>
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -203,7 +201,6 @@ const CurriculumBuilder = () => {
                                   value={lecture.duration || ''}
                                   onChange={(e) => updateLecture(section.id, lecture.id, 'duration', e.target.value)}
                                   placeholder="00:00"
-                                  size="sm"
                                 />
                               </div>
                             </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Trash2, GripVertical, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -222,7 +221,7 @@ const QuizBuilder = () => {
                         <Input
                           type="number"
                           value={quiz.timeLimit || ''}
-                          onChange={(e) => updateQuiz(quiz.id, 'timeLimit', parseInt(e.target.value) || 0)}
+                          onChange={(e) => updateQuiz(quiz.id, 'timeLimit', Number(e.target.value) || 0)}
                           placeholder="30"
                         />
                       </div>
@@ -232,7 +231,7 @@ const QuizBuilder = () => {
                         <Input
                           type="number"
                           value={quiz.passingScore}
-                          onChange={(e) => updateQuiz(quiz.id, 'passingScore', parseInt(e.target.value) || 70)}
+                          onChange={(e) => updateQuiz(quiz.id, 'passingScore', Number(e.target.value) || 70)}
                           placeholder="70"
                           min="0"
                           max="100"
@@ -282,7 +281,7 @@ const QuizBuilder = () => {
                                   value={question.type}
                                   onValueChange={(value) => updateQuestion(quiz.id, question.id, 'type', value)}
                                 >
-                                  <SelectTrigger size="sm">
+                                  <SelectTrigger>
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -298,9 +297,8 @@ const QuizBuilder = () => {
                                 <Input
                                   type="number"
                                   value={question.points}
-                                  onChange={(e) => updateQuestion(quiz.id, question.id, 'points', parseInt(e.target.value) || 1)}
+                                  onChange={(e) => updateQuestion(quiz.id, question.id, 'points', Number(e.target.value) || 1)}
                                   min="1"
-                                  size="sm"
                                 />
                               </div>
                             </div>
@@ -331,7 +329,6 @@ const QuizBuilder = () => {
                                       value={option.text}
                                       onChange={(e) => updateOption(quiz.id, question.id, option.id, 'text', e.target.value)}
                                       placeholder={`Option ${optionIndex + 1}`}
-                                      size="sm"
                                       className="flex-1"
                                     />
                                     <Button
