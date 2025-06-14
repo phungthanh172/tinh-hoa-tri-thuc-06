@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +15,7 @@ import InstructorDashboard from "./pages/InstructorDashboard";
 import CourseCreator from "./pages/CourseCreator";
 import LearningProgress from "./pages/LearningProgress";
 import Search from "./pages/Search";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +37,7 @@ const App = () => (
             <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
             <Route path="/instructor/course/create" element={<CourseCreator />} />
             <Route path="/instructor/course/:id/edit" element={<CourseCreator />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/learning-progress" element={<LearningProgress />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
