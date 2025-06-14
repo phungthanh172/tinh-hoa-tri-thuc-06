@@ -14,6 +14,7 @@ import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import CourseCreator from "./pages/CourseCreator";
+import LearningProgress from "./pages/LearningProgress";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
             <Route path="/instructor/course/create" element={<CourseCreator />} />
             <Route path="/instructor/course/:id/edit" element={<CourseCreator />} />
+            <Route path="/learning-progress" element={<LearningProgress />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
