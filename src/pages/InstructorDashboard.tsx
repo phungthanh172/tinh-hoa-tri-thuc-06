@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, BookOpen, Users, DollarSign, BarChart3, Settings, Video, FileText, HelpCircle } from 'lucide-react';
+import { Plus, BookOpen, Users, DollarSign, BarChart3, Settings, Video, FileText, HelpCircle, User, MessageSquare, Megaphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
+import InstructorProfile from '@/components/instructor/InstructorProfile';
+import StudentInteraction from '@/components/instructor/StudentInteraction';
+import EarningsTracker from '@/components/instructor/EarningsTracker';
+import PromotionalTools from '@/components/instructor/PromotionalTools';
 
 const InstructorDashboard = () => {
   const [courses] = useState([
@@ -108,10 +112,13 @@ const InstructorDashboard = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList>
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="courses">My Courses</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="earnings">Earnings</TabsTrigger>
+            <TabsTrigger value="promotion">Promotion</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
 
           <TabsContent value="courses">
@@ -154,6 +161,22 @@ const InstructorDashboard = () => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="profile">
+            <InstructorProfile />
+          </TabsContent>
+
+          <TabsContent value="students">
+            <StudentInteraction />
+          </TabsContent>
+
+          <TabsContent value="earnings">
+            <EarningsTracker />
+          </TabsContent>
+
+          <TabsContent value="promotion">
+            <PromotionalTools />
+          </TabsContent>
+
           <TabsContent value="analytics">
             <Card>
               <CardHeader>
@@ -161,17 +184,6 @@ const InstructorDashboard = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">Analytics dashboard coming soon...</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="earnings">
-            <Card>
-              <CardHeader>
-                <CardTitle>Earnings Report</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Earnings report coming soon...</p>
               </CardContent>
             </Card>
           </TabsContent>

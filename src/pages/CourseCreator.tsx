@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Save, Upload, Plus, Trash2, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,7 @@ import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
 import CurriculumBuilder from '@/components/course/CurriculumBuilder';
 import QuizBuilder from '@/components/course/QuizBuilder';
+import ContentUploader from '@/components/course/ContentUploader';
 
 const CourseCreator = () => {
   const [courseData, setCourseData] = useState({
@@ -74,8 +74,9 @@ const CourseCreator = () => {
         </div>
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-6">
-          <TabsList className="grid grid-cols-4 w-full">
+          <TabsList className="grid grid-cols-5 w-full">
             <TabsTrigger value="basics">Course Basics</TabsTrigger>
+            <TabsTrigger value="content">Content Upload</TabsTrigger>
             <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
             <TabsTrigger value="quizzes">Quizzes</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -190,6 +191,10 @@ const CourseCreator = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="content">
+            <ContentUploader />
           </TabsContent>
 
           <TabsContent value="curriculum">
