@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Star, Clock, Users, Play, Globe, Download, Trophy, Smartphone, Monitor, Award, ChevronDown, ChevronUp, Heart, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -123,9 +122,9 @@ const CourseDetail = () => {
               {/* Breadcrumbs */}
               <nav className="text-sm mb-4">
                 <Link to="/courses" className="text-purple-400 hover:underline">Development</Link>
-                <span className="mx-2">></span>
+                <span className="mx-2">&gt;</span>
                 <Link to="/courses" className="text-purple-400 hover:underline">Web Development</Link>
-                <span className="mx-2">></span>
+                <span className="mx-2">&gt;</span>
                 <span>JavaScript</span>
               </nav>
 
