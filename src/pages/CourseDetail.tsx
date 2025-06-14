@@ -3,9 +3,9 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import CourseHero from '@/components/course/CourseHero';
-import CourseInfoTabs from '@/components/course/CourseInfoTabs';
-import CourseSidebar from '@/components/course/CourseSidebar';
+import CourseBreadcrumbs from '@/components/course/CourseBreadcrumbs';
+import CourseMainContent from '@/components/course/CourseMainContent';
+import CourseDetailSidebar from '@/components/course/CourseDetailSidebar';
 
 const CourseDetail = () => {
   const { id } = useParams();
@@ -18,7 +18,7 @@ const CourseDetail = () => {
       name: "Jonas Schmedtmann",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
       title: "Web Developer, Designer, and Teacher",
-      bio: "Hi, I'm Jonas! I have been identified as one of Udemy's Top Instructors and all my premium courses have earned the best-selling status for outstanding performance and student satisfaction.",
+      bio: "Hi, I'm Jonas! I have been identified as one of Udemy's Top Instructors and all my premium courses have earned the best-selling status for outstanding performance and student satisfaction. I have been teaching people to code for many years now and love to share my passion for web development with my students.",
       rating: 4.7,
       reviewCount: 123456,
       students: 850000,
@@ -37,7 +37,16 @@ const CourseDetail = () => {
     lectures: 320,
     level: "All Levels",
     bestseller: true,
-    categories: ["Development", "Web Development", "JavaScript"]
+    categories: ["Development", "Web Development", "JavaScript"],
+    description: "This is the most comprehensive and modern JavaScript course you'll find anywhere. It covers everything from the absolute basics to advanced topics like object-oriented programming, asynchronous JavaScript, and modern tools and workflows. By the end of this course, you'll have the skills and confidence you need to apply for JavaScript developer jobs, or work on your own projects.",
+    includes: [
+      { icon: "video", text: "69 hours on-demand video" },
+      { icon: "article", text: "12 articles" },
+      { icon: "download", text: "114 downloadable resources" },
+      { icon: "mobile", text: "Access on mobile and TV" },
+      { icon: "infinity", text: "Full lifetime access" },
+      { icon: "certificate", text: "Certificate of completion" }
+    ]
   };
 
   const whatYoullLearn = [
@@ -59,7 +68,10 @@ const CourseDetail = () => {
       lessons: [
         { title: "Course Structure and Projects", duration: "7:31", preview: true },
         { title: "Watch Before You Start!", duration: "4:07" },
-        { title: "Setting Up Our Code Editor", duration: "11:30" }
+        { title: "Setting Up Our Code Editor", duration: "11:30" },
+        { title: "Installing Node.js and Setting Up a Dev Environment", duration: "8:15" },
+        { title: "How to Get Help", duration: "4:22" },
+        { title: "Setting Up Prettier and VS Code", duration: "3:25" }
       ]
     },
     {
@@ -69,7 +81,20 @@ const CourseDetail = () => {
       lessons: [
         { title: "Section Intro", duration: "1:15" },
         { title: "Hello World!", duration: "4:30" },
-        { title: "A Brief Introduction to JavaScript", duration: "8:21" }
+        { title: "A Brief Introduction to JavaScript", duration: "8:21" },
+        { title: "Linking a JavaScript File", duration: "6:17" },
+        { title: "Values and Variables", duration: "11:02" }
+      ]
+    },
+    {
+      title: "JavaScript Fundamentals – Part 2",
+      lectures: 22,
+      duration: "6hr 18min",
+      lessons: [
+        { title: "Section Intro", duration: "1:42" },
+        { title: "Activating Strict Mode", duration: "7:21" },
+        { title: "Functions", duration: "13:33" },
+        { title: "Function Declarations vs. Expressions", duration: "11:45" }
       ]
     }
   ];
@@ -80,30 +105,27 @@ const CourseDetail = () => {
     "A basic understanding of HTML and CSS is a plus, but not a must! The course includes an HTML and CSS crash course."
   ];
 
-  const sampleQuizQuestions = [
+  const reviews = [
     {
-      id: '1',
-      question: 'What is the correct way to declare a variable in JavaScript?',
-      type: 'multiple-choice' as const,
-      options: [
-        { id: 'a', text: 'var myVariable;', isCorrect: true },
-        { id: 'b', text: 'variable myVariable;', isCorrect: false },
-        { id: 'c', text: 'v myVariable;', isCorrect: false },
-        { id: 'd', text: 'declare myVariable;', isCorrect: false }
-      ],
-      explanation: 'In JavaScript, variables are declared using var, let, or const keywords.',
-      points: 1
+      id: 1,
+      name: "Sarah Chen",
+      rating: 5,
+      date: "2 weeks ago",
+      comment: "This course is absolutely fantastic! Jonas explains everything so clearly and the projects are really engaging. I went from knowing nothing about JavaScript to building my own projects. Highly recommend!"
     },
     {
-      id: '2',
-      question: 'JavaScript is a compiled language.',
-      type: 'multiple-choice' as const,
-      options: [
-        { id: 'a', text: 'True', isCorrect: false },
-        { id: 'b', text: 'False', isCorrect: true }
-      ],
-      explanation: 'JavaScript is an interpreted language, not a compiled language.',
-      points: 1
+      id: 2,
+      name: "Michael Rodriguez",
+      rating: 5,
+      date: "1 month ago",
+      comment: "Best programming course I've ever taken. The structure is perfect, starting from basics and building up to advanced concepts. The real-world projects really help solidify the learning."
+    },
+    {
+      id: 3,
+      name: "Emily Johnson",
+      rating: 4,
+      date: "3 weeks ago",
+      comment: "Great course with excellent content. Sometimes the pace can be a bit fast, but you can always rewatch the videos. The instructor is very knowledgeable and passionate about teaching."
     }
   ];
 
@@ -111,23 +133,63 @@ const CourseDetail = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      <CourseHero course={course} />
+      <div className="bg-gray-900 text-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Content - Left Column (70%) */}
+            <div className="lg:col-span-2">
+              <CourseBreadcrumbs categories={course.categories} />
+              
+              <div className="space-y-6">
+                <div>
+                  <h1 className="text-3xl lg:text-4xl font-bold mb-4">{course.title}</h1>
+                  <p className="text-lg text-gray-300 mb-4">{course.subtitle}</p>
+                  
+                  <div className="flex flex-wrap items-center gap-4 text-sm">
+                    <div className="flex items-center">
+                      <span className="text-orange-400 mr-1">★</span>
+                      <span className="font-semibold text-orange-400">{course.rating}</span>
+                      <span className="text-purple-300 ml-2">({course.reviewCount.toLocaleString()} ratings)</span>
+                    </div>
+                    <span className="text-gray-300">{course.studentsCount.toLocaleString()} students</span>
+                  </div>
+                  
+                  <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-300">
+                    <span>Created by <span className="text-purple-300 underline">{course.instructor.name}</span></span>
+                    <span>Last updated {course.lastUpdated}</span>
+                    <span>{course.language}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Sidebar Placeholder - Hidden on larger screens */}
+            <div className="lg:hidden">
+              <CourseDetailSidebar course={course} />
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            <CourseInfoTabs
+          <div className="lg:col-span-2">
+            <CourseMainContent
               course={course}
               whatYoullLearn={whatYoullLearn}
               courseContent={courseContent}
               requirements={requirements}
-              sampleQuizQuestions={sampleQuizQuestions}
+              reviews={reviews}
             />
           </div>
 
-          {/* Sticky Sidebar */}
-          <CourseSidebar course={course} />
+          {/* Sticky Sidebar - Hidden on mobile, shown on larger screens */}
+          <div className="hidden lg:block">
+            <div className="sticky top-8">
+              <CourseDetailSidebar course={course} />
+            </div>
+          </div>
         </div>
       </div>
 
