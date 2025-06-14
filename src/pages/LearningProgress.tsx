@@ -6,8 +6,12 @@ import VideoPlayer from '@/components/progress/VideoPlayer';
 import QuizTaker from '@/components/progress/QuizTaker';
 import ProgressDashboard from '@/components/progress/ProgressDashboard';
 import CertificateGenerator from '@/components/progress/CertificateGenerator';
+import CertificateCustomizer from '@/components/progress/CertificateCustomizer';
 import ChatWithAI from '@/components/progress/ChatWithAI';
 import Notes from '@/components/progress/Notes';
+import BadgesAchievements from '@/components/progress/BadgesAchievements';
+import LearningPaths from '@/components/progress/LearningPaths';
+import EnhancedProgressOverview from '@/components/progress/EnhancedProgressOverview';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useProgress } from '@/contexts/ProgressContext';
@@ -54,20 +58,29 @@ const LearningProgress = () => {
         </div>
 
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="paths">Learning Paths</TabsTrigger>
             <TabsTrigger value="video">Video Learning</TabsTrigger>
             <TabsTrigger value="quiz">Quiz Practice</TabsTrigger>
+            <TabsTrigger value="achievements">Achievements</TabsTrigger>
             <TabsTrigger value="chat">Chat with AI</TabsTrigger>
             <TabsTrigger value="notes">Notes</TabsTrigger>
             <TabsTrigger value="certificate">Certificate</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard" className="mt-6">
-            <ProgressDashboard
-              courseId="1"
-              courseName="The Complete JavaScript Course 2024"
-            />
+            <EnhancedProgressOverview courseId="1" />
+            <div className="mt-8">
+              <ProgressDashboard
+                courseId="1"
+                courseName="The Complete JavaScript Course 2024"
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="paths" className="mt-6">
+            <LearningPaths />
           </TabsContent>
 
           <TabsContent value="video" className="mt-6">
@@ -103,6 +116,10 @@ const LearningProgress = () => {
             />
           </TabsContent>
 
+          <TabsContent value="achievements" className="mt-6">
+            <BadgesAchievements />
+          </TabsContent>
+
           <TabsContent value="chat" className="mt-6">
             <ChatWithAI
               courseId="1"
@@ -119,14 +136,24 @@ const LearningProgress = () => {
 
           <TabsContent value="certificate" className="mt-6">
             {courseProgress?.completed ? (
-              <CertificateGenerator
-                studentName="John Doe"
-                courseName="The Complete JavaScript Course 2024"
-                instructorName="Jonas Schmedtmann"
-                completionDate={courseProgress.completionDate || new Date()}
-                certificateId="CERT-2024-JS-001"
-                courseHours={69}
-              />
+              <div className="space-y-8">
+                <CertificateCustomizer
+                  studentName="John Doe"
+                  courseName="The Complete JavaScript Course 2024"
+                  instructorName="Jonas Schmedtmann"
+                  completionDate={courseProgress.completionDate || new Date()}
+                  certificateId="CERT-2024-JS-001"
+                  courseHours={69}
+                />
+                <CertificateGenerator
+                  studentName="John Doe"
+                  courseName="The Complete JavaScript Course 2024"
+                  instructorName="Jonas Schmedtmann"
+                  completionDate={courseProgress.completionDate || new Date()}
+                  certificateId="CERT-2024-JS-001"
+                  courseHours={69}
+                />
+              </div>
             ) : (
               <Card>
                 <CardContent className="p-8 text-center">
