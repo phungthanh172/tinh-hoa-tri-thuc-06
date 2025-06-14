@@ -1,29 +1,49 @@
-
 import React, { useState } from 'react';
-import { User, Settings, BookOpen, Award, Star, Clock, Users, Camera, Edit3, Mail, Phone, MapPin, Calendar, Heart, Share2, Download } from 'lucide-react';
+import { User, Settings, BookOpen, Award, Star, Clock, Users, Camera, Edit3, Mail, Phone, MapPin, Calendar, Heart, Share2, Download, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import Header from '@/components/Header';
 import { Link } from 'react-router-dom';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('courses');
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
-  const user = {
+  const [user, setUser] = useState({
     name: "John Doe",
     email: "john.doe@example.com",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
     joinDate: "January 2022",
     location: "San Francisco, CA",
+    phone: "+1 (555) 123-4567",
     totalCourses: 12,
     completedCourses: 8,
     certificatesEarned: 6,
     totalHours: 156,
     bio: "Passionate web developer and lifelong learner. Love exploring new technologies and building amazing projects."
+  });
+
+  const [editingUser, setEditingUser] = useState(user);
+
+  const handleEditProfile = () => {
+    setEditingUser(user);
+    setIsEditingProfile(true);
+  };
+
+  const handleSaveProfile = () => {
+    setUser(editingUser);
+    setIsEditingProfile(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingUser(user);
+    setIsEditingProfile(false);
   };
 
   const enrolledCourses = [
@@ -126,28 +146,75 @@ const Profile = () => {
                   </button>
                 </div>
                 
-                <h2 className="text-xl font-bold mb-1">{user.name}</h2>
-                <p className="text-gray-600 text-sm mb-4">{user.bio}</p>
-                
-                <div className="space-y-2 text-sm text-gray-600 mb-6">
-                  <div className="flex items-center justify-center space-x-2">
-                    <Mail className="w-4 h-4" />
-                    <span>{user.email}</span>
+                {isEditingProfile ? (
+                  <div className="space-y-4 mb-6">
+                    <Input
+                      value={editingUser.name}
+                      onChange={(e) => setEditingUser({...editingUser, name: e.target.value})}
+                      className="text-center font-bold"
+                    />
+                    <Textarea
+                      value={editingUser.bio}
+                      onChange={(e) => setEditingUser({...editingUser, bio: e.target.value})}
+                      className="text-sm resize-none"
+                      rows={3}
+                    />
+                    <Input
+                      value={editingUser.email}
+                      onChange={(e) => setEditingUser({...editingUser, email: e.target.value})}
+                      className="text-sm"
+                    />
+                    <Input
+                      value={editingUser.location}
+                      onChange={(e) => setEditingUser({...editingUser, location: e.target.value})}
+                      className="text-sm"
+                    />
+                    <Input
+                      value={editingUser.phone}
+                      onChange={(e) => setEditingUser({...editingUser, phone: e.target.value})}
+                      className="text-sm"
+                    />
+                    <div className="flex space-x-2">
+                      <Button size="sm" onClick={handleSaveProfile} className="flex-1">
+                        <Save className="w-4 h-4 mr-1" />
+                        Save
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={handleCancelEdit} className="flex-1">
+                        <X className="w-4 h-4 mr-1" />
+                        Cancel
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <MapPin className="w-4 h-4" />
-                    <span>{user.location}</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>Joined {user.joinDate}</span>
-                  </div>
-                </div>
+                ) : (
+                  <div>
+                    <h2 className="text-xl font-bold mb-1">{user.name}</h2>
+                    <p className="text-gray-600 text-sm mb-4">{user.bio}</p>
+                    
+                    <div className="space-y-2 text-sm text-gray-600 mb-6">
+                      <div className="flex items-center justify-center space-x-2">
+                        <Mail className="w-4 h-4" />
+                        <span>{user.email}</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <MapPin className="w-4 h-4" />
+                        <span>{user.location}</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <Phone className="w-4 h-4" />
+                        <span>{user.phone}</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>Joined {user.joinDate}</span>
+                      </div>
+                    </div>
 
-                <Button variant="outline" className="w-full mb-4">
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  Edit Profile
-                </Button>
+                    <Button variant="outline" className="w-full mb-4" onClick={handleEditProfile}>
+                      <Edit3 className="w-4 h-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                  </div>
+                )}
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-4 text-center">
