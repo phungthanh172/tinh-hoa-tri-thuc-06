@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Search, Star, Users, Clock, Award, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import Header from '@/components/Header';
 
 const Index = () => {
   const featuredCourses = [
@@ -78,23 +78,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-8">
-            <h1 className="text-2xl font-bold text-primary">LearnHub</h1>
-            <nav className="hidden md:flex space-x-6">
-              <a href="#" className="text-gray-600 hover:text-primary transition-colors">Categories</a>
-              <a href="#" className="text-gray-600 hover:text-primary transition-colors">Teach</a>
-              <a href="#" className="text-gray-600 hover:text-primary transition-colors">Business</a>
-            </nav>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Button variant="outline">Log In</Button>
-            <Button>Sign Up</Button>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
