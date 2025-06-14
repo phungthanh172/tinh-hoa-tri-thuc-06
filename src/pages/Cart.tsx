@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
-import { Trash2, Heart, Star, Clock, Users, Tag, CreditCard, Shield, ArrowLeft } from 'lucide-react';
+import { Trash2, Heart, Star, Clock, Users, Tag, CreditCard, Shield, ArrowLeft, Package, Percent, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Header from '@/components/Header';
 import { Link } from 'react-router-dom';
 
@@ -47,6 +48,24 @@ const Cart = () => {
 
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
+
+  const currencies = {
+    USD: { symbol: '$', rate: 1, name: 'US Dollar' },
+    EUR: { symbol: '€', rate: 0.85, name: 'Euro' },
+    GBP: { symbol: '£', rate: 0.73, name: 'British Pound' },
+    CAD: { symbol: 'C$', rate: 1.25, name: 'Canadian Dollar' },
+    AUD: { symbol: 'A$', rate: 1.35, name: 'Australian Dollar' },
+    JPY: { symbol: '¥', rate: 110, name: 'Japanese Yen' }
+  };
+
+  const paymentMethods = [
+    { id: 'card', name: 'Credit/Debit Card', icon: CreditCard },
+    { id: 'paypal', name: 'PayPal', icon: CreditCard },
+    { id: 'apple-pay', name: 'Apple Pay', icon: CreditCard },
+    { id: 'google-pay', name: 'Google Pay', icon: CreditCard }
+  ];
 
   const removeFromCart = (id) => {
     setCartItems(items => items.filter(item => item.id !== id));
@@ -57,16 +76,41 @@ const Cart = () => {
     removeFromCart(id);
   };
 
+  const convertCurrency = (amount) => {
+    const rate = currencies[selectedCurrency].rate;
+    return (amount * rate).toFixed(2);
+  };
+
+  const formatPrice = (amount) => {
+    const converted = convertCurrency(amount);
+    const symbol = currencies[selectedCurrency].symbol;
+    return `${symbol}${converted}`;
+  };
+
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const originalTotal = cartItems.reduce((sum, item) => sum + item.originalPrice, 0);
   const savings = originalTotal - subtotal;
-  const promoDiscount = appliedPromo ? subtotal * 0.1 : 0;
-  const total = subtotal - promoDiscount;
+  const promoDiscount = appliedPromo ? subtotal * (appliedPromo.discount / 100) : 0;
+  const tax = subtotal * 0.08; // 8% tax rate
+  const total = subtotal - promoDiscount + tax;
 
   const applyPromoCode = () => {
-    if (promoCode.toLowerCase() === 'save10') {
-      setAppliedPromo({ code: 'SAVE10', discount: 10 });
+    const validPromoCodes = {
+      'save10': { discount: 10, type: 'percentage' },
+      'save20': { discount: 20, type: 'percentage' },
+      'flat50': { discount: 50, type: 'fixed' },
+      'flash25': { discount: 25, type: 'percentage' }
+    };
+
+    const promo = validPromoCodes[promoCode.toLowerCase()];
+    if (promo) {
+      setAppliedPromo({ code: promoCode.toUpperCase(), ...promo });
     }
+  };
+
+  const removePromoCode = () => {
+    setAppliedPromo(null);
+    setPromoCode('');
   };
 
   return (
@@ -81,8 +125,29 @@ const Cart = () => {
               <span>Continue Shopping</span>
             </Link>
           </div>
-          <h1 className="text-3xl font-bold">Shopping Cart</h1>
-          <p className="text-gray-600">{cartItems.length} Course{cartItems.length !== 1 ? 's' : ''} in Cart</p>
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold">Shopping Cart</h1>
+              <p className="text-gray-600">{cartItems.length} Course{cartItems.length !== 1 ? 's' : ''} in Cart</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Globe className="w-4 h-4 text-gray-600" />
+                <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
+                  <SelectTrigger className="w-24">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(currencies).map(([code, currency]) => (
+                      <SelectItem key={code} value={code}>
+                        {currency.symbol} {code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
         </div>
 
         {cartItems.length === 0 ? (
@@ -100,6 +165,22 @@ const Cart = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
+              {/* Bundle Suggestion */}
+              <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-3">
+                    <Package className="w-6 h-6 text-purple-600" />
+                    <div>
+                      <h3 className="font-semibold text-purple-900">Complete JavaScript Bundle Available!</h3>
+                      <p className="text-sm text-purple-700">Get both courses + bonus content for 30% off</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="ml-auto border-purple-300 text-purple-700 hover:bg-purple-100">
+                      View Bundle
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
               {cartItems.map((item) => (
                 <Card key={item.id} className="hover:shadow-md transition-shadow">
                   <div className="flex p-4">
@@ -173,10 +254,10 @@ const Cart = () => {
 
                         <div className="text-right ml-4">
                           <div className="text-2xl font-bold text-purple-600 mb-1">
-                            ${item.price}
+                            {formatPrice(item.price)}
                           </div>
                           <div className="text-sm text-gray-500 line-through">
-                            ${item.originalPrice}
+                            {formatPrice(item.originalPrice)}
                           </div>
                         </div>
                       </div>
@@ -196,22 +277,34 @@ const Cart = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Original Price:</span>
-                      <span className="line-through text-gray-500">${originalTotal.toFixed(2)}</span>
+                      <span className="line-through text-gray-500">{formatPrice(originalTotal)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Discounts:</span>
-                      <span className="text-green-600">-${savings.toFixed(2)}</span>
+                      <span className="text-green-600">-{formatPrice(savings)}</span>
                     </div>
                     {appliedPromo && (
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span>Promo ({appliedPromo.code}):</span>
-                        <span className="text-green-600">-${promoDiscount.toFixed(2)}</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-green-600">-{formatPrice(promoDiscount)}</span>
+                          <button 
+                            onClick={removePromoCode}
+                            className="text-red-500 hover:text-red-700 text-xs"
+                          >
+                            ×
+                          </button>
+                        </div>
                       </div>
                     )}
+                    <div className="flex justify-between">
+                      <span>Tax:</span>
+                      <span>{formatPrice(tax)}</span>
+                    </div>
                     <Separator />
                     <div className="flex justify-between text-lg font-bold">
                       <span>Total:</span>
-                      <span>${total.toFixed(2)}</span>
+                      <span>{formatPrice(total)}</span>
                     </div>
                   </div>
 
@@ -237,15 +330,51 @@ const Cart = () => {
                     )}
                   </div>
 
+                  {/* Payment Method Selection */}
+                  <div className="space-y-3">
+                    <h4 className="font-medium">Payment Method</h4>
+                    <div className="space-y-2">
+                      {paymentMethods.map((method) => (
+                        <div key={method.id} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={method.id}
+                            checked={selectedPaymentMethod === method.id}
+                            onCheckedChange={() => setSelectedPaymentMethod(method.id)}
+                          />
+                          <label htmlFor={method.id} className="flex items-center space-x-2 text-sm cursor-pointer">
+                            <method.icon className="w-4 h-4" />
+                            <span>{method.name}</span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   <Button size="lg" className="w-full bg-purple-600 hover:bg-purple-700">
                     <CreditCard className="w-4 h-4 mr-2" />
-                    Checkout
+                    Secure Checkout
                   </Button>
 
                   <div className="text-center">
                     <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
                       <Shield className="w-4 h-4" />
                       <span>30-Day Money-Back Guarantee</span>
+                    </div>
+                  </div>
+
+                  {/* Security Features */}
+                  <div className="space-y-2 text-xs text-gray-600 pt-4 border-t">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 text-green-600">🔒</div>
+                      <span>PCI DSS Compliant</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 text-green-600">🛡️</div>
+                      <span>Fraud Protection</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 text-green-600">🔐</div>
+                      <span>256-bit SSL Encryption</span>
                     </div>
                   </div>
 
