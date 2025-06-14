@@ -11,6 +11,8 @@ import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
+import InstructorDashboard from "./pages/InstructorDashboard";
+import CourseCreator from "./pages/CourseCreator";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,9 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
+          <Route path="/instructor/course/create" element={<CourseCreator />} />
+          <Route path="/instructor/course/:id/edit" element={<CourseCreator />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
