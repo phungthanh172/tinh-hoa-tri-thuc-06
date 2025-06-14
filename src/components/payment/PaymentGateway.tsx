@@ -255,7 +255,7 @@ const PaymentGateway = ({ orderTotal = 99.99, currency = 'USD' }) => {
               <Checkbox 
                 id="save-card" 
                 checked={saveCard}
-                onCheckedChange={setSaveCard}
+                onCheckedChange={(checked) => setSaveCard(checked === true)}
               />
               <Label htmlFor="save-card" className="text-sm">
                 Save this card for future purchases
@@ -364,7 +364,7 @@ const PaymentGateway = ({ orderTotal = 99.99, currency = 'USD' }) => {
             <Checkbox 
               id="terms" 
               checked={agreedToTerms}
-              onCheckedChange={setAgreedToTerms}
+              onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
             />
             <Label htmlFor="terms" className="text-sm">
               I agree to the <a href="#" className="text-purple-600 hover:underline">Terms of Service</a> and{' '}
