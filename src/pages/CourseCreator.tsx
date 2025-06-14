@@ -32,6 +32,7 @@ const CourseCreator = () => {
     keywords: '',
     isDraft: true,
     instructor: 'Current User', // This would come from auth context
+    instructorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
     image: 'https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=300&h=200&fit=crop',
     duration: '0 hours',
     lectures: 0
@@ -104,6 +105,7 @@ const CourseCreator = () => {
         keywords: '',
         isDraft: true,
         instructor: existingCourse.instructor,
+        instructorAvatar: existingCourse.instructorAvatar,
         image: existingCourse.image,
         duration: existingCourse.duration,
         lectures: existingCourse.lectures
