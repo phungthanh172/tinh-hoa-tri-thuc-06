@@ -4,12 +4,15 @@ import { Play, Heart, Share, Gift, Clock, FileText, Download, Smartphone, Infini
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 
 interface CourseDetailSidebarProps {
   course: any;
 }
 
 const CourseDetailSidebar: React.FC<CourseDetailSidebarProps> = ({ course }) => {
+  const navigate = useNavigate();
+
   const getIncludesIcon = (iconType: string) => {
     switch (iconType) {
       case 'video': return <Clock className="w-4 h-4" />;
@@ -21,6 +24,13 @@ const CourseDetailSidebar: React.FC<CourseDetailSidebarProps> = ({ course }) => 
       default: return <FileText className="w-4 h-4" />;
     }
   };
+
+  const handleGoToCourse = () => {
+    navigate(`/course/${course.id}/learn`);
+  };
+
+  // Check if course is paid (assuming price is 0 for free courses)
+  const isPaidCourse = course.price > 0;
 
   return (
     <Card className="shadow-lg border border-gray-200 bg-white">
@@ -46,34 +56,49 @@ const CourseDetailSidebar: React.FC<CourseDetailSidebarProps> = ({ course }) => 
 
         <div className="p-6 space-y-6 bg-white">
           {/* Price */}
-          <div className="space-y-2">
-            <div className="flex items-baseline space-x-2">
-              <span className="text-3xl font-bold text-black">${course.price}</span>
-              <span className="text-lg text-gray-500 line-through">${course.originalPrice}</span>
-              <Badge className="bg-red-100 text-red-800">
-                {Math.round((1 - course.price / course.originalPrice) * 100)}% off
-              </Badge>
+          {isPaidCourse && (
+            <div className="space-y-2">
+              <div className="flex items-baseline space-x-2">
+                <span className="text-3xl font-bold text-black">${course.price}</span>
+                <span className="text-lg text-gray-500 line-through">${course.originalPrice}</span>
+                <Badge className="bg-red-100 text-red-800">
+                  {Math.round((1 - course.price / course.originalPrice) * 100)}% off
+                </Badge>
+              </div>
+              <p className="text-sm text-red-600 font-medium">
+                <Clock className="w-4 h-4 inline mr-1" />
+                2 days left at this price!
+              </p>
             </div>
-            <p className="text-sm text-red-600 font-medium">
-              <Clock className="w-4 h-4 inline mr-1" />
-              2 days left at this price!
-            </p>
-          </div>
+          )}
 
           {/* Action Buttons */}
           <div className="space-y-3">
-            <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 text-lg font-semibold">
-              Add to cart
-            </Button>
-            <Button variant="outline" className="w-full py-3 text-lg font-semibold border-gray-900 text-gray-900 hover:bg-gray-50">
-              Buy now
-            </Button>
+            {isPaidCourse ? (
+              <>
+                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 text-lg font-semibold">
+                  Add to cart
+                </Button>
+                <Button variant="outline" className="w-full py-3 text-lg font-semibold border-gray-900 text-gray-900 hover:bg-gray-50">
+                  Buy now
+                </Button>
+              </>
+            ) : (
+              <Button 
+                onClick={handleGoToCourse}
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg font-semibold"
+              >
+                Go to Course
+              </Button>
+            )}
           </div>
 
           {/* Guarantee */}
-          <p className="text-center text-sm text-gray-600">
-            30-Day Money-Back Guarantee
-          </p>
+          {isPaidCourse && (
+            <p className="text-center text-sm text-gray-600">
+              30-Day Money-Back Guarantee
+            </p>
+          )}
 
           {/* This course includes */}
           <div>

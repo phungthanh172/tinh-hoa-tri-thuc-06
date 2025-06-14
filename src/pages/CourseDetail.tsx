@@ -26,7 +26,7 @@ const CourseDetail = () => {
     rating: 4.7,
     reviewCount: 289456,
     studentsCount: 756843,
-    price: 84.99,
+    price: 0, // Changed to 0 to make it a free course for testing
     originalPrice: 199.99,
     image: "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=600&h=400&fit=crop",
     previewVideo: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
