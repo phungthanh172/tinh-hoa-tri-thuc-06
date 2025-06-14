@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Star, Clock, Users, ChevronDown, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,50 +16,33 @@ import {
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
+import { coursesApi } from '@/services/coursesApi';
 
 const Courses = () => {
   const [sortBy, setSortBy] = useState('Most Popular');
-  
-  const courses = [
-    {
-      id: 1,
-      title: "The Complete JavaScript Course 2024: From Zero to Expert!",
-      instructor: "Jonas Schmedtmann",
-      instructorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-      rating: 4.7,
-      reviewCount: 289456,
-      studentsCount: 756843,
-      duration: "69 total hours",
-      lectures: 320,
-      price: 84.99,
-      originalPrice: 199.99,
-      image: "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=300&h=200&fit=crop",
-      bestseller: true,
-      level: "All Levels",
-      lastUpdated: "11/2023",
-      description: "Learn modern JavaScript from scratch! Master JavaScript with projects, challenges and theory."
-    },
-    {
-      id: 2,
-      title: "React - The Complete Guide 2024 (incl. Next.js, Redux)",
-      instructor: "Maximilian Schwarzmüller",
-      instructorAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
-      rating: 4.6,
-      reviewCount: 152341,
-      studentsCount: 434567,
-      duration: "48.5 total hours",
-      lectures: 835,
-      price: 89.99,
-      originalPrice: 199.99,
-      image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=300&h=200&fit=crop",
-      bestseller: true,
-      level: "Intermediate",
-      lastUpdated: "12/2023",
-      description: "Dive in and learn React.js from scratch! Learn Reactjs, Hooks, Redux, React Routing, Animations, Next.js and way more!"
-    }
-  ];
+  const [filters, setFilters] = useState({
+    category: '',
+    level: '',
+    rating: 0,
+    duration: '',
+    language: '',
+    price: ''
+  });
 
-  const CourseCard = ({ course }) => (
+  const { data: courses, isLoading, error } = useQuery({
+    queryKey: ['courses', filters],
+    queryFn: () => coursesApi.fetchCourses(filters),
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+
+  const handleFilterChange = (filterType: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: prev[filterType as keyof typeof prev] === value ? '' : value
+    }));
+  };
+
+  const CourseCard = ({ course }: { course: any }) => (
     <Card className="hover:shadow-lg transition-shadow">
       <Link to={`/course/${course.id}`}>
         <div className="flex p-4">
@@ -127,6 +112,19 @@ const Courses = () => {
     </Card>
   );
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="container mx-auto px-4 py-8 text-center">
+          <h1 className="text-3xl font-bold mb-4">Error Loading Courses</h1>
+          <p className="text-red-600">Failed to load courses. Please try again later.</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -147,7 +145,11 @@ const Courses = () => {
                     <AccordionTrigger className="text-sm font-medium">Rating</AccordionTrigger>
                     <AccordionContent className="space-y-2">
                       <div className="flex items-center space-x-2">
-                        <Checkbox id="rating-4.5" />
+                        <Checkbox 
+                          id="rating-4.5" 
+                          checked={filters.rating === 4.5}
+                          onCheckedChange={() => handleFilterChange('rating', '4.5')}
+                        />
                         <label htmlFor="rating-4.5" className="text-sm flex items-center">
                           <span className="flex text-yellow-400 mr-1">
                             {[...Array(4)].map((_, i) => <Star key={i} className="w-3 h-3 fill-current" />)}
@@ -157,7 +159,11 @@ const Courses = () => {
                         </label>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Checkbox id="rating-4.0" />
+                        <Checkbox 
+                          id="rating-4.0"
+                          checked={filters.rating === 4.0}
+                          onCheckedChange={() => handleFilterChange('rating', '4.0')}
+                        />
                         <label htmlFor="rating-4.0" className="text-sm flex items-center">
                           <span className="flex text-yellow-400 mr-1">
                             {[...Array(4)].map((_, i) => <Star key={i} className="w-3 h-3 fill-current" />)}
@@ -168,41 +174,31 @@ const Courses = () => {
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="duration">
-                    <AccordionTrigger className="text-sm font-medium">Video Duration</AccordionTrigger>
-                    <AccordionContent className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="duration-0-2" />
-                        <label htmlFor="duration-0-2" className="text-sm">0-2 Hours</label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="duration-3-6" />
-                        <label htmlFor="duration-3-6" className="text-sm">3-6 Hours</label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="duration-6-17" />
-                        <label htmlFor="duration-6-17" className="text-sm">6-17 Hours</label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="duration-17+" />
-                        <label htmlFor="duration-17+" className="text-sm">17+ Hours</label>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-
                   <AccordionItem value="level">
                     <AccordionTrigger className="text-sm font-medium">Level</AccordionTrigger>
                     <AccordionContent className="space-y-2">
                       <div className="flex items-center space-x-2">
-                        <Checkbox id="beginner" />
+                        <Checkbox 
+                          id="beginner"
+                          checked={filters.level === 'Beginner'}
+                          onCheckedChange={() => handleFilterChange('level', 'Beginner')}
+                        />
                         <label htmlFor="beginner" className="text-sm">Beginner</label>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Checkbox id="intermediate" />
+                        <Checkbox 
+                          id="intermediate"
+                          checked={filters.level === 'Intermediate'}
+                          onCheckedChange={() => handleFilterChange('level', 'Intermediate')}
+                        />
                         <label htmlFor="intermediate" className="text-sm">Intermediate</label>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Checkbox id="expert" />
+                        <Checkbox 
+                          id="expert"
+                          checked={filters.level === 'Expert'}
+                          onCheckedChange={() => handleFilterChange('level', 'Expert')}
+                        />
                         <label htmlFor="expert" className="text-sm">Expert</label>
                       </div>
                     </AccordionContent>
@@ -212,26 +208,20 @@ const Courses = () => {
                     <AccordionTrigger className="text-sm font-medium">Language</AccordionTrigger>
                     <AccordionContent className="space-y-2">
                       <div className="flex items-center space-x-2">
-                        <Checkbox id="english" />
+                        <Checkbox 
+                          id="english"
+                          checked={filters.language === 'English'}
+                          onCheckedChange={() => handleFilterChange('language', 'English')}
+                        />
                         <label htmlFor="english" className="text-sm">English</label>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Checkbox id="spanish" />
+                        <Checkbox 
+                          id="spanish"
+                          checked={filters.language === 'Spanish'}
+                          onCheckedChange={() => handleFilterChange('language', 'Spanish')}
+                        />
                         <label htmlFor="spanish" className="text-sm">Español</label>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="price">
-                    <AccordionTrigger className="text-sm font-medium">Price</AccordionTrigger>
-                    <AccordionContent className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="paid" />
-                        <label htmlFor="paid" className="text-sm">Paid</label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="free" />
-                        <label htmlFor="free" className="text-sm">Free</label>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
@@ -244,11 +234,11 @@ const Courses = () => {
           <div className="lg:col-span-3">
             <div className="mb-6">
               <h1 className="text-3xl font-bold mb-2">Development Courses</h1>
-              <p className="text-gray-600">Choose from 213,000 online video courses with new additions published every month</p>
+              <p className="text-gray-600">Choose from {courses?.length || 0} online video courses with new additions published every month</p>
             </div>
 
             <div className="flex items-center justify-between mb-6">
-              <p className="text-gray-600">{courses.length} results</p>
+              <p className="text-gray-600">{courses?.length || 0} results</p>
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -277,11 +267,28 @@ const Courses = () => {
               </DropdownMenu>
             </div>
 
-            <div className="space-y-4">
-              {courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <Card key={i} className="animate-pulse">
+                    <div className="flex p-4">
+                      <div className="w-64 h-36 mr-4 bg-gray-200 rounded"></div>
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-gray-200 rounded"></div>
+                        <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {courses?.map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))}
+              </div>
+            )}
 
             {/* Pagination */}
             <div className="flex justify-center mt-12">
