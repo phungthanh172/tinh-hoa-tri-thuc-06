@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useNavigate } from 'react-router-dom';
 
-interface CoursePlayerHeaderProps {
+interface CourseLearnerHeaderProps {
   course: {
     title: string;
     completionPercentage: number;
@@ -13,7 +13,7 @@ interface CoursePlayerHeaderProps {
   onToggleSidebar: () => void;
 }
 
-const CoursePlayerHeader: React.FC<CoursePlayerHeaderProps> = ({ course, onToggleSidebar }) => {
+const CourseLearnerHeader: React.FC<CourseLearnerHeaderProps> = ({ course, onToggleSidebar }) => {
   const navigate = useNavigate();
 
   return (
@@ -59,4 +59,4 @@ const CoursePlayerHeader: React.FC<CoursePlayerHeaderProps> = ({ course, onToggl
   );
 };
 
-export default CoursePlayerHeader;
+export default CourseLearnerHeader;

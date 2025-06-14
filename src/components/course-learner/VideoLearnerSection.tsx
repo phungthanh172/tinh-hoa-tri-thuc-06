@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import VideoPlayer from '@/components/progress/VideoPlayer';
 
-interface VideoPlayerSectionProps {
+interface VideoLearnerSectionProps {
   courseId: string;
   lectureId: string;
   lecture?: {
@@ -16,7 +16,7 @@ interface VideoPlayerSectionProps {
   onPrevious: () => void;
 }
 
-const VideoPlayerSection: React.FC<VideoPlayerSectionProps> = ({
+const VideoLearnerSection: React.FC<VideoLearnerSectionProps> = ({
   courseId,
   lectureId,
   lecture,
@@ -70,4 +70,4 @@ const VideoPlayerSection: React.FC<VideoPlayerSectionProps> = ({
   );
 };
 
-export default VideoPlayerSection;
+export default VideoLearnerSection;

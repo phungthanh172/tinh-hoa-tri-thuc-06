@@ -9,11 +9,11 @@ import ChatWithAI from '@/components/progress/ChatWithAI';
 import QuizzesTab from '@/components/course/tabs/QuizzesTab';
 import ProgressDashboard from '@/components/progress/ProgressDashboard';
 
-interface CoursePlayerTabsProps {
+interface CourseLearnerTabsProps {
   courseId: string;
 }
 
-const CoursePlayerTabs: React.FC<CoursePlayerTabsProps> = ({ courseId }) => {
+const CourseLearnerTabs: React.FC<CourseLearnerTabsProps> = ({ courseId }) => {
   const sampleQuizQuestions = [
     {
       id: '1',
@@ -75,4 +75,4 @@ const CoursePlayerTabs: React.FC<CoursePlayerTabsProps> = ({ courseId }) => {
   );
 };
 
-export default CoursePlayerTabs;
+export default CourseLearnerTabs;

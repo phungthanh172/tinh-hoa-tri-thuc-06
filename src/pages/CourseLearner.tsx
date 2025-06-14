@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import CoursePlayerHeader from '@/components/course-player/CoursePlayerHeader';
-import VideoPlayerSection from '@/components/course-player/VideoPlayerSection';
-import CoursePlayerTabs from '@/components/course-player/CoursePlayerTabs';
-import CourseContentSidebar from '@/components/course-player/CourseContentSidebar';
+import CourseLearnerHeader from '@/components/course-learner/CourseLearnerHeader';
+import VideoLearnerSection from '@/components/course-learner/VideoLearnerSection';
+import CourseLearnerTabs from '@/components/course-learner/CourseLearnerTabs';
+import CourseContentSidebar from '@/components/course-learner/CourseContentSidebar';
 
-const CoursePlayer = () => {
+const CourseLearner = () => {
   const { id } = useParams();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentLectureId, setCurrentLectureId] = useState('1');
@@ -63,7 +63,7 @@ const CoursePlayer = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <CoursePlayerHeader 
+      <CourseLearnerHeader 
         course={course}
         onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
@@ -71,7 +71,7 @@ const CoursePlayer = () => {
       <div className="flex">
         {/* Main Content Panel */}
         <div className={`transition-all duration-300 ${isSidebarCollapsed ? 'w-full' : 'w-3/4'}`}>
-          <VideoPlayerSection 
+          <VideoLearnerSection 
             courseId={course.id.toString()}
             lectureId={currentLectureId}
             lecture={currentLecture}
@@ -79,7 +79,7 @@ const CoursePlayer = () => {
             onPrevious={handlePreviousLecture}
           />
           
-          <CoursePlayerTabs courseId={course.id.toString()} />
+          <CourseLearnerTabs courseId={course.id.toString()} />
         </div>
 
         {/* Sidebar */}
@@ -95,4 +95,4 @@ const CoursePlayer = () => {
   );
 };
 
-export default CoursePlayer;
+export default CourseLearner;
