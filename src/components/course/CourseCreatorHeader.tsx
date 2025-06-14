@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Save, Eye } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import CoursePreviewDialog from './CoursePreviewDialog';
@@ -10,9 +10,16 @@ interface CourseCreatorHeaderProps {
   onPublish: () => void;
   isEditing?: boolean;
   courseData?: any;
+  isLoading?: boolean;
 }
 
-const CourseCreatorHeader = ({ onSaveDraft, onPublish, isEditing = false, courseData }: CourseCreatorHeaderProps) => {
+const CourseCreatorHeader = ({ 
+  onSaveDraft, 
+  onPublish, 
+  isEditing = false, 
+  courseData,
+  isLoading = false 
+}: CourseCreatorHeaderProps) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const handleSaveFromPreview = () => {
@@ -47,11 +54,26 @@ const CourseCreatorHeader = ({ onSaveDraft, onPublish, isEditing = false, course
             <Eye className="w-4 h-4 mr-2" />
             Preview
           </Button>
-          <Button variant="outline" onClick={onSaveDraft}>
-            <Save className="w-4 h-4 mr-2" />
+          <Button 
+            variant="outline" 
+            onClick={onSaveDraft}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4 mr-2" />
+            )}
             Save Draft
           </Button>
-          <Button onClick={onPublish} className="bg-purple-600 hover:bg-purple-700">
+          <Button 
+            onClick={onPublish} 
+            className="bg-purple-600 hover:bg-purple-700"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : null}
             {isEditing ? 'Update Course' : 'Publish Course'}
           </Button>
         </div>

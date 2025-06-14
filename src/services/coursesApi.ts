@@ -141,24 +141,36 @@ export const coursesApi = {
   },
 
   // Create new course (for instructors)
-  createCourse: async (courseData: Omit<Course, 'id'>): Promise<Course> => {
+  createCourse: async (courseData: Omit<Course, 'id' | 'rating' | 'reviewCount' | 'studentsCount' | 'bestseller' | 'lastUpdated'>): Promise<Course> => {
     await new Promise(resolve => setTimeout(resolve, 500));
-    const newCourse = {
+    const newCourse: Course = {
       ...courseData,
-      id: Math.max(...mockCourses.map(c => c.id)) + 1
+      id: Math.max(...mockCourses.map(c => c.id)) + 1,
+      rating: 0,
+      reviewCount: 0,
+      studentsCount: 0,
+      bestseller: false,
+      lastUpdated: new Date().toLocaleDateString(),
+      instructorAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
     };
     mockCourses.push(newCourse);
+    console.log('Course created:', newCourse);
     return newCourse;
   },
 
   // Update existing course
-  updateCourse: async (id: number, courseData: Partial<Course>): Promise<Course> => {
+  updateCourse: async (id: number, courseData: Partial<Omit<Course, 'id'>>): Promise<Course> => {
     await new Promise(resolve => setTimeout(resolve, 500));
     const courseIndex = mockCourses.findIndex(course => course.id === id);
     if (courseIndex === -1) {
       throw new Error('Course not found');
     }
-    mockCourses[courseIndex] = { ...mockCourses[courseIndex], ...courseData };
+    mockCourses[courseIndex] = { 
+      ...mockCourses[courseIndex], 
+      ...courseData,
+      lastUpdated: new Date().toLocaleDateString()
+    };
+    console.log('Course updated:', mockCourses[courseIndex]);
     return mockCourses[courseIndex];
   },
 
