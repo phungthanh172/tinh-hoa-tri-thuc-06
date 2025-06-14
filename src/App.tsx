@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProgressProvider } from "@/contexts/ProgressContext";
 import { GamificationProvider } from "@/contexts/GamificationContext";
+import FloatingChatBox from "@/components/FloatingChatBox";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/learning-progress" element={<LearningProgress />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <FloatingChatBox />
           </BrowserRouter>
         </TooltipProvider>
       </GamificationProvider>
