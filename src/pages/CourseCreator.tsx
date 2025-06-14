@@ -47,6 +47,7 @@ const CourseCreator = () => {
           onSaveDraft={handleSaveDraft}
           onPublish={handlePublish}
           isEditing={isEditing}
+          courseData={courseData}
         />
 
         <CourseCreationWizard
