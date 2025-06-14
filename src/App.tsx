@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import CourseCreator from "./pages/CourseCreator";
 import LearningProgress from "./pages/LearningProgress";
+import Search from "./pages/Search";
 
 const queryClient = new QueryClient();
 
