@@ -1,16 +1,15 @@
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useParams } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import CurriculumBuilder from '@/components/course/CurriculumBuilder';
-import QuizBuilder from '@/components/course/QuizBuilder';
-import ContentUploader from '@/components/course/ContentUploader';
-import CourseBasicsForm from '@/components/course/CourseBasicsForm';
-import CourseSettings from '@/components/course/CourseSettings';
+import CourseCreationWizard from '@/components/course/CourseCreationWizard';
 import CourseCreatorHeader from '@/components/course/CourseCreatorHeader';
 
 const CourseCreator = () => {
+  const { id } = useParams();
+  const isEditing = Boolean(id);
+
   const [courseData, setCourseData] = useState({
     title: '',
     subtitle: '',
@@ -19,24 +18,23 @@ const CourseCreator = () => {
     level: '',
     language: 'English',
     price: '',
-    thumbnail: null as File | null
+    currency: 'USD',
+    targetAudience: '',
+    learningObjectives: [''],
+    prerequisites: '',
+    thumbnail: null as File | null,
+    promotionalVideo: null as File | null,
+    keywords: '',
+    isDraft: true
   });
 
-  const [currentTab, setCurrentTab] = useState('basics');
-
-  const handleInputChange = (field: string, value: string) => {
-    setCourseData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleFileUpload = (file: File) => {
-    setCourseData(prev => ({ ...prev, thumbnail: file }));
-  };
-
   const handleSaveDraft = () => {
+    setCourseData(prev => ({ ...prev, isDraft: true }));
     console.log('Saving draft...', courseData);
   };
 
   const handlePublish = () => {
+    setCourseData(prev => ({ ...prev, isDraft: false }));
     console.log('Publishing course...', courseData);
   };
 
@@ -48,41 +46,14 @@ const CourseCreator = () => {
         <CourseCreatorHeader 
           onSaveDraft={handleSaveDraft}
           onPublish={handlePublish}
+          isEditing={isEditing}
         />
 
-        <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-6">
-          <TabsList className="grid grid-cols-5 w-full">
-            <TabsTrigger value="basics">Course Basics</TabsTrigger>
-            <TabsTrigger value="content">Content Upload</TabsTrigger>
-            <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
-            <TabsTrigger value="quizzes">Quizzes</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="basics">
-            <CourseBasicsForm
-              courseData={courseData}
-              onInputChange={handleInputChange}
-              onFileUpload={handleFileUpload}
-            />
-          </TabsContent>
-
-          <TabsContent value="content">
-            <ContentUploader />
-          </TabsContent>
-
-          <TabsContent value="curriculum">
-            <CurriculumBuilder />
-          </TabsContent>
-
-          <TabsContent value="quizzes">
-            <QuizBuilder />
-          </TabsContent>
-
-          <TabsContent value="settings">
-            <CourseSettings />
-          </TabsContent>
-        </Tabs>
+        <CourseCreationWizard
+          courseData={courseData}
+          setCourseData={setCourseData}
+          isEditing={isEditing}
+        />
       </div>
 
       <Footer />
