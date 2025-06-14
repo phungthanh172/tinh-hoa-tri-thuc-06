@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Play, Trophy, Star, Award, Users } from 'lucide-react';
+import { Play, Trophy, Star, Award, Users, MessageCircle, StickyNote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +8,8 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import VideoPlayer from '@/components/progress/VideoPlayer';
 import QuizTaker from '@/components/progress/QuizTaker';
 import ProgressDashboard from '@/components/progress/ProgressDashboard';
+import ChatWithAI from '@/components/progress/ChatWithAI';
+import Notes from '@/components/progress/Notes';
 import CourseContentSection from './CourseContentSection';
 
 interface CourseInfoTabsProps {
@@ -31,10 +32,12 @@ const CourseInfoTabs: React.FC<CourseInfoTabsProps> = ({
 
   return (
     <Tabs defaultValue="overview" className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
+      <TabsList className="grid w-full grid-cols-6">
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="lectures">Lectures</TabsTrigger>
         <TabsTrigger value="quizzes">Quizzes</TabsTrigger>
+        <TabsTrigger value="chat">Chat with AI</TabsTrigger>
+        <TabsTrigger value="notes">Notes</TabsTrigger>
         <TabsTrigger value="progress">Progress</TabsTrigger>
       </TabsList>
       
@@ -208,10 +211,24 @@ const CourseInfoTabs: React.FC<CourseInfoTabsProps> = ({
         </div>
       </TabsContent>
       
+      <TabsContent value="chat">
+        <ChatWithAI
+          courseId="1"
+          courseName={course.title}
+        />
+      </TabsContent>
+      
+      <TabsContent value="notes">
+        <Notes
+          courseId="1"
+          courseName={course.title}
+        />
+      </TabsContent>
+      
       <TabsContent value="progress">
         <ProgressDashboard
           courseId="1"
-          courseName="The Complete JavaScript Course 2024"
+          courseName={course.title}
         />
       </TabsContent>
     </Tabs>

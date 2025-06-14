@@ -6,6 +6,8 @@ import VideoPlayer from '@/components/progress/VideoPlayer';
 import QuizTaker from '@/components/progress/QuizTaker';
 import ProgressDashboard from '@/components/progress/ProgressDashboard';
 import CertificateGenerator from '@/components/progress/CertificateGenerator';
+import ChatWithAI from '@/components/progress/ChatWithAI';
+import Notes from '@/components/progress/Notes';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useProgress } from '@/contexts/ProgressContext';
@@ -52,10 +54,12 @@ const LearningProgress = () => {
         </div>
 
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="video">Video Learning</TabsTrigger>
             <TabsTrigger value="quiz">Quiz Practice</TabsTrigger>
+            <TabsTrigger value="chat">Chat with AI</TabsTrigger>
+            <TabsTrigger value="notes">Notes</TabsTrigger>
             <TabsTrigger value="certificate">Certificate</TabsTrigger>
           </TabsList>
 
@@ -96,6 +100,20 @@ const LearningProgress = () => {
               onComplete={(score, passed) => {
                 console.log(`Quiz completed: ${score}%, Passed: ${passed}`);
               }}
+            />
+          </TabsContent>
+
+          <TabsContent value="chat" className="mt-6">
+            <ChatWithAI
+              courseId="1"
+              courseName="The Complete JavaScript Course 2024"
+            />
+          </TabsContent>
+
+          <TabsContent value="notes" className="mt-6">
+            <Notes
+              courseId="1"
+              courseName="The Complete JavaScript Course 2024"
             />
           </TabsContent>
 
