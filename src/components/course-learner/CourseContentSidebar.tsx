@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { ChevronDown, ChevronRight, Play, Check } from 'lucide-react';
+import { ChevronDown, ChevronRight, Play, Check, FileText, Presentation, HelpCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -10,6 +11,7 @@ interface Lecture {
   duration: string;
   completed: boolean;
   isCurrentlyPlaying: boolean;
+  type?: string;
 }
 
 interface Section {
@@ -46,11 +48,25 @@ const CourseContentSidebar: React.FC<CourseContentSidebarProps> = ({
     console.log('Toggle complete for lecture:', lectureId);
   };
 
+  const getContentIcon = (type: string = 'video') => {
+    switch (type) {
+      case 'pdf':
+        return <FileText className="w-4 h-4 text-red-500" />;
+      case 'slide':
+        return <Presentation className="w-4 h-4 text-blue-500" />;
+      case 'quiz':
+        return <HelpCircle className="w-4 h-4 text-orange-500" />;
+      case 'video':
+      default:
+        return <Play className="w-4 h-4 text-gray-400" />;
+    }
+  };
+
   return (
-    <div className="w-1/4 bg-gray-800 border-l border-gray-700 h-screen overflow-y-auto">
-      <Card className="bg-gray-800 border-gray-700 rounded-none">
-        <CardHeader className="border-b border-gray-700">
-          <CardTitle className="text-white text-lg">Course content</CardTitle>
+    <div className="w-1/4 bg-white border-l border-gray-200 h-screen overflow-y-auto">
+      <Card className="bg-white border-gray-200 rounded-none">
+        <CardHeader className="border-b border-gray-200">
+          <CardTitle className="text-gray-800 text-lg">Course content</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="space-y-1">
@@ -60,23 +76,23 @@ const CourseContentSidebar: React.FC<CourseContentSidebarProps> = ({
                 open={openSections.includes(section.id)}
                 onOpenChange={() => toggleSection(section.id)}
               >
-                <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left hover:bg-gray-700 transition-colors">
-                  <span className="font-medium text-white">{section.title}</span>
+                <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left hover:bg-gray-50 transition-colors">
+                  <span className="font-medium text-gray-800">{section.title}</span>
                   {openSections.includes(section.id) ? (
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                    <ChevronDown className="w-4 h-4 text-gray-600" />
                   ) : (
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                    <ChevronRight className="w-4 h-4 text-gray-600" />
                   )}
                 </CollapsibleTrigger>
                 
-                <CollapsibleContent className="bg-gray-900">
+                <CollapsibleContent className="bg-gray-50">
                   {section.lectures.map((lecture) => (
                     <div
                       key={lecture.id}
                       className={`flex items-center space-x-3 p-3 cursor-pointer transition-colors ${
                         lecture.id === currentLectureId 
-                          ? 'bg-purple-600 bg-opacity-20 border-l-4 border-purple-500' 
-                          : 'hover:bg-gray-800'
+                          ? 'bg-purple-100 border-l-4 border-purple-500' 
+                          : 'hover:bg-gray-100'
                       }`}
                       onClick={() => onLectureSelect(lecture.id)}
                     >
@@ -84,7 +100,7 @@ const CourseContentSidebar: React.FC<CourseContentSidebarProps> = ({
                         checked={lecture.completed}
                         onCheckedChange={() => toggleLectureComplete(lecture.id)}
                         onClick={(e) => e.stopPropagation()}
-                        className="border-gray-500"
+                        className="border-gray-400"
                       />
                       
                       <div className="flex-1 min-w-0">
@@ -94,10 +110,10 @@ const CourseContentSidebar: React.FC<CourseContentSidebarProps> = ({
                           ) : lecture.completed ? (
                             <Check className="w-4 h-4 text-green-500" />
                           ) : (
-                            <Play className="w-4 h-4 text-gray-400" />
+                            getContentIcon(lecture.type)
                           )}
                           <span className={`text-sm truncate ${
-                            lecture.id === currentLectureId ? 'text-white font-medium' : 'text-gray-300'
+                            lecture.id === currentLectureId ? 'text-gray-900 font-medium' : 'text-gray-700'
                           }`}>
                             {lecture.title}
                           </span>

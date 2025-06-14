@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import CourseLearnerHeader from '@/components/course-learner/CourseLearnerHeader';
 import VideoLearnerSection from '@/components/course-learner/VideoLearnerSection';
 import CourseLearnerTabs from '@/components/course-learner/CourseLearnerTabs';
@@ -11,7 +13,7 @@ const CourseLearner = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentLectureId, setCurrentLectureId] = useState('1');
 
-  // Mock course data
+  // Mock course data with different content types
   const course = {
     id: 1,
     title: "The Complete JavaScript Course 2024: From Zero to Expert!",
@@ -21,17 +23,17 @@ const CourseLearner = () => {
         id: '1',
         title: 'Getting Started',
         lectures: [
-          { id: '1', title: 'Course Introduction', duration: '5:30', completed: true, isCurrentlyPlaying: true },
-          { id: '2', title: 'Setting Up Your Environment', duration: '10:15', completed: true, isCurrentlyPlaying: false },
-          { id: '3', title: 'Your First JavaScript Program', duration: '8:45', completed: false, isCurrentlyPlaying: false }
+          { id: '1', title: 'Course Introduction', duration: '5:30', completed: true, isCurrentlyPlaying: true, type: 'video' },
+          { id: '2', title: 'JavaScript Fundamentals PDF', duration: '10:15', completed: true, isCurrentlyPlaying: false, type: 'pdf' },
+          { id: '3', title: 'Variables and Data Types Quiz', duration: '8:45', completed: false, isCurrentlyPlaying: false, type: 'quiz' }
         ]
       },
       {
         id: '2',
         title: 'JavaScript Fundamentals',
         lectures: [
-          { id: '4', title: 'Variables and Data Types', duration: '12:30', completed: false, isCurrentlyPlaying: false },
-          { id: '5', title: 'Functions and Scope', duration: '15:20', completed: false, isCurrentlyPlaying: false }
+          { id: '4', title: 'Functions Presentation', duration: '12:30', completed: false, isCurrentlyPlaying: false, type: 'slide' },
+          { id: '5', title: 'Functions and Scope Video', duration: '15:20', completed: false, isCurrentlyPlaying: false, type: 'video' }
         ]
       }
     ]
@@ -62,7 +64,8 @@ const CourseLearner = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-white">
+      <Header />
       <CourseLearnerHeader 
         course={course}
         onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
@@ -91,6 +94,8 @@ const CourseLearner = () => {
           />
         )}
       </div>
+
+      <Footer />
     </div>
   );
 };
