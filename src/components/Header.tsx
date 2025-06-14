@@ -1,31 +1,99 @@
 
 import React, { useState } from 'react';
-import { Search, ShoppingCart, Globe, Menu, User, Bell } from 'lucide-react';
+import { Search, ShoppingCart, Globe, Menu, User, Bell, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
+  const categories = [
+    {
+      title: "Development",
+      subcategories: ["Web Development", "Mobile Development", "Programming Languages", "Game Development", "Database Design", "Software Testing", "Software Engineering", "Development Tools"]
+    },
+    {
+      title: "Business",
+      subcategories: ["Entrepreneurship", "Communications", "Management", "Sales", "Business Strategy", "Operations", "Project Management", "Business Law"]
+    },
+    {
+      title: "Finance & Accounting",
+      subcategories: ["Accounting & Bookkeeping", "Compliance", "Cryptocurrency & Blockchain", "Economics", "Finance", "Finance Cert & Exam Prep", "Financial Modeling & Analysis", "Investing & Trading"]
+    },
+    {
+      title: "IT & Software",
+      subcategories: ["IT Certifications", "Network & Security", "Hardware", "Operating Systems", "Other IT & Software"]
+    },
+    {
+      title: "Office Productivity",
+      subcategories: ["Microsoft", "Apple", "Google", "SAP", "Oracle", "Other Office Productivity"]
+    },
+    {
+      title: "Personal Development",
+      subcategories: ["Personal Transformation", "Personal Productivity", "Leadership", "Career Development", "Parenting & Relationships", "Happiness"]
+    },
+    {
+      title: "Design",
+      subcategories: ["Web Design", "Graphic Design & Illustration", "Design Tools", "User Experience Design", "Game Design", "3D & Animation", "Fashion Design", "Architectural Design"]
+    },
+    {
+      title: "Marketing",
+      subcategories: ["Digital Marketing", "Search Engine Optimization", "Social Media Marketing", "Branding", "Marketing Fundamentals", "Analytics & Automation", "Public Relations", "Advertising"]
+    }
+  ];
+
   return (
     <header className="border-b bg-white sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo và Menu */}
+          {/* Logo và Categories */}
           <div className="flex items-center space-x-8">
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-purple-600 rounded"></div>
               <span className="text-2xl font-bold text-gray-900">Udemy</span>
             </Link>
             
-            <button className="hidden lg:flex items-center space-x-1 text-gray-600 hover:text-purple-600">
-              <Menu className="w-4 h-4" />
-              <span>Categories</span>
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="hidden lg:flex items-center space-x-1 text-gray-600 hover:text-purple-600">
+                  <Menu className="w-4 h-4" />
+                  <span>Categories</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-96 max-h-96 overflow-y-auto bg-white">
+                <div className="grid grid-cols-1 gap-1">
+                  {categories.map((category) => (
+                    <DropdownMenuItem key={category.title} className="cursor-pointer">
+                      <div className="w-full">
+                        <div className="font-semibold text-purple-600 mb-1">{category.title}</div>
+                        <div className="grid grid-cols-2 gap-1 text-sm text-gray-600">
+                          {category.subcategories.slice(0, 4).map((sub) => (
+                            <Link 
+                              key={sub} 
+                              to={`/courses?category=${encodeURIComponent(sub.toLowerCase())}`}
+                              className="hover:text-purple-600"
+                            >
+                              {sub}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Search Bar */}
