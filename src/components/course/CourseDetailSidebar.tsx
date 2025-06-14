@@ -23,7 +23,7 @@ const CourseDetailSidebar: React.FC<CourseDetailSidebarProps> = ({ course }) => 
   };
 
   return (
-    <Card className="shadow-lg">
+    <Card className="shadow-lg border border-gray-200 bg-white">
       <CardContent className="p-0">
         {/* Course Preview */}
         <div className="relative">
@@ -44,11 +44,11 @@ const CourseDetailSidebar: React.FC<CourseDetailSidebarProps> = ({ course }) => 
           </div>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 bg-white">
           {/* Price */}
           <div className="space-y-2">
             <div className="flex items-baseline space-x-2">
-              <span className="text-3xl font-bold">${course.price}</span>
+              <span className="text-3xl font-bold text-black">${course.price}</span>
               <span className="text-lg text-gray-500 line-through">${course.originalPrice}</span>
               <Badge className="bg-red-100 text-red-800">
                 {Math.round((1 - course.price / course.originalPrice) * 100)}% off
@@ -77,10 +77,10 @@ const CourseDetailSidebar: React.FC<CourseDetailSidebarProps> = ({ course }) => 
 
           {/* This course includes */}
           <div>
-            <h3 className="font-semibold mb-3">This course includes:</h3>
+            <h3 className="font-semibold mb-3 text-black">This course includes:</h3>
             <ul className="space-y-2">
               {course.includes.map((item: any, index: number) => (
-                <li key={index} className="flex items-center space-x-3 text-sm">
+                <li key={index} className="flex items-center space-x-3 text-sm text-gray-700">
                   {getIncludesIcon(item.icon)}
                   <span>{item.text}</span>
                 </li>
@@ -89,7 +89,7 @@ const CourseDetailSidebar: React.FC<CourseDetailSidebarProps> = ({ course }) => 
           </div>
 
           {/* Action Links */}
-          <div className="flex justify-center space-x-6 pt-4 border-t">
+          <div className="flex justify-center space-x-6 pt-4 border-t border-gray-200">
             <button className="flex items-center space-x-1 text-purple-600 hover:underline">
               <Share className="w-4 h-4" />
               <span>Share</span>
@@ -101,7 +101,7 @@ const CourseDetailSidebar: React.FC<CourseDetailSidebarProps> = ({ course }) => 
           </div>
 
           {/* Additional Info */}
-          <div className="pt-4 border-t space-y-2 text-sm text-gray-600">
+          <div className="pt-4 border-t border-gray-200 space-y-2 text-sm text-gray-600">
             <div className="flex justify-between">
               <span>Students</span>
               <span>{course.studentsCount.toLocaleString()}</span>

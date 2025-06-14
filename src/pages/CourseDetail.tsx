@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -172,7 +171,7 @@ const CourseDetail = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Main Content */}
           <div className="lg:col-span-2">
             <CourseMainContent
@@ -184,9 +183,9 @@ const CourseDetail = () => {
             />
           </div>
 
-          {/* Sticky Sidebar - Hidden on mobile, shown on larger screens */}
+          {/* Sticky Sidebar - Hidden on mobile, shown on larger screens, positioned in middle */}
           <div className="hidden lg:block">
-            <div className="sticky top-8">
+            <div className="sticky top-8 -mt-32">
               <CourseDetailSidebar course={course} />
             </div>
           </div>
