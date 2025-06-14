@@ -8,6 +8,7 @@ import { GamificationProvider } from "@/contexts/GamificationContext";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
+import CoursePlayer from "./pages/CoursePlayer";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import Cart from "./pages/Cart";
@@ -33,6 +34,7 @@ const App = () => (
               <Route path="/search" element={<Search />} />
               <Route path="/courses" element={<Courses />} />
               <Route path="/course/:id" element={<CourseDetail />} />
+              <Route path="/course/:id/learn" element={<CoursePlayer />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/cart" element={<Cart />} />
