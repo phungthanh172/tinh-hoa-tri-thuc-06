@@ -15,7 +15,17 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/search');
+    }
+  };
 
   const categories = [
     {
@@ -81,7 +91,7 @@ const Header = () => {
                           {category.subcategories.slice(0, 4).map((sub) => (
                             <Link 
                               key={sub} 
-                              to={`/courses?category=${encodeURIComponent(sub.toLowerCase())}`}
+                              to={`/search?category=${encodeURIComponent(sub.toLowerCase())}`}
                               className="hover:text-purple-600"
                             >
                               {sub}
@@ -98,13 +108,15 @@ const Header = () => {
 
           {/* Search Bar */}
           <div className="flex-1 max-w-xl mx-8 hidden md:block">
-            <div className="relative">
+            <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <Input 
                 placeholder="Search for anything" 
                 className="pl-10 h-12 border-gray-900 focus:border-purple-600"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </div>
+            </form>
           </div>
 
           {/* Right Menu */}
