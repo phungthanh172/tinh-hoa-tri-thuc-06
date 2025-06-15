@@ -8,6 +8,7 @@ import Testimonials from '@/components/Testimonials';
 import CallToAction from '@/components/CallToAction';
 import Footer from '@/components/Footer';
 import ProgressNavigation from '@/components/progress/ProgressNavigation';
+import InactivityPopup from '@/components/InactivityPopup';
 
 const Index = () => {
   return (
@@ -24,6 +25,8 @@ const Index = () => {
       <Testimonials />
       <CallToAction />
       <Footer />
+      
+      <InactivityPopup />
     </div>
   );
 };
