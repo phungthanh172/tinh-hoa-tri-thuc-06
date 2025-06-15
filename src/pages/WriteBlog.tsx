@@ -110,7 +110,6 @@ const WriteBlog = () => {
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center space-x-4">
               <Link to="/instructor/dashboard">
@@ -138,7 +137,6 @@ const WriteBlog = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Editor */}
             <div className="lg:col-span-2 space-y-6">
               <BlogEditor 
                 formData={formData}
@@ -146,7 +144,6 @@ const WriteBlog = () => {
               />
             </div>
 
-            {/* Sidebar */}
             <BlogSidebar
               formData={formData}
               newTag={newTag}
