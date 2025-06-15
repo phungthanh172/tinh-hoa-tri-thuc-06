@@ -13,8 +13,8 @@ const BlogPostContent = ({ content }: BlogPostContentProps) => {
   return (
     <div className="prose prose-lg prose-gray max-w-none 
       prose-headings:text-gray-900 prose-headings:font-bold
-      prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-8 prose-h1:border-b prose-h1:border-gray-200 prose-h1:pb-4
-      prose-h2:text-2xl prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-purple-800
+      prose-h1:text-4xl prose-h1:mb-8 prose-h1:mt-12 prose-h1:border-b-2 prose-h1:border-purple-200 prose-h1:pb-6 prose-h1:text-purple-900
+      prose-h2:text-3xl prose-h2:mb-6 prose-h2:mt-10 prose-h2:text-purple-800 prose-h2:border-l-4 prose-h2:border-purple-500 prose-h2:pl-4
       prose-h3:text-xl prose-h3:mb-3 prose-h3:mt-6 prose-h3:text-purple-700
       prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
       prose-a:text-purple-600 prose-a:font-medium prose-a:no-underline hover:prose-a:underline
@@ -34,7 +34,7 @@ const BlogPostContent = ({ content }: BlogPostContentProps) => {
         remarkPlugins={[remarkGfm]}
         components={{
           code(props) {
-            const { children, className, ...rest } = props;
+            const { children, className, node, ...rest } = props;
             const match = /language-(\w+)/.exec(className || '');
             return match ? (
               <SyntaxHighlighter
@@ -53,17 +53,17 @@ const BlogPostContent = ({ content }: BlogPostContentProps) => {
             );
           },
           h1: ({ children }) => (
-            <h1 id={children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}>
+            <h1 id={children?.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}>
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 id={children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}>
+            <h2 id={children?.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}>
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 id={children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}>
+            <h3 id={children?.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}>
               {children}
             </h3>
           )
