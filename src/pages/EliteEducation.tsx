@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Users, TrendingUp, Award, Shield, PlayCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,53 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useQuery } from '@tanstack/react-query';
+import { coursesApi } from '@/services/coursesApi';
 
 const EliteEducation = () => {
-  const customerServiceCourses = [
-    {
-      id: 1,
-      title: "Customer Service Fundamentals: Building Rapport",
-      instructor: "Jane Doe",
-      duration: "6 hours",
-      students: 18340,
-      rating: 4.9,
-      price: 149,
-      originalPrice: 249,
-      image: "https://images.unsplash.com/photo-1556740772-1a741367b93e?w=300&h=200&fit=crop",
-      level: "Beginner",
-      description: "Learn the core principles of exceptional customer service and build lasting customer relationships.",
-      topics: ["Communication", "Empathy", "Problem-Solving", "Active Listening"]
-    },
-    {
-      id: 2,
-      title: "Advanced Communication for Support Professionals",
-      instructor: "Johnathan Smith",
-      duration: "10 hours",
-      students: 9870,
-      rating: 4.8,
-      price: 199,
-      originalPrice: 299,
-      image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=300&h=200&fit=crop",
-      level: "Intermediate",
-      description: "Master advanced communication techniques to handle any customer interaction with confidence and skill.",
-      topics: ["De-escalation", "Negotiation", "Positive Language", "Written Communication"]
-    },
-    {
-      id: 3,
-      title: "Handling Difficult Customers With Empathy",
-      instructor: "Maria Garcia",
-      duration: "8 hours",
-      students: 14210,
-      rating: 4.7,
-      price: 179,
-      originalPrice: 279,
-      image: "https://images.unsplash.com/photo-1586473215170-25a2a2e0615e?w=300&h=200&fit=crop",
-      level: "Advanced",
-      description: "Develop strategies to manage challenging customers effectively, turning negative experiences into positive ones.",
-      topics: ["Emotional Intelligence", "Conflict Resolution", "Stress Management", "Empathy Mapping"]
-    }
-  ];
-
   const serviceFeatures = [
     {
       icon: Users,
@@ -77,10 +33,17 @@ const EliteEducation = () => {
     }
   ];
 
+  // Use React Query to get featured customer service courses
+  const { data: customerServiceCourses, isLoading, error } = useQuery({
+    queryKey: ['customer-service-courses'],
+    queryFn: () => coursesApi.fetchFeaturedCourses(),
+    staleTime: 5 * 60 * 1000,
+  });
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-20">
         <div className="container mx-auto px-4">
@@ -124,7 +87,7 @@ const EliteEducation = () => {
         </div>
       </section>
 
-      {/* Featured Courses */}
+      {/* Featured Courses - now dynamic */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -133,65 +96,78 @@ const EliteEducation = () => {
               From essential fundamentals to advanced techniques for handling complex situations.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {customerServiceCourses.map((course) => (
-              <Card key={course.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative">
-                  <img 
-                    src={course.image} 
-                    alt={course.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <Badge className="bg-purple-600">{course.level}</Badge>
-                  </div>
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                    <PlayCircle className="w-12 h-12 text-white" />
-                  </div>
-                </div>
-                
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg leading-tight">{course.title}</CardTitle>
-                  <p className="text-sm text-gray-600">{course.instructor}</p>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-gray-700">{course.description}</p>
-                  
-                  <div className="flex flex-wrap gap-1">
-                    {course.topics.slice(0, 3).map((topic, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
-                        {topic}
-                      </Badge>
-                    ))}
-                  </div>
-                  
-                  <div className="flex items-center justify-between text-sm text-gray-600">
-                    <span>{course.duration}</span>
-                    <span>{course.students.toLocaleString()} students</span>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <div className="flex text-yellow-400">
-                      {'★'.repeat(Math.floor(course.rating))}
+
+          {isLoading && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="animate-pulse bg-white rounded-lg h-80 shadow" />
+              ))}
+            </div>
+          )}
+
+          {error && (
+            <div className="text-center text-red-600">Failed to load courses. Please try again later.</div>
+          )}
+
+          {!isLoading && !error && customerServiceCourses && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {customerServiceCourses.map((course) => (
+                <Card key={course.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="relative">
+                    <img 
+                      src={course.image} 
+                      alt={course.title}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-purple-600">{course.level}</Badge>
                     </div>
-                    <span className="text-sm font-medium">{course.rating}</span>
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                      <PlayCircle className="w-12 h-12 text-white" />
+                    </div>
                   </div>
-                  
-                  <div className="flex items-center justify-between">
+
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg leading-tight">{course.title}</CardTitle>
+                    <p className="text-sm text-gray-600">{course.instructor}</p>
+                  </CardHeader>
+
+                  <CardContent className="space-y-4">
+                    <p className="text-sm text-gray-700">{course.description}</p>
+                    
+                    <div className="flex flex-wrap gap-1">
+                      {/* Placeholder for topics; adapt if topics are added to the API */}
+                      {course.level && (
+                        <Badge variant="secondary" className="text-xs">{course.level}</Badge>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm text-gray-600">
+                      <span>{course.duration}</span>
+                      <span>{course.studentsCount?.toLocaleString()} students</span>
+                    </div>
+
                     <div className="flex items-center space-x-2">
-                      <span className="text-2xl font-bold text-purple-600">${course.price}</span>
-                      <span className="text-lg text-gray-500 line-through">${course.originalPrice}</span>
+                      <div className="flex text-yellow-400">
+                        {'★'.repeat(Math.floor(course.rating))}
+                      </div>
+                      <span className="text-sm font-medium">{course.rating}</span>
                     </div>
-                    <Button asChild size="sm">
-                      <Link to={`/course/${course.id}`}>Enroll Now</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-2xl font-bold text-purple-600">${course.price}</span>
+                        <span className="text-lg text-gray-500 line-through">${course.originalPrice}</span>
+                      </div>
+                      <Button asChild size="sm">
+                        <Link to={`/course/${course.id}`}>Enroll Now</Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
