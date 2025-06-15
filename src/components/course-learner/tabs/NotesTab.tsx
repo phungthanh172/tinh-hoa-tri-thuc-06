@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Plus, Clock, Edit, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,14 +41,14 @@ const NotesTab: React.FC<NotesTabProps> = ({ courseId }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <Card className="bg-gray-800 border-gray-700">
+    <div className="space-y-6 max-w-2xl mx-auto w-full">
+      <Card className="bg-white border-gray-200 shadow-lg rounded-xl">
         <CardHeader>
-          <CardTitle className="flex items-center justify-between text-white">
+          <CardTitle className="flex items-center justify-between text-gray-900">
             <span>Notes</span>
             <Button 
               onClick={() => setIsCreating(true)}
-              className="bg-purple-600 hover:bg-purple-700"
+              className="bg-purple-600 hover:bg-purple-700 text-white"
             >
               <Plus className="w-4 h-4 mr-2" />
               Create note
@@ -56,9 +57,9 @@ const NotesTab: React.FC<NotesTabProps> = ({ courseId }) => {
         </CardHeader>
         
         {isCreating && (
-          <CardContent className="border-t border-gray-700">
+          <CardContent className="border-t border-gray-200">
             <div className="space-y-4">
-              <div className="flex items-center space-x-2 text-sm text-gray-400">
+              <div className="flex items-center space-x-2 text-sm text-gray-500">
                 <Clock className="w-4 h-4" />
                 <span>Note will be created at current video time: 08:45</span>
               </div>
@@ -66,11 +67,11 @@ const NotesTab: React.FC<NotesTabProps> = ({ courseId }) => {
                 placeholder="Write your note here..."
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
-                className="bg-gray-700 border-gray-600 text-white"
+                className="bg-gray-100 border-gray-300 text-gray-900"
                 rows={3}
               />
               <div className="flex space-x-2">
-                <Button onClick={handleCreateNote} className="bg-purple-600 hover:bg-purple-700">
+                <Button onClick={handleCreateNote} className="bg-purple-600 hover:bg-purple-700 text-white">
                   Save note
                 </Button>
                 <Button variant="outline" onClick={() => setIsCreating(false)}>
@@ -84,28 +85,28 @@ const NotesTab: React.FC<NotesTabProps> = ({ courseId }) => {
 
       <div className="space-y-4">
         {notes.map((note) => (
-          <Card key={note.id} className="bg-gray-800 border-gray-700">
+          <Card key={note.id} className="bg-white border-gray-200 shadow rounded-lg">
             <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-3">
                 <div className="flex items-center space-x-2">
-                  <Badge variant="outline" className="text-purple-400 border-purple-400">
+                  <Badge variant="outline" className="text-purple-700 border-purple-400 bg-purple-50">
                     {note.timestamp}
                   </Badge>
-                  <span className="text-sm text-gray-400">{note.lectureTitle}</span>
+                  <span className="text-sm text-gray-500">{note.lectureTitle}</span>
                 </div>
-                <div className="flex space-x-1">
-                  <Button size="icon" variant="ghost" className="text-gray-400 hover:text-white">
+                <div className="flex space-x-1 mt-2 md:mt-0">
+                  <Button size="icon" variant="ghost" className="text-gray-500 hover:text-purple-700">
                     <Edit className="w-4 h-4" />
                   </Button>
-                  <Button size="icon" variant="ghost" className="text-gray-400 hover:text-red-400">
+                  <Button size="icon" variant="ghost" className="text-gray-500 hover:text-red-500">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
               
-              <p className="text-gray-300 mb-2">{note.content}</p>
+              <p className="text-gray-800 mb-2">{note.content}</p>
               
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-gray-400">
                 Created {note.createdAt}
               </div>
             </CardContent>

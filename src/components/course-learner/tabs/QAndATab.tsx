@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Search, MessageSquare, ThumbsUp, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,35 +46,35 @@ const QAndATab: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
-      <Card className="bg-gray-800 border-gray-700">
+    <div className="space-y-6 max-w-2xl mx-auto w-full">
+      <Card className="bg-white border-gray-200 shadow-lg rounded-xl">
         <CardHeader>
-          <CardTitle className="text-white">Q&A</CardTitle>
+          <CardTitle className="text-gray-900">Q&A</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex space-x-4">
+          <div className="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Search existing questions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-700 border-gray-600 text-white"
+                className="pl-10 bg-gray-100 border-gray-300 text-gray-900"
               />
             </div>
-            <Button className="bg-purple-600 hover:bg-purple-700">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white mt-2 md:mt-0 w-full md:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               Ask a question
             </Button>
           </div>
 
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-400">Sort by:</span>
+            <span className="text-sm text-gray-500">Sort by:</span>
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40 bg-gray-700 border-gray-600 text-white">
+              <SelectTrigger className="w-40 bg-gray-100 border-gray-300 text-gray-900">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600">
+              <SelectContent className="bg-white border-gray-200">
                 <SelectItem value="recent">Most recent</SelectItem>
                 <SelectItem value="upvoted">Most upvoted</SelectItem>
                 <SelectItem value="unanswered">Unanswered</SelectItem>
@@ -85,12 +86,12 @@ const QAndATab: React.FC = () => {
 
       <div className="space-y-4">
         {filteredQuestions.map((question) => (
-          <Card key={question.id} className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors cursor-pointer">
+          <Card key={question.id} className="bg-white border-gray-200 shadow rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
             <CardContent className="p-4">
-              <div className="flex items-start justify-between">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                 <div className="flex-1">
-                  <h3 className="text-white font-medium mb-2">{question.question}</h3>
-                  <div className="flex items-center space-x-4 text-sm text-gray-400">
+                  <h3 className="text-gray-900 font-medium mb-2">{question.question}</h3>
+                  <div className="flex flex-wrap items-center space-x-4 text-sm text-gray-500">
                     <span>by {question.author}</span>
                     <span>{question.timestamp}</span>
                     {question.hasAnswer && (
@@ -101,7 +102,7 @@ const QAndATab: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-4 text-sm text-gray-400">
+                <div className="flex items-center space-x-4 text-sm text-gray-400 mt-3 md:mt-0">
                   <div className="flex items-center space-x-1">
                     <MessageSquare className="w-4 h-4" />
                     <span>{question.answers}</span>

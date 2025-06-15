@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Star } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,12 +34,12 @@ const ReviewsTab: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <Card className="bg-gray-800 border-gray-700">
+    <div className="space-y-6 max-w-2xl mx-auto w-full">
+      <Card className="bg-white border-gray-200 shadow-lg rounded-xl">
         <CardHeader>
-          <CardTitle className="flex items-center justify-between text-white">
+          <CardTitle className="flex items-center justify-between text-gray-900">
             <span>Reviews</span>
-            <Button className="bg-purple-600 hover:bg-purple-700">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white">
               Leave a review
             </Button>
           </CardTitle>
@@ -47,15 +48,15 @@ const ReviewsTab: React.FC = () => {
 
       <div className="space-y-4">
         {reviews.map((review) => (
-          <Card key={review.id} className="bg-gray-800 border-gray-700">
-            <CardContent className="p-6">
+          <Card key={review.id} className="bg-white border-gray-200 shadow rounded-lg">
+            <CardContent className="p-4">
               <div className="flex items-start space-x-4">
                 <Avatar>
                   <AvatarFallback>{review.avatar}</AvatarFallback>
                 </Avatar>
-                <div>
+                <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
-                    <h3 className="text-white font-semibold">{review.author}</h3>
+                    <h3 className="text-gray-900 font-semibold">{review.author}</h3>
                     <div className="flex items-center space-x-1 text-yellow-500">
                       {[...Array(review.rating)].map((_, i) => (
                         <Star key={i} className="w-4 h-4" />
@@ -63,9 +64,9 @@ const ReviewsTab: React.FC = () => {
                     </div>
                   </div>
                   
-                  <p className="text-gray-300 mb-3">{review.comment}</p>
+                  <p className="text-gray-800 mb-3">{review.comment}</p>
                   
-                  <div className="text-sm text-gray-400">
+                  <div className="text-sm text-gray-500">
                     {new Date(review.date).toLocaleDateString()}
                   </div>
                 </div>
