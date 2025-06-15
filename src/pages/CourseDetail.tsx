@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -26,7 +27,7 @@ const CourseDetail = () => {
     rating: 4.7,
     reviewCount: 289456,
     studentsCount: 756843,
-    price: 0, // Changed to 0 to make it a free course for testing
+    price: 0,
     originalPrice: 199.99,
     image: "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=600&h=400&fit=crop",
     previewVideo: "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
@@ -132,6 +133,7 @@ const CourseDetail = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
+      {/* Black background section with main heading and sidebar */}
       <div className="bg-gray-900 text-white">
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -162,14 +164,15 @@ const CourseDetail = () => {
               </div>
             </div>
 
-            {/* Mobile Sidebar Placeholder - Hidden on larger screens */}
-            <div className="lg:hidden">
+            {/* Sidebar - Visible on all screens, comes next to heading content */}
+            <div>
               <CourseDetailSidebar course={course} />
             </div>
           </div>
         </div>
       </div>
 
+      {/* Main Course Content Section */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Main Content */}
@@ -182,13 +185,7 @@ const CourseDetail = () => {
               reviews={reviews}
             />
           </div>
-
-          {/* Sticky Sidebar - Hidden on mobile, shown on larger screens, positioned in middle */}
-          <div className="hidden lg:block">
-            <div className="sticky top-8 -mt-32">
-              <CourseDetailSidebar course={course} />
-            </div>
-          </div>
+          {/* Remove sticky sidebar from here, moved up */}
         </div>
       </div>
 
@@ -198,3 +195,4 @@ const CourseDetail = () => {
 };
 
 export default CourseDetail;
+
