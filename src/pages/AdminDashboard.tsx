@@ -14,6 +14,8 @@ import AdminReporting from '@/components/admin/AdminReporting';
 import ContentModeration from '@/components/admin/ContentModeration';
 import SupportManagement from '@/components/admin/SupportManagement';
 import SystemMonitoring from '@/components/admin/SystemMonitoring';
+import AdminBlogManagement from '@/components/admin/BlogManagement';
+import FeatureManagement from '@/components/admin/FeatureManagement';
 
 const AdminDashboard = () => {
   const [adminStats] = useState({
@@ -144,10 +146,12 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-8">
+          <TabsList className="grid w-full grid-cols-10">
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
+            <TabsTrigger value="blog">Blog</TabsTrigger>
+            <TabsTrigger value="features">Features</TabsTrigger>
             <TabsTrigger value="financial">Financial</TabsTrigger>
             <TabsTrigger value="platform">Platform</TabsTrigger>
             <TabsTrigger value="support">Support</TabsTrigger>
@@ -165,6 +169,14 @@ const AdminDashboard = () => {
 
           <TabsContent value="content">
             <ContentModeration />
+          </TabsContent>
+
+          <TabsContent value="blog">
+            <AdminBlogManagement />
+          </TabsContent>
+
+          <TabsContent value="features">
+            <FeatureManagement />
           </TabsContent>
 
           <TabsContent value="financial">
