@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User, Tag, MessageSquare, Reply } from 'lucide-react';
@@ -340,20 +339,21 @@ Both SQL and NoSQL databases are important:
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={{
-                      code({ node, inline, className, children, ...props }) {
+                      code(props) {
+                        const { children, className, ...rest } = props;
                         const match = /language-(\w+)/.exec(className || '');
-                        return !inline && match ? (
+                        return match ? (
                           <SyntaxHighlighter
                             style={tomorrow}
                             language={match[1]}
                             PreTag="div"
                             className="rounded-lg shadow-lg"
-                            {...props}
+                            {...rest}
                           >
                             {String(children).replace(/\n$/, '')}
                           </SyntaxHighlighter>
                         ) : (
-                          <code className={className} {...props}>
+                          <code className={className} {...rest}>
                             {children}
                           </code>
                         );
