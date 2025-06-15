@@ -69,7 +69,7 @@ const Header = () => {
     <header className="border-b bg-white sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo và Awesome */}
+          {/* Logo và Categories */}
           <div className="flex items-center space-x-8">
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-purple-600 rounded"></div>
@@ -78,31 +78,39 @@ const Header = () => {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="hidden lg:flex items-center space-x-1 text-gray-600 hover:text-purple-600">
+                <button className="hidden lg:flex items-center space-x-1 text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-md transition-colors duration-200 font-medium">
                   <Menu className="w-4 h-4" />
-                  <span>Awesome</span>
+                  <span>Categories</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-96 max-h-96 overflow-y-auto bg-white">
-                <div className="grid grid-cols-1 gap-1">
+              <DropdownMenuContent className="w-[800px] max-h-[500px] overflow-y-auto bg-white shadow-xl border border-gray-200 rounded-lg p-4">
+                <div className="grid grid-cols-2 gap-6">
                   {categories.map((category) => (
-                    <DropdownMenuItem key={category.title} className="cursor-pointer">
-                      <div className="w-full">
-                        <div className="font-semibold text-purple-600 mb-1">{category.title}</div>
-                        <div className="grid grid-cols-2 gap-1 text-sm text-gray-600">
-                          {category.subcategories.slice(0, 4).map((sub) => (
-                            <Link 
-                              key={sub} 
-                              to={`/search?category=${encodeURIComponent(sub.toLowerCase())}`}
-                              className="hover:text-purple-600"
-                            >
-                              {sub}
-                            </Link>
-                          ))}
-                        </div>
+                    <div key={category.title} className="space-y-3">
+                      <h3 className="font-bold text-lg text-purple-700 border-b border-gray-100 pb-2">
+                        {category.title}
+                      </h3>
+                      <div className="space-y-1">
+                        {category.subcategories.slice(0, 6).map((sub) => (
+                          <Link 
+                            key={sub} 
+                            to={`/search?category=${encodeURIComponent(sub.toLowerCase())}`}
+                            className="block text-sm text-gray-600 hover:text-purple-600 hover:bg-purple-50 px-2 py-1 rounded transition-colors duration-150"
+                          >
+                            {sub}
+                          </Link>
+                        ))}
+                        {category.subcategories.length > 6 && (
+                          <Link 
+                            to={`/search?category=${encodeURIComponent(category.title.toLowerCase())}`}
+                            className="block text-sm text-purple-600 hover:text-purple-700 px-2 py-1 font-medium"
+                          >
+                            Show all {category.title}
+                          </Link>
+                        )}
                       </div>
-                    </DropdownMenuItem>
+                    </div>
                   ))}
                 </div>
               </DropdownMenuContent>
