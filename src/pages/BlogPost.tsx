@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User, Tag, MessageSquare, Reply } from 'lucide-react';
@@ -316,82 +317,66 @@ Both SQL and NoSQL databases are important:
                   )}
                 </div>
 
-                {/* Article Content */}
-                <div className="prose prose-lg max-w-none">
-                  {/* ... keep existing code (article content sections) */}
-                  <div id="introduction">
-                    <h1>Introduction</h1>
-                    <p>This is a comprehensive guide to the most important skills for developers in 2024.</p>
-                  </div>
+                {/* Article Content with Enhanced Markdown Styling */}
+                <div className="prose prose-lg prose-gray max-w-none 
+                  prose-headings:text-gray-900 prose-headings:font-bold
+                  prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-8 prose-h1:border-b prose-h1:border-gray-200 prose-h1:pb-4
+                  prose-h2:text-2xl prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-purple-800
+                  prose-h3:text-xl prose-h3:mb-3 prose-h3:mt-6 prose-h3:text-purple-700
+                  prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
+                  prose-a:text-purple-600 prose-a:font-medium prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-gray-900 prose-strong:font-semibold
+                  prose-code:bg-gray-100 prose-code:text-purple-600 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono
+                  prose-pre:bg-gray-900 prose-pre:text-white prose-pre:rounded-lg prose-pre:p-4 prose-pre:overflow-x-auto
+                  prose-blockquote:border-l-4 prose-blockquote:border-purple-500 prose-blockquote:bg-purple-50 prose-blockquote:p-4 prose-blockquote:italic prose-blockquote:text-purple-800 prose-blockquote:rounded-r-lg
+                  prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-4
+                  prose-ol:list-decimal prose-ol:pl-6 prose-ol:mb-4
+                  prose-li:mb-2 prose-li:text-gray-700
+                  prose-table:border-collapse prose-table:w-full
+                  prose-th:border prose-th:border-gray-300 prose-th:bg-gray-100 prose-th:p-3 prose-th:text-left prose-th:font-semibold
+                  prose-td:border prose-td:border-gray-300 prose-td:p-3
+                  prose-img:rounded-lg prose-img:shadow-md prose-img:mx-auto">
                   
-                  <div id="javascript-typescript">
-                    <h2>1. JavaScript and TypeScript</h2>
-                    <p>JavaScript remains the backbone of web development, while TypeScript adds type safety:</p>
-                    <SyntaxHighlighter
-                      language="javascript"
-                      style={tomorrow}
-                      PreTag="div"
-                    >
-                      {`const greeting = (name: string): string => {
-  return \`Hello, \${name}!\`;
-};`}
-                    </SyntaxHighlighter>
-                  </div>
-
-                  <div id="react-frameworks">
-                    <h2>2. React and Modern Frameworks</h2>
-                    <p>Modern frameworks like React, Vue, and Angular are essential:</p>
-                    <ul>
-                      <li><strong>React</strong>: Component-based architecture</li>
-                      <li><strong>Next.js</strong>: Full-stack React framework</li>
-                      <li><strong>Vue</strong>: Progressive framework</li>
-                    </ul>
-                  </div>
-
-                  <div id="backend-technologies">
-                    <h2>3. Backend Technologies</h2>
-                    <p>Understanding backend development is crucial:</p>
-                    <ol>
-                      <li>Node.js and Express</li>
-                      <li>Database management (SQL/NoSQL)</li>
-                      <li>API design principles</li>
-                    </ol>
-                    <blockquote>
-                      <p>"The best developers understand both frontend and backend technologies."</p>
-                    </blockquote>
-                  </div>
-
-                  <div id="cloud-devops">
-                    <h2>4. Cloud Computing and DevOps</h2>
-                    <p>Modern developers need to understand cloud platforms and deployment:</p>
-                    <ul>
-                      <li>AWS, Azure, Google Cloud</li>
-                      <li>Docker and containerization</li>
-                      <li>CI/CD pipelines</li>
-                      <li>Infrastructure as Code</li>
-                    </ul>
-                  </div>
-
-                  <div id="database-management">
-                    <h2>5. Database Management</h2>
-                    <p>Both SQL and NoSQL databases are important:</p>
-                    <ul>
-                      <li>PostgreSQL, MySQL</li>
-                      <li>MongoDB, Redis</li>
-                      <li>Database design principles</li>
-                      <li>Query optimization</li>
-                    </ul>
-                  </div>
-
-                  <div id="key-takeaways">
-                    <h3>Key Takeaways</h3>
-                    <ul>
-                      <li>Stay updated with latest technologies</li>
-                      <li>Practice regularly</li>
-                      <li>Build real projects</li>
-                      <li>Contribute to open source</li>
-                    </ul>
-                  </div>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      code({ node, inline, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || '');
+                        return !inline && match ? (
+                          <SyntaxHighlighter
+                            style={tomorrow}
+                            language={match[1]}
+                            PreTag="div"
+                            className="rounded-lg shadow-lg"
+                            {...props}
+                          >
+                            {String(children).replace(/\n$/, '')}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        );
+                      },
+                      h1: ({ children }) => (
+                        <h1 id={children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}>
+                          {children}
+                        </h1>
+                      ),
+                      h2: ({ children }) => (
+                        <h2 id={children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}>
+                          {children}
+                        </h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 id={children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}>
+                          {children}
+                        </h3>
+                      )
+                    }}
+                  >
+                    {blogPost.content}
+                  </ReactMarkdown>
                 </div>
               </CardContent>
             </Card>
