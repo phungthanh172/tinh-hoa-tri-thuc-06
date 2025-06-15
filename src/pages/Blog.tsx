@@ -1,13 +1,16 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar, Clock, User, ArrowRight } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const Blog = () => {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
   const blogPosts = [
     {
       id: 1,
@@ -73,6 +76,10 @@ const Blog = () => {
 
   const categories = ["All", "Development", "Education", "Tutorial", "Motivation", "Data Science", "Productivity"];
 
+  const filteredPosts = selectedCategory === "All" 
+    ? blogPosts 
+    : blogPosts.filter(post => post.category === selectedCategory);
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -97,84 +104,115 @@ const Blog = () => {
           {categories.map((category) => (
             <Badge
               key={category}
-              variant={category === "All" ? "default" : "outline"}
+              variant={category === selectedCategory ? "default" : "outline"}
               className="cursor-pointer hover:bg-purple-100 px-4 py-2"
+              onClick={() => setSelectedCategory(category)}
             >
               {category}
+              {category !== "All" && (
+                <span className="ml-2 text-xs">
+                  ({blogPosts.filter(post => post.category === category).length})
+                </span>
+              )}
             </Badge>
           ))}
         </div>
 
-        {/* Featured Post */}
-        <div className="mb-12">
-          <Card className="overflow-hidden">
-            <div className="md:flex">
-              <div className="md:w-1/2">
-                <img
-                  src={blogPosts[0].image}
-                  alt={blogPosts[0].title}
-                  className="w-full h-64 md:h-full object-cover"
-                />
-              </div>
-              <div className="md:w-1/2 p-8">
-                <Badge className="mb-4">{blogPosts[0].category}</Badge>
-                <h2 className="text-2xl font-bold mb-4">{blogPosts[0].title}</h2>
-                <p className="text-gray-600 mb-6">{blogPosts[0].excerpt}</p>
-                <div className="flex items-center text-sm text-gray-500 mb-6">
-                  <User className="w-4 h-4 mr-1" />
-                  <span className="mr-4">{blogPosts[0].author}</span>
-                  <Calendar className="w-4 h-4 mr-1" />
-                  <span className="mr-4">{blogPosts[0].date}</span>
-                  <Clock className="w-4 h-4 mr-1" />
-                  <span>{blogPosts[0].readTime}</span>
-                </div>
-                <Button className="group">
-                  Read More
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </div>
-            </div>
-          </Card>
+        {/* Results Count */}
+        <div className="mb-6 text-center text-gray-600">
+          Showing {filteredPosts.length} {selectedCategory !== "All" ? selectedCategory : ""} posts
         </div>
+
+        {/* Featured Post */}
+        {filteredPosts.length > 0 && (
+          <div className="mb-12">
+            <Card className="overflow-hidden">
+              <div className="md:flex">
+                <div className="md:w-1/2">
+                  <img
+                    src={filteredPosts[0].image}
+                    alt={filteredPosts[0].title}
+                    className="w-full h-64 md:h-full object-cover"
+                  />
+                </div>
+                <div className="md:w-1/2 p-8">
+                  <Badge className="mb-4">{filteredPosts[0].category}</Badge>
+                  <h2 className="text-2xl font-bold mb-4">{filteredPosts[0].title}</h2>
+                  <p className="text-gray-600 mb-6">{filteredPosts[0].excerpt}</p>
+                  <div className="flex items-center text-sm text-gray-500 mb-6">
+                    <User className="w-4 h-4 mr-1" />
+                    <span className="mr-4">{filteredPosts[0].author}</span>
+                    <Calendar className="w-4 h-4 mr-1" />
+                    <span className="mr-4">{filteredPosts[0].date}</span>
+                    <Clock className="w-4 h-4 mr-1" />
+                    <span>{filteredPosts[0].readTime}</span>
+                  </div>
+                  <Link to={`/blog/${filteredPosts[0].id}`}>
+                    <Button className="group">
+                      Read More
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
 
         {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogPosts.slice(1).map((post) => (
-            <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="aspect-video overflow-hidden">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <CardHeader>
-                <Badge className="w-fit mb-2">{post.category}</Badge>
-                <CardTitle className="line-clamp-2">{post.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
-                <div className="flex items-center text-sm text-gray-500 mb-4">
-                  <User className="w-4 h-4 mr-1" />
-                  <span className="mr-3">{post.author}</span>
-                  <Clock className="w-4 h-4 mr-1" />
-                  <span>{post.readTime}</span>
+        {filteredPosts.length > 1 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPosts.slice(1).map((post) => (
+              <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="aspect-video overflow-hidden">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-                <Button variant="outline" className="w-full group">
-                  Read More
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <CardHeader>
+                  <Badge className="w-fit mb-2">{post.category}</Badge>
+                  <CardTitle className="line-clamp-2">{post.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
+                  <div className="flex items-center text-sm text-gray-500 mb-4">
+                    <User className="w-4 h-4 mr-1" />
+                    <span className="mr-3">{post.author}</span>
+                    <Clock className="w-4 h-4 mr-1" />
+                    <span>{post.readTime}</span>
+                  </div>
+                  <Link to={`/blog/${post.id}`}>
+                    <Button variant="outline" className="w-full group">
+                      Read More
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {filteredPosts.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold mb-2">No posts found</h3>
+            <p className="text-gray-600 mb-4">No blog posts found in the "{selectedCategory}" category.</p>
+            <Button variant="outline" onClick={() => setSelectedCategory("All")}>
+              View All Posts
+            </Button>
+          </div>
+        )}
 
         {/* Load More Button */}
-        <div className="text-center mt-12">
-          <Button variant="outline" size="lg">
-            Load More Posts
-          </Button>
-        </div>
+        {filteredPosts.length > 0 && (
+          <div className="text-center mt-12">
+            <Button variant="outline" size="lg">
+              Load More Posts
+            </Button>
+          </div>
+        )}
       </div>
 
       <Footer />

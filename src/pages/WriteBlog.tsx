@@ -5,14 +5,15 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import RichTextEditor from '@/components/blog/RichTextEditor';
 
 const WriteBlog = () => {
   const navigate = useNavigate();
@@ -215,14 +216,11 @@ const WriteBlog = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="content">Content *</Label>
-                    <Textarea
-                      id="content"
-                      placeholder="Write your blog post content here..."
+                    <Label htmlFor="content">Content * (Markdown Supported)</Label>
+                    <RichTextEditor
                       value={formData.content}
-                      onChange={(e) => handleInputChange('content', e.target.value)}
-                      rows={20}
-                      className="font-mono"
+                      onChange={(value) => handleInputChange('content', value)}
+                      placeholder="Write your blog post content here using Markdown..."
                     />
                   </div>
                 </CardContent>

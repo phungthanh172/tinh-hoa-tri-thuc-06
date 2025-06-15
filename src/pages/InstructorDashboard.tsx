@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Plus, BookOpen, Users, DollarSign, BarChart3, Settings, Video, FileText, HelpCircle, User, MessageSquare, Megaphone, PenTool } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import InstructorProfile from '@/components/instructor/InstructorProfile';
 import StudentInteraction from '@/components/instructor/StudentInteraction';
 import EarningsTracker from '@/components/instructor/EarningsTracker';
 import PromotionalTools from '@/components/instructor/PromotionalTools';
+import BlogManagement from '@/components/blog/BlogManagement';
 
 const InstructorDashboard = () => {
   const [courses] = useState([
@@ -119,8 +121,9 @@ const InstructorDashboard = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="courses">My Courses</TabsTrigger>
+            <TabsTrigger value="blog">Blog Posts</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="earnings">Earnings</TabsTrigger>
@@ -166,6 +169,10 @@ const InstructorDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="blog">
+            <BlogManagement />
           </TabsContent>
 
           <TabsContent value="profile">
