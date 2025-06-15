@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Search, ShoppingCart, Globe, Menu, User, Bell, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,11 +12,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Link, useNavigate } from 'react-router-dom';
 import { Language, Labels, LabelsVI } from '@/constants/labels';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Header = () => {
+  const { language, setLanguage } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [language, setLanguage] = useState(Language.EN);
   const navigate = useNavigate();
 
   // Mock login status - in a real app, this would come from auth context/state
@@ -30,10 +30,6 @@ const Header = () => {
     } else {
       navigate('/search');
     }
-  };
-
-  const handleToggleLanguage = (lang: Language) => {
-    setLanguage(lang);
   };
 
   const t = (labelKey: keyof typeof Labels) =>
@@ -94,7 +90,7 @@ const Header = () => {
     <header className="border-b bg-white sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo và Categories */}
+          {/* Logo and Categories */}
           <div className="flex items-center space-x-8">
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-purple-600 rounded"></div>
@@ -216,13 +212,13 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-44">
                 <DropdownMenuItem
-                  onClick={() => handleToggleLanguage(Language.EN)}
+                  onClick={() => setLanguage(Language.EN)}
                   className={language === Language.EN ? "bg-purple-100 font-bold" : ""}
                 >
                   English
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleToggleLanguage(Language.VI)}
+                  onClick={() => setLanguage(Language.VI)}
                   className={language === Language.VI ? "bg-purple-100 font-bold" : ""}
                 >
                   Tiếng Việt
@@ -237,4 +233,3 @@ const Header = () => {
 };
 
 export default Header;
-
