@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Plus, BookOpen, Users, DollarSign, BarChart3, Settings, Video, FileText, HelpCircle, User, MessageSquare, Megaphone } from 'lucide-react';
+import { Plus, BookOpen, Users, DollarSign, BarChart3, Settings, Video, FileText, HelpCircle, User, MessageSquare, Megaphone, PenTool } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -52,12 +51,20 @@ const InstructorDashboard = () => {
             <h1 className="text-3xl font-bold">Instructor Dashboard</h1>
             <p className="text-gray-600 mt-2">Manage your courses and track your success</p>
           </div>
-          <Link to="/instructor/course/create">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
-              <Plus className="w-5 h-5 mr-2" />
-              Create New Course
-            </Button>
-          </Link>
+          <div className="flex space-x-3">
+            <Link to="/blog/write">
+              <Button variant="outline" size="lg">
+                <PenTool className="w-5 h-5 mr-2" />
+                Write Blog Post
+              </Button>
+            </Link>
+            <Link to="/instructor/course/create">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
+                <Plus className="w-5 h-5 mr-2" />
+                Create New Course
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Stats Overview */}
