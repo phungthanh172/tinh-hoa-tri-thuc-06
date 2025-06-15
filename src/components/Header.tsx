@@ -132,6 +132,10 @@ const Header = () => {
               My learning
             </Link>
 
+            <Link to="/blog" className="hidden lg:block text-gray-600 hover:text-purple-600">
+              Blog
+            </Link>
+
             <button className="relative">
               <Bell className="w-6 h-6 text-gray-600" />
               <Badge className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center">

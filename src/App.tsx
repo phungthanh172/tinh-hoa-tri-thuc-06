@@ -20,6 +20,7 @@ import CourseCreator from "./pages/CourseCreator";
 import LearningProgress from "./pages/LearningProgress";
 import Search from "./pages/Search";
 import AdminDashboard from "./pages/AdminDashboard";
+import Blog from "./pages/Blog";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/blog" element={<Blog />} />
               <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
               <Route path="/instructor/course/create" element={<CourseCreator />} />
               <Route path="/instructor/course/:id/edit" element={<CourseCreator />} />
