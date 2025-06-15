@@ -138,12 +138,10 @@ const CourseDetail = () => {
             {/* Main Content - Left Column (70%) */}
             <div className="lg:col-span-2">
               <CourseBreadcrumbs categories={course.categories} />
-              
               <div className="space-y-6">
                 <div>
                   <h1 className="text-3xl lg:text-4xl font-bold mb-4">{course.title}</h1>
                   <p className="text-lg text-gray-300 mb-4">{course.subtitle}</p>
-                  
                   <div className="flex flex-wrap items-center gap-4 text-sm">
                     <div className="flex items-center">
                       <span className="text-orange-400 mr-1">★</span>
@@ -152,7 +150,6 @@ const CourseDetail = () => {
                     </div>
                     <span className="text-gray-300">{course.studentsCount.toLocaleString()} students</span>
                   </div>
-                  
                   <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-300">
                     <span>Created by <span className="text-purple-300 underline">{course.instructor.name}</span></span>
                     <span>Last updated {course.lastUpdated}</span>
@@ -160,10 +157,14 @@ const CourseDetail = () => {
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Mobile Sidebar Placeholder - Hidden on larger screens */}
-            <div className="lg:hidden">
+              {/* Mobile Sidebar below summary on small screens only */}
+              <div className="mt-[10px] lg:hidden">
+                <CourseDetailSidebar course={course} />
+              </div>
+            </div>
+            {/* Sidebar on right, visible only on large screens, margin top 10px */}
+            <div className="hidden lg:block mt-[10px]">
               <CourseDetailSidebar course={course} />
             </div>
           </div>
@@ -182,16 +183,8 @@ const CourseDetail = () => {
               reviews={reviews}
             />
           </div>
-
-          {/* Sticky Sidebar - Hidden on mobile, shown on larger screens, positioned in middle */}
-          <div className="hidden lg:block">
-            <div className="sticky top-8 -mt-32">
-              <CourseDetailSidebar course={course} />
-            </div>
-          </div>
         </div>
       </div>
-
       <Footer />
     </div>
   );
