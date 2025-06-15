@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { coursesApi, Course } from '@/services/coursesApi';
 import DailySummaryDialog from './reporting/DailySummaryDialog';
 import CoursePerformanceDialog from './reporting/CoursePerformanceDialog';
@@ -11,6 +11,7 @@ import CourseCategoriesCard from './reporting/cards/CourseCategoriesCard';
 import UserGrowthCard from './reporting/cards/UserGrowthCard';
 import TopInstructorsCard from './reporting/cards/TopInstructorsCard';
 import QuickActions from './reporting/QuickActions';
+import { exportToCsv } from '@/lib/export';
 
 const AdminReporting = () => {
   const [timeRange, setTimeRange] = useState('30days');
@@ -66,7 +67,55 @@ const AdminReporting = () => {
   ];
 
   const exportReport = (type: string) => {
-    console.log(`Exporting ${type} report for ${timeRange}`);
+    const date = format(new Date(), 'yyyy-MM-dd');
+    let exported = false;
+    let reportName = type;
+
+    try {
+      switch (type) {
+        case 'financial':
+        case 'revenue':
+          exportToCsv(`revenue-report-${date}.csv`, revenueData);
+          exported = true;
+          reportName = 'Financial';
+          break;
+        case 'user-activity':
+        case 'users':
+          exportToCsv(`user-growth-report-${date}.csv`, userGrowthData);
+          exported = true;
+          reportName = 'User Activity';
+          break;
+        case 'course-categories':
+          exportToCsv(`course-categories-report-${date}.csv`, categoryData.map(({ color, ...rest }) => rest));
+          exported = true;
+          reportName = 'Course Categories';
+          break;
+        case 'top-instructors':
+          exportToCsv(`top-instructors-report-${date}.csv`, topInstructors);
+          exported = true;
+          reportName = 'Top Instructors';
+          break;
+        case 'comprehensive':
+          exportToCsv(`revenue-report-${date}.csv`, revenueData);
+          exportToCsv(`user-growth-report-${date}.csv`, userGrowthData);
+          exportToCsv(`course-categories-report-${date}.csv`, categoryData.map(({ color, ...rest }) => rest));
+          exportToCsv(`top-instructors-report-${date}.csv`, topInstructors);
+          exported = true;
+          reportName = 'Comprehensive';
+          break;
+        default:
+          toast.error(`Export type "${type}" is not recognized.`);
+      }
+
+      if (exported) {
+        toast.success(`${reportName} report exported`, {
+          description: `Your file is downloading.`,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to export report:", error);
+      toast.error("An error occurred while exporting the report.");
+    }
   };
   
   const handleShowDailySummary = () => {
