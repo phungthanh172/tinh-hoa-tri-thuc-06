@@ -23,6 +23,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import WriteBlog from "./pages/WriteBlog";
+import UdemyBusiness from "./pages/UdemyBusiness";
 
 const queryClient = new QueryClient();
 
@@ -46,7 +47,7 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogPost />} />
               <Route path="/blog/write" element={<WriteBlog />} />
-              <Route path="/blog/edit/:id" element={<WriteBlog />} />
+              <Route path="/udemy-business" element={<UdemyBusiness />} />
               <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
               <Route path="/instructor/course/create" element={<CourseCreator />} />
               <Route path="/instructor/course/:id/edit" element={<CourseCreator />} />
