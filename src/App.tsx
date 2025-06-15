@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProgressProvider } from "@/contexts/ProgressContext";
 import { GamificationProvider } from "@/contexts/GamificationContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
 import FloatingChatBox from "@/components/FloatingChatBox";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
@@ -34,31 +33,29 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <LanguageProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/courses" element={<Courses />} />
-                <Route path="/course/:id" element={<CourseDetail />} />
-                <Route path="/course/:id/learn" element={<CourseLearner />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:id" element={<BlogPost />} />
-                <Route path="/blog/write" element={<WriteBlog />} />
-                <Route path="/elite-education" element={<EliteEducation />} />
-                <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
-                <Route path="/instructor/course/create" element={<CourseCreator />} />
-                <Route path="/instructor/course/:id/edit" element={<CourseCreator />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/learning-progress" element={<LearningProgress />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <FloatingChatBox />
-            </BrowserRouter>
-          </LanguageProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/courses" element={<Courses />} />
+              <Route path="/course/:id" element={<CourseDetail />} />
+              <Route path="/course/:id/learn" element={<CourseLearner />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
+              <Route path="/blog/write" element={<WriteBlog />} />
+              <Route path="/elite-education" element={<EliteEducation />} />
+              <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
+              <Route path="/instructor/course/create" element={<CourseCreator />} />
+              <Route path="/instructor/course/:id/edit" element={<CourseCreator />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/learning-progress" element={<LearningProgress />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <FloatingChatBox />
+          </BrowserRouter>
         </TooltipProvider>
       </GamificationProvider>
     </ProgressProvider>
