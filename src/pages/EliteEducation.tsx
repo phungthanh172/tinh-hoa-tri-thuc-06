@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Building2, Users, TrendingUp, Shield, Award, PlayCircle } from 'lucide-react';
+import { Users, TrendingUp, Award, Shield, PlayCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,72 +8,72 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-const UdemyBusiness = () => {
-  const businessCourses = [
+const EliteEducation = () => {
+  const customerServiceCourses = [
     {
       id: 1,
-      title: "Complete Landing Page Design for Business Growth",
-      instructor: "Sarah Johnson",
-      duration: "8 hours",
-      students: 15420,
-      rating: 4.8,
-      price: 199,
-      originalPrice: 299,
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop",
-      level: "All Levels",
-      description: "Master the art of creating high-converting landing pages that drive business results",
-      topics: ["Conversion Optimization", "UI/UX Design", "A/B Testing", "Analytics"]
+      title: "Customer Service Fundamentals: Building Rapport",
+      instructor: "Jane Doe",
+      duration: "6 hours",
+      students: 18340,
+      rating: 4.9,
+      price: 149,
+      originalPrice: 249,
+      image: "https://images.unsplash.com/photo-1556740772-1a741367b93e?w=300&h=200&fit=crop",
+      level: "Beginner",
+      description: "Learn the core principles of exceptional customer service and build lasting customer relationships.",
+      topics: ["Communication", "Empathy", "Problem-Solving", "Active Listening"]
     },
     {
       id: 2,
-      title: "Corporate Branding & Landing Page Strategy",
-      instructor: "Michael Chen",
-      duration: "12 hours",
-      students: 8932,
-      rating: 4.9,
-      price: 249,
-      originalPrice: 349,
-      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=300&h=200&fit=crop",
+      title: "Advanced Communication for Support Professionals",
+      instructor: "Johnathan Smith",
+      duration: "10 hours",
+      students: 9870,
+      rating: 4.8,
+      price: 199,
+      originalPrice: 299,
+      image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=300&h=200&fit=crop",
       level: "Intermediate",
-      description: "Build cohesive brand experiences through strategic landing page design",
-      topics: ["Brand Strategy", "Visual Identity", "Corporate Design", "Marketing Funnels"]
+      description: "Master advanced communication techniques to handle any customer interaction with confidence and skill.",
+      topics: ["De-escalation", "Negotiation", "Positive Language", "Written Communication"]
     },
     {
       id: 3,
-      title: "Landing Page Conversion Optimization for Enterprises",
-      instructor: "Emma Rodriguez",
-      duration: "10 hours",
-      students: 12567,
+      title: "Handling Difficult Customers With Empathy",
+      instructor: "Maria Garcia",
+      duration: "8 hours",
+      students: 14210,
       rating: 4.7,
-      price: 229,
-      originalPrice: 329,
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=300&h=200&fit=crop",
+      price: 179,
+      originalPrice: 279,
+      image: "https://images.unsplash.com/photo-1586473215170-25a2a2e0615e?w=300&h=200&fit=crop",
       level: "Advanced",
-      description: "Advanced techniques for maximizing enterprise landing page conversions",
-      topics: ["Enterprise Solutions", "Data Analytics", "ROI Optimization", "Team Management"]
+      description: "Develop strategies to manage challenging customers effectively, turning negative experiences into positive ones.",
+      topics: ["Emotional Intelligence", "Conflict Resolution", "Stress Management", "Empathy Mapping"]
     }
   ];
 
-  const businessFeatures = [
-    {
-      icon: Building2,
-      title: "Enterprise-Ready Content",
-      description: "Courses designed specifically for corporate training and business growth"
-    },
+  const serviceFeatures = [
     {
       icon: Users,
-      title: "Team Learning",
-      description: "Manage and track learning progress across your entire organization"
+      title: "Customer-Centric Approach",
+      description: "Instill a customer-first mindset across your entire support team."
     },
     {
       icon: TrendingUp,
-      title: "Business Impact",
-      description: "Measure ROI and business outcomes from your learning investments"
+      title: "Boost CSAT & NPS",
+      description: "Improve key support metrics like Customer Satisfaction and Net Promoter Score."
+    },
+    {
+      icon: Award,
+      title: "Award-Winning Training",
+      description: "Access high-quality, proven training materials developed by industry experts."
     },
     {
       icon: Shield,
-      title: "Enterprise Security",
-      description: "Advanced security features and compliance for corporate environments"
+      title: "Build Customer Trust",
+      description: "Enhance brand loyalty and trust through consistent, positive interactions."
     }
   ];
 
@@ -85,10 +85,9 @@ const UdemyBusiness = () => {
       <section className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6">Udemy Business</h1>
+            <h1 className="text-5xl font-bold mb-6">Mastering Customer Service Excellence</h1>
             <p className="text-xl mb-8 opacity-90">
-              Empower your team with the skills they need to drive business growth. 
-              Specialized courses in landing page design and conversion optimization for companies.
+              Equip your team with the skills to deliver outstanding customer experiences, drive loyalty, and boost your bottom line.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
@@ -106,13 +105,13 @@ const UdemyBusiness = () => {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why Choose Udemy Business?</h2>
+            <h2 className="text-3xl font-bold mb-4">Why Invest in Customer Service Training?</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Transform your team's capabilities with enterprise-grade learning solutions
+              Transform your support team into a powerhouse of customer satisfaction and retention.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {businessFeatures.map((feature, index) => (
+            {serviceFeatures.map((feature, index) => (
               <div key={index} className="text-center">
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <feature.icon className="w-8 h-8 text-purple-600" />
@@ -129,14 +128,14 @@ const UdemyBusiness = () => {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Landing Page Courses for Companies</h2>
+            <h2 className="text-3xl font-bold mb-4">Featured Customer Service Courses</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Master the art of creating high-converting landing pages that drive business results
+              From essential fundamentals to advanced techniques for handling complex situations.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {businessCourses.map((course) => (
+            {customerServiceCourses.map((course) => (
               <Card key={course.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative">
                   <img 
@@ -199,9 +198,9 @@ const UdemyBusiness = () => {
       {/* Call to Action */}
       <section className="py-16 bg-purple-600 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Team?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to Elevate Your Customer Support?</h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join thousands of companies that trust Udemy Business to upskill their teams
+            Join leading companies that trust us to upskill their customer-facing teams.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
@@ -219,4 +218,4 @@ const UdemyBusiness = () => {
   );
 };
 
-export default UdemyBusiness;
+export default EliteEducation;
