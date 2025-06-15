@@ -1,14 +1,25 @@
-
 import React, { useState } from 'react';
 import { BarChart3, Download, Calendar, TrendingUp, Users, BookOpen, DollarSign } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import { format } from 'date-fns';
+import DailySummaryDialog from './reporting/DailySummaryDialog';
 
 const AdminReporting = () => {
   const [timeRange, setTimeRange] = useState('30days');
+  const [isSummaryOpen, setSummaryOpen] = useState(false);
   
+  // Mock data for the daily summary. In a real app, this would be fetched from an API.
+  const [dailySummaryData] = useState({
+    date: format(new Date(), 'MMMM d, yyyy'),
+    newUsers: 42,
+    dailyRevenue: 1250.75,
+    newCourses: 3,
+    newSupportTickets: 5,
+  });
+
   const revenueData = [
     { month: 'Jan', revenue: 45000, users: 1200, courses: 15 },
     { month: 'Feb', revenue: 52000, users: 1350, courses: 18 },
@@ -45,6 +56,11 @@ const AdminReporting = () => {
 
   const exportReport = (type: string) => {
     console.log(`Exporting ${type} report for ${timeRange}`);
+  };
+  
+  const handleShowDailySummary = () => {
+    // In a real app, you might fetch this data on-demand
+    setSummaryOpen(true);
   };
 
   return (
@@ -220,7 +236,7 @@ const AdminReporting = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" onClick={() => exportReport('daily-summary')}>
+            <Button variant="outline" onClick={handleShowDailySummary}>
               <Calendar className="w-4 h-4 mr-2" />
               Daily Summary
             </Button>
@@ -239,6 +255,12 @@ const AdminReporting = () => {
           </div>
         </CardContent>
       </Card>
+
+      <DailySummaryDialog 
+        isOpen={isSummaryOpen}
+        onOpenChange={setSummaryOpen}
+        summaryData={dailySummaryData}
+      />
     </div>
   );
 };
