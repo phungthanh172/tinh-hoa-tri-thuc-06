@@ -131,7 +131,7 @@ const Header = () => {
 
           {/* Right Menu */}
           <div className="flex items-center space-x-4">
-            <Link to="/udemy-business" className="hidden lg:block text-gray-600 hover:text-purple-600">
+            <Link to="/elite-education" className="hidden lg:block text-gray-600 hover:text-purple-600">
               EliteEducation
             </Link>
             <Link to="/instructor/dashboard" className="hidden lg:block text-gray-600 hover:text-purple-600">
