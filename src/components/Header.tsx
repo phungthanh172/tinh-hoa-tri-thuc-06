@@ -138,6 +138,9 @@ const Header = () => {
             <Link to="/instructor/dashboard" className="hidden lg:block text-gray-600 hover:text-purple-600">
               Teach on Udemy
             </Link>
+            <Link to="/blog" className="hidden lg:block text-gray-600 hover:text-purple-600">
+              Blog
+            </Link>
             
             {isLoggedIn && (
               <Link to="/courses" className="hidden lg:block text-gray-600 hover:text-purple-600">
