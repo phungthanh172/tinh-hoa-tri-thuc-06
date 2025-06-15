@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User, Tag } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -11,10 +11,12 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const BlogPost = () => {
   const { id } = useParams();
-  
+  const [activeSection, setActiveSection] = useState('');
+
   // Mock blog post data - in a real app, this would come from an API
   const blogPost = {
     id: 1,
@@ -51,6 +53,24 @@ Understanding backend development is crucial:
 
 > "The best developers understand both frontend and backend technologies."
 
+## 4. Cloud Computing and DevOps
+
+Modern developers need to understand cloud platforms and deployment:
+
+- AWS, Azure, Google Cloud
+- Docker and containerization
+- CI/CD pipelines
+- Infrastructure as Code
+
+## 5. Database Management
+
+Both SQL and NoSQL databases are important:
+
+- PostgreSQL, MySQL
+- MongoDB, Redis
+- Database design principles
+- Query optimization
+
 ### Key Takeaways
 
 - Stay updated with latest technologies
@@ -65,6 +85,63 @@ Understanding backend development is crucial:
     tags: ["JavaScript", "React", "Career", "Programming"],
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=400&fit=crop"
   };
+
+  // Extract headings for table of contents
+  const headings = [
+    { id: 'introduction', title: 'Introduction', level: 1 },
+    { id: 'javascript-typescript', title: '1. JavaScript and TypeScript', level: 2 },
+    { id: 'react-frameworks', title: '2. React and Modern Frameworks', level: 2 },
+    { id: 'backend-technologies', title: '3. Backend Technologies', level: 2 },
+    { id: 'cloud-devops', title: '4. Cloud Computing and DevOps', level: 2 },
+    { id: 'database-management', title: '5. Database Management', level: 2 },
+    { id: 'key-takeaways', title: 'Key Takeaways', level: 3 }
+  ];
+
+  const featuredNews = [
+    {
+      id: 1,
+      title: "New JavaScript Framework Released",
+      image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=300&h=200&fit=crop",
+      date: "2024-01-20"
+    },
+    {
+      id: 2,
+      title: "AI Tools for Developers",
+      image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=300&h=200&fit=crop",
+      date: "2024-01-18"
+    },
+    {
+      id: 3,
+      title: "Web Development Trends 2024",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=200&fit=crop",
+      date: "2024-01-16"
+    }
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = headings.map(heading => {
+        const element = document.getElementById(heading.id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return {
+            id: heading.id,
+            top: rect.top,
+            inView: rect.top >= 0 && rect.top <= window.innerHeight / 2
+          };
+        }
+        return null;
+      }).filter(Boolean);
+
+      const activeSection = sections.find(section => section.inView);
+      if (activeSection) {
+        setActiveSection(activeSection.id);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   if (!blogPost) {
     return (
@@ -85,6 +162,56 @@ Understanding backend development is crucial:
     <div className="min-h-screen bg-white">
       <Header />
       
+      {/* Floating Table of Contents */}
+      <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-50 hidden xl:block">
+        <Card className="w-64 shadow-lg">
+          <CardContent className="p-4">
+            <h3 className="font-semibold mb-3 text-sm">Table of Contents</h3>
+            <ScrollArea className="h-96">
+              <nav className="space-y-2">
+                {headings.map((heading) => (
+                  <a
+                    key={heading.id}
+                    href={`#${heading.id}`}
+                    className={`block text-sm transition-colors ${
+                      activeSection === heading.id
+                        ? 'text-purple-600 font-medium'
+                        : 'text-gray-600 hover:text-purple-500'
+                    } ${heading.level === 3 ? 'ml-4' : ''}`}
+                  >
+                    {heading.title}
+                  </a>
+                ))}
+              </nav>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Featured News Poster */}
+      <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50 hidden xl:block">
+        <Card className="w-80 shadow-lg">
+          <CardContent className="p-4">
+            <h3 className="font-semibold mb-4 text-sm">Featured News</h3>
+            <div className="space-y-4">
+              {featuredNews.map((news) => (
+                <div key={news.id} className="group cursor-pointer">
+                  <img 
+                    src={news.image} 
+                    alt={news.title}
+                    className="w-full h-32 object-cover rounded-lg mb-2 group-hover:opacity-90 transition-opacity"
+                  />
+                  <h4 className="font-medium text-sm group-hover:text-purple-600 transition-colors">
+                    {news.title}
+                  </h4>
+                  <p className="text-xs text-gray-500 mt-1">{news.date}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Back Button */}
@@ -137,32 +264,81 @@ Understanding backend development is crucial:
               )}
             </div>
 
-            {/* Article Content */}
+            {/* Article Content with heading IDs */}
             <div className="prose prose-lg max-w-none">
-              <ReactMarkdown 
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  code({className, children, ...props}) {
-                    const match = /language-(\w+)/.exec(className || '');
-                    return match ? (
-                      <SyntaxHighlighter
-                        style={tomorrow}
-                        language={match[1]}
-                        PreTag="div"
-                        {...props}
-                      >
-                        {String(children).replace(/\n$/, '')}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code className={className} {...props}>
-                        {children}
-                      </code>
-                    );
-                  }
-                }}
-              >
-                {blogPost.content}
-              </ReactMarkdown>
+              <div id="introduction">
+                <h1>Introduction</h1>
+                <p>This is a comprehensive guide to the most important skills for developers in 2024.</p>
+              </div>
+              
+              <div id="javascript-typescript">
+                <h2>1. JavaScript and TypeScript</h2>
+                <p>JavaScript remains the backbone of web development, while TypeScript adds type safety:</p>
+                <SyntaxHighlighter
+                  language="javascript"
+                  style={tomorrow}
+                  PreTag="div"
+                >
+                  {`const greeting = (name: string): string => {
+  return \`Hello, \${name}!\`;
+};`}
+                </SyntaxHighlighter>
+              </div>
+
+              <div id="react-frameworks">
+                <h2>2. React and Modern Frameworks</h2>
+                <p>Modern frameworks like React, Vue, and Angular are essential:</p>
+                <ul>
+                  <li><strong>React</strong>: Component-based architecture</li>
+                  <li><strong>Next.js</strong>: Full-stack React framework</li>
+                  <li><strong>Vue</strong>: Progressive framework</li>
+                </ul>
+              </div>
+
+              <div id="backend-technologies">
+                <h2>3. Backend Technologies</h2>
+                <p>Understanding backend development is crucial:</p>
+                <ol>
+                  <li>Node.js and Express</li>
+                  <li>Database management (SQL/NoSQL)</li>
+                  <li>API design principles</li>
+                </ol>
+                <blockquote>
+                  <p>"The best developers understand both frontend and backend technologies."</p>
+                </blockquote>
+              </div>
+
+              <div id="cloud-devops">
+                <h2>4. Cloud Computing and DevOps</h2>
+                <p>Modern developers need to understand cloud platforms and deployment:</p>
+                <ul>
+                  <li>AWS, Azure, Google Cloud</li>
+                  <li>Docker and containerization</li>
+                  <li>CI/CD pipelines</li>
+                  <li>Infrastructure as Code</li>
+                </ul>
+              </div>
+
+              <div id="database-management">
+                <h2>5. Database Management</h2>
+                <p>Both SQL and NoSQL databases are important:</p>
+                <ul>
+                  <li>PostgreSQL, MySQL</li>
+                  <li>MongoDB, Redis</li>
+                  <li>Database design principles</li>
+                  <li>Query optimization</li>
+                </ul>
+              </div>
+
+              <div id="key-takeaways">
+                <h3>Key Takeaways</h3>
+                <ul>
+                  <li>Stay updated with latest technologies</li>
+                  <li>Practice regularly</li>
+                  <li>Build real projects</li>
+                  <li>Contribute to open source</li>
+                </ul>
+              </div>
             </div>
           </article>
 
