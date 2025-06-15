@@ -1,14 +1,16 @@
+
 import React, { useState } from 'react';
-import { BarChart3, Download, Calendar, TrendingUp, Users, BookOpen, DollarSign } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { format } from 'date-fns';
-import DailySummaryDialog from './reporting/DailySummaryDialog';
 import { useQuery } from '@tanstack/react-query';
 import { coursesApi, Course } from '@/services/coursesApi';
+import DailySummaryDialog from './reporting/DailySummaryDialog';
 import CoursePerformanceDialog from './reporting/CoursePerformanceDialog';
+import ReportControls from './reporting/ReportControls';
+import RevenueAnalyticsCard from './reporting/cards/RevenueAnalyticsCard';
+import CourseCategoriesCard from './reporting/cards/CourseCategoriesCard';
+import UserGrowthCard from './reporting/cards/UserGrowthCard';
+import TopInstructorsCard from './reporting/cards/TopInstructorsCard';
+import QuickActions from './reporting/QuickActions';
 
 const AdminReporting = () => {
   const [timeRange, setTimeRange] = useState('30days');
@@ -30,12 +32,12 @@ const AdminReporting = () => {
   });
 
   const revenueData = [
-    { month: 'Jan', revenue: 45000, users: 1200, courses: 15 },
-    { month: 'Feb', revenue: 52000, users: 1350, courses: 18 },
-    { month: 'Mar', revenue: 48000, users: 1280, courses: 16 },
-    { month: 'Apr', revenue: 61000, users: 1480, courses: 22 },
-    { month: 'May', revenue: 55000, users: 1420, courses: 19 },
-    { month: 'Jun', revenue: 67000, users: 1650, courses: 25 }
+    { month: 'Jan', revenue: 45000 },
+    { month: 'Feb', revenue: 52000 },
+    { month: 'Mar', revenue: 48000 },
+    { month: 'Apr', revenue: 61000 },
+    { month: 'May', revenue: 55000 },
+    { month: 'Jun', revenue: 67000 }
   ];
 
   const categoryData = [
@@ -68,7 +70,6 @@ const AdminReporting = () => {
   };
   
   const handleShowDailySummary = () => {
-    // In a real app, you might fetch this data on-demand
     setSummaryOpen(true);
   };
 
@@ -78,196 +79,27 @@ const AdminReporting = () => {
 
   return (
     <div className="space-y-6">
-      {/* Report Controls */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center">
-              <BarChart3 className="w-5 h-5 mr-2" />
-              Analytics & Reporting
-            </span>
-            <div className="flex items-center space-x-2">
-              <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="7days">Last 7 days</SelectItem>
-                  <SelectItem value="30days">Last 30 days</SelectItem>
-                  <SelectItem value="90days">Last 90 days</SelectItem>
-                  <SelectItem value="1year">Last year</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline" onClick={() => exportReport('comprehensive')}>
-                <Download className="w-4 h-4 mr-2" />
-                Export All
-              </Button>
-            </div>
-          </CardTitle>
-        </CardHeader>
-      </Card>
-
-      {/* Revenue Analytics */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center">
-              <DollarSign className="w-5 h-5 mr-2" />
-              Revenue Analytics
-            </span>
-            <Button variant="outline" size="sm" onClick={() => exportReport('revenue')}>
-              <Download className="w-4 h-4 mr-2" />
-              Export
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']} />
-                <Bar dataKey="revenue" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+      <ReportControls 
+        timeRange={timeRange}
+        onTimeRangeChange={setTimeRange}
+        onExport={exportReport}
+      />
+      
+      <RevenueAnalyticsCard data={revenueData} onExport={exportReport} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Course Categories */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center">
-                <BookOpen className="w-5 h-5 mr-2" />
-                Course Categories
-              </span>
-              <Button variant="outline" size="sm" onClick={() => exportReport('categories')}>
-                <Download className="w-4 h-4 mr-2" />
-                Export
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={categoryData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    dataKey="value"
-                    label={({ name, value }) => `${name}: ${value}%`}
-                  >
-                    {categoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* User Growth */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center">
-                <Users className="w-5 h-5 mr-2" />
-                User Growth
-              </span>
-              <Button variant="outline" size="sm" onClick={() => exportReport('users')}>
-                <Download className="w-4 h-4 mr-2" />
-                Export
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={userGrowthData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="students" stroke="#8884d8" name="Students" />
-                  <Line type="monotone" dataKey="instructors" stroke="#82ca9d" name="Instructors" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+        <CourseCategoriesCard data={categoryData} onExport={exportReport} />
+        <UserGrowthCard data={userGrowthData} onExport={exportReport} />
       </div>
 
-      {/* Top Performing Instructors */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2" />
-              Top Performing Instructors
-            </span>
-            <Button variant="outline" size="sm" onClick={() => exportReport('instructors')}>
-              <Download className="w-4 h-4 mr-2" />
-              Export
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {topInstructors.map((instructor, index) => (
-              <div key={instructor.name} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center space-x-4">
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-bold text-purple-600">#{index + 1}</span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">{instructor.name}</h3>
-                    <p className="text-sm text-gray-500">{instructor.courses} courses</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-semibold">${instructor.revenue.toLocaleString()}</div>
-                  <div className="text-sm text-gray-500">{instructor.students} students</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Report Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" onClick={handleShowDailySummary}>
-              <Calendar className="w-4 h-4 mr-2" />
-              Daily Summary
-            </Button>
-            <Button variant="outline" onClick={() => exportReport('financial')}>
-              <DollarSign className="w-4 h-4 mr-2" />
-              Financial Report
-            </Button>
-            <Button variant="outline" onClick={() => exportReport('user-activity')}>
-              <Users className="w-4 h-4 mr-2" />
-              User Activity
-            </Button>
-            <Button variant="outline" onClick={handleShowCoursePerformance} disabled={isLoadingCourses}>
-              <BookOpen className="w-4 h-4 mr-2" />
-              {isLoadingCourses ? 'Loading...' : 'Course Performance'}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <TopInstructorsCard instructors={topInstructors} onExport={exportReport} />
+      
+      <QuickActions 
+        onShowDailySummary={handleShowDailySummary}
+        onShowCoursePerformance={handleShowCoursePerformance}
+        onExport={exportReport}
+        isLoadingCourses={isLoadingCourses}
+      />
 
       <DailySummaryDialog 
         isOpen={isSummaryOpen}
