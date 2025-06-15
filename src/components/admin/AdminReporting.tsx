@@ -6,10 +6,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { format } from 'date-fns';
 import DailySummaryDialog from './reporting/DailySummaryDialog';
+import { useQuery } from '@tanstack/react-query';
+import { coursesApi, Course } from '@/services/coursesApi';
+import CoursePerformanceDialog from './reporting/CoursePerformanceDialog';
 
 const AdminReporting = () => {
   const [timeRange, setTimeRange] = useState('30days');
   const [isSummaryOpen, setSummaryOpen] = useState(false);
+  const [isPerfOpen, setPerfOpen] = useState(false);
   
   // Mock data for the daily summary. In a real app, this would be fetched from an API.
   const [dailySummaryData] = useState({
@@ -18,6 +22,11 @@ const AdminReporting = () => {
     dailyRevenue: 1250.75,
     newCourses: 3,
     newSupportTickets: 5,
+  });
+
+  const { data: courses = [], isLoading: isLoadingCourses } = useQuery<Course[]>({
+    queryKey: ['allCoursesReport'],
+    queryFn: () => coursesApi.fetchCourses({}),
   });
 
   const revenueData = [
@@ -61,6 +70,10 @@ const AdminReporting = () => {
   const handleShowDailySummary = () => {
     // In a real app, you might fetch this data on-demand
     setSummaryOpen(true);
+  };
+
+  const handleShowCoursePerformance = () => {
+    setPerfOpen(true);
   };
 
   return (
@@ -248,9 +261,9 @@ const AdminReporting = () => {
               <Users className="w-4 h-4 mr-2" />
               User Activity
             </Button>
-            <Button variant="outline" onClick={() => exportReport('course-performance')}>
+            <Button variant="outline" onClick={handleShowCoursePerformance} disabled={isLoadingCourses}>
               <BookOpen className="w-4 h-4 mr-2" />
-              Course Performance
+              {isLoadingCourses ? 'Loading...' : 'Course Performance'}
             </Button>
           </div>
         </CardContent>
@@ -260,6 +273,12 @@ const AdminReporting = () => {
         isOpen={isSummaryOpen}
         onOpenChange={setSummaryOpen}
         summaryData={dailySummaryData}
+      />
+
+      <CoursePerformanceDialog
+        isOpen={isPerfOpen}
+        onOpenChange={setPerfOpen}
+        courses={courses}
       />
     </div>
   );
