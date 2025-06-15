@@ -11,9 +11,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Column 1 */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-white">Udemy Business</h3>
+            <h3 className="font-semibold text-white">EliteEducation</h3>
             <ul className="space-y-2 text-gray-300">
-              <li><Link to="#" className="hover:text-white">Teach on Udemy</Link></li>
+              <li><Link to="#" className="hover:text-white">Become Teacher</Link></li>
               <li><Link to="#" className="hover:text-white">Get the app</Link></li>
               <li><Link to="#" className="hover:text-white">About us</Link></li>
               <li><Link to="#" className="hover:text-white">Contact us</Link></li>
@@ -55,9 +55,9 @@ const Footer = () => {
         <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <Link to="/" className="flex items-center space-x-2 mb-4 md:mb-0">
             <div className="w-8 h-8 bg-purple-600 rounded"></div>
-            <span className="text-xl font-bold">Udemy</span>
+            <span className="text-xl font-bold">EliteKnowledge</span>
           </Link>
-          <p className="text-gray-400 text-sm">© 2025 Udemy, Inc.</p>
+          <p className="text-gray-400 text-sm">© 2025 EliteKnowledge, Inc.</p>
         </div>
       </div>
     </footer>

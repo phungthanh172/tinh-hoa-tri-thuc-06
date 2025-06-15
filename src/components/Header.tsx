@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, ShoppingCart, Globe, Menu, User, Bell, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -73,7 +72,7 @@ const Header = () => {
           <div className="flex items-center space-x-8">
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-purple-600 rounded"></div>
-              <span className="text-2xl font-bold text-gray-900">Udemy</span>
+              <span className="text-2xl font-bold text-gray-900">EliteKnowledge</span>
             </Link>
             
             <DropdownMenu>
@@ -133,10 +132,10 @@ const Header = () => {
           {/* Right Menu */}
           <div className="flex items-center space-x-4">
             <Link to="/udemy-business" className="hidden lg:block text-gray-600 hover:text-purple-600">
-              Udemy Business
+              EliteEducation
             </Link>
             <Link to="/instructor/dashboard" className="hidden lg:block text-gray-600 hover:text-purple-600">
-              Teach on Udemy
+              Become Teacher
             </Link>
             <Link to="/blog" className="hidden lg:block text-gray-600 hover:text-purple-600">
               Blog
