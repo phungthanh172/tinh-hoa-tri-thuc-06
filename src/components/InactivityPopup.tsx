@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -34,10 +33,10 @@ const InactivityPopup = () => {
       clearTimeout(inactivityTimer);
       
       inactivityTimer = setTimeout(() => {
-        if (Date.now() - lastActivity >= 60000) {
+        if (Date.now() - lastActivity >= 30000) {
           setIsOpen(true);
         }
-      }, 60000);
+      }, 30000);
     };
 
     const handleActivity = () => {
