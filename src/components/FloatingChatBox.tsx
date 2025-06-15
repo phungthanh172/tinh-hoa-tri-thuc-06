@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MessageCircle, X, Minimize2, Send, User, GraduationCap } from 'lucide-react';
+import { MessageCircle, X, Minimize2, Send, User, GraduationCap, HeadphonesIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -69,9 +69,9 @@ const FloatingChatBox = () => {
         <Button
           onClick={() => setIsOpen(true)}
           size="lg"
-          className="rounded-full w-16 h-16 bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
+          className="rounded-full w-16 h-16 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-white"
         >
-          <MessageCircle className="w-6 h-6" />
+          <HeadphonesIcon className="w-6 h-6 text-white" />
         </Button>
       </div>
     );
@@ -82,7 +82,7 @@ const FloatingChatBox = () => {
     return (
       <div className="fixed bottom-6 right-6 z-50">
         <Card className="w-80 shadow-xl border-purple-200">
-          <CardHeader className="bg-purple-600 text-white p-3 rounded-t-lg">
+          <CardHeader className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-3 rounded-t-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Avatar className="w-8 h-8">
@@ -122,10 +122,10 @@ const FloatingChatBox = () => {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <Card className="w-96 h-[500px] shadow-xl border-purple-200 flex flex-col">
-        <CardHeader className="bg-purple-600 text-white p-4 rounded-t-lg">
+        <CardHeader className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-4 rounded-t-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <Avatar className="w-10 h-10">
+              <Avatar className="w-10 h-10 border-2 border-white">
                 <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" />
                 <AvatarFallback>
                   <GraduationCap className="w-5 h-5" />
@@ -133,7 +133,10 @@ const FloatingChatBox = () => {
               </Avatar>
               <div>
                 <CardTitle className="text-lg">Professor Smith</CardTitle>
-                <p className="text-purple-100 text-sm">Online now</p>
+                <p className="text-purple-100 text-sm flex items-center">
+                  <span className="w-2 h-2 bg-green-400 rounded-full mr-1"></span>
+                  Online now
+                </p>
               </div>
             </div>
             <div className="flex space-x-1">
