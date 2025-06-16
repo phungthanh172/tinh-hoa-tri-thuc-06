@@ -16,8 +16,12 @@ const WriteBlog = () => {
   
   const [formData, setFormData] = useState({
     title: '',
+    slug: '',
     excerpt: '',
     content: '',
+    metaTitle: '',
+    metaDescription: '',
+    focusKeyword: '',
     category: '',
     tags: [],
     featuredImage: null,
@@ -65,10 +69,10 @@ const WriteBlog = () => {
   };
 
   const handlePublish = () => {
-    if (!formData.title || !formData.content || !formData.category) {
+    if (!formData.title || !formData.content || !formData.category || !formData.slug) {
       toast({
         title: "Missing Information",
-        description: "Please fill in all required fields before publishing.",
+        description: "Please fill in all required fields (title, slug, content, category) before publishing.",
         variant: "destructive"
       });
       return;
