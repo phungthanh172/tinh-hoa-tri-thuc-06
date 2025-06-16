@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Users, BookOpen, DollarSign, Settings, BarChart3, Shield, FileText, AlertTriangle, Activity, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ import SupportManagement from '@/components/admin/SupportManagement';
 import SystemMonitoring from '@/components/admin/SystemMonitoring';
 import AdminBlogManagement from '@/components/admin/BlogManagement';
 import FeatureManagement from '@/components/admin/FeatureManagement';
+import ManagerFeatureNews from '@/components/admin/ManagerFeatureNews';
 
 const AdminDashboard = () => {
   const [adminStats] = useState({
@@ -146,11 +146,12 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-10">
+          <TabsList className="grid w-full grid-cols-11">
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
+            <TabsTrigger value="news">News</TabsTrigger>
             <TabsTrigger value="features">Features</TabsTrigger>
             <TabsTrigger value="financial">Financial</TabsTrigger>
             <TabsTrigger value="platform">Platform</TabsTrigger>
@@ -173,6 +174,10 @@ const AdminDashboard = () => {
 
           <TabsContent value="blog">
             <AdminBlogManagement />
+          </TabsContent>
+
+          <TabsContent value="news">
+            <ManagerFeatureNews />
           </TabsContent>
 
           <TabsContent value="features">
