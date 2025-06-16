@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Settings, BookOpen, Award, Star, Clock, Users, Camera, Edit3, Mail, Phone, MapPin, Calendar, Heart, Share2, Download, Save, X } from 'lucide-react';
+import { User, Settings, BookOpen, Award, Star, Clock, Users, Camera, Edit3, Mail, Phone, MapPin, Calendar, Heart, Share2, Download, Save, X, Route } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -146,7 +146,44 @@ const Profile = () => {
                   </button>
                 </div>
                 
-                {isEditingProfile ? (
+                {!isEditingProfile ? (
+                  <div>
+                    <h2 className="text-xl font-bold mb-1">{user.name}</h2>
+                    <p className="text-gray-600 text-sm mb-4">{user.bio}</p>
+                    
+                    <div className="space-y-2 text-sm text-gray-600 mb-6">
+                      <div className="flex items-center justify-center space-x-2">
+                        <Mail className="w-4 h-4" />
+                        <span>{user.email}</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <MapPin className="w-4 h-4" />
+                        <span>{user.location}</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <Phone className="w-4 h-4" />
+                        <span>{user.phone}</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>Joined {user.joinDate}</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 mb-6">
+                      <Button variant="outline" className="w-full" onClick={handleEditProfile}>
+                        <Edit3 className="w-4 h-4 mr-2" />
+                        Edit Profile
+                      </Button>
+                      <Link to="/life-path" className="w-full">
+                        <Button variant="default" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                          <Route className="w-4 h-4 mr-2" />
+                          Design Life Path
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
                   <div className="space-y-4 mb-6">
                     <Input
                       value={editingUser.name}
@@ -184,35 +221,6 @@ const Profile = () => {
                         Cancel
                       </Button>
                     </div>
-                  </div>
-                ) : (
-                  <div>
-                    <h2 className="text-xl font-bold mb-1">{user.name}</h2>
-                    <p className="text-gray-600 text-sm mb-4">{user.bio}</p>
-                    
-                    <div className="space-y-2 text-sm text-gray-600 mb-6">
-                      <div className="flex items-center justify-center space-x-2">
-                        <Mail className="w-4 h-4" />
-                        <span>{user.email}</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-2">
-                        <MapPin className="w-4 h-4" />
-                        <span>{user.location}</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-2">
-                        <Phone className="w-4 h-4" />
-                        <span>{user.phone}</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-2">
-                        <Calendar className="w-4 h-4" />
-                        <span>Joined {user.joinDate}</span>
-                      </div>
-                    </div>
-
-                    <Button variant="outline" className="w-full mb-4" onClick={handleEditProfile}>
-                      <Edit3 className="w-4 h-4 mr-2" />
-                      Edit Profile
-                    </Button>
                   </div>
                 )}
 

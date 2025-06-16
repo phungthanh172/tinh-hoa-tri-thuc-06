@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +24,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import WriteBlog from "./pages/WriteBlog";
 import EliteEducation from "./pages/EliteEducation";
+import LifePath from "./pages/LifePath";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +44,7 @@ const App = () => (
               <Route path="/course/:id/learn" element={<CourseLearner />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/life-path" element={<LifePath />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogPost />} />
