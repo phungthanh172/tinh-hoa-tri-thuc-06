@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Save, Share2, Undo, Redo, Palette, Plus, Zap } from 'lucide-react';
 import Header from '@/components/Header';
@@ -90,34 +89,15 @@ const LifePath = () => {
         {/* Main Interface */}
         <div className="grid grid-cols-12 gap-4 h-[calc(100vh-200px)]">
           {/* Block Library Sidebar */}
-          <div className="col-span-2">
+          <div className="col-span-3">
             <BlockLibrary />
           </div>
 
           {/* Canvas Area */}
-          <div className="col-span-8">
+          <div className="col-span-9">
             <div className="bg-white rounded-lg shadow-lg h-full overflow-hidden">
               <LifePathToolbar canvasRef={canvasRef} />
               <LifePathCanvas onCanvasReady={setCanvasRef} />
-            </div>
-          </div>
-
-          {/* Properties Panel */}
-          <div className="col-span-2">
-            <div className="bg-white rounded-lg shadow-lg p-4 h-full">
-              <h3 className="font-semibold mb-4 text-gray-800">Properties</h3>
-              <div className="space-y-4 text-sm text-gray-600">
-                <p>Select a block to edit its properties</p>
-                <div className="border-t pt-4">
-                  <h4 className="font-medium mb-2">Quick Tips:</h4>
-                  <ul className="space-y-1 text-xs">
-                    <li>• Drag blocks from the library</li>
-                    <li>• Double-click to edit text</li>
-                    <li>• Connect blocks by dragging</li>
-                    <li>• Right-click for options</li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
         </div>
