@@ -1,174 +1,186 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Canvas as FabricCanvas, Rect, IText, Group, Line } from 'fabric';
+import React, { useRef, useEffect, useState } from 'react';
+import { Canvas, Rect, Circle, Line, Textbox } from 'fabric';
 
 interface LifePathCanvasProps {
-  selectedElement: any;
-  onElementSelect: (element: any) => void;
-  connectionMode: boolean;
-  onAddElement: (type: string) => void;
+  selectedTool: string;
+  canvasData?: any;
+  onCanvasChange?: (data: any) => void;
 }
 
-const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode, onAddElement }: LifePathCanvasProps) => {
+const LifePathCanvas = ({ selectedTool, canvasData, onCanvasChange }: LifePathCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvas, setCanvas] = useState<FabricCanvas | null>(null);
+  const fabricCanvasRef = useRef<Canvas | null>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
 
   useEffect(() => {
-    if (canvasRef.current && !canvas) {
-      const fabricCanvas = new FabricCanvas(canvasRef.current, {
-        width: 1200,
-        height: 800,
-        backgroundColor: '#f8f9fa'
+    if (!canvasRef.current) return;
+
+    const canvas = new Canvas(canvasRef.current, {
+      width: 800,
+      height: 600,
+      backgroundColor: '#ffffff',
+    });
+
+    fabricCanvasRef.current = canvas;
+
+    // Load existing data if provided
+    if (canvasData) {
+      canvas.loadFromJSON(canvasData, () => {
+        canvas.renderAll();
       });
-
-      setCanvas(fabricCanvas);
-
-      // Handle object selection
-      fabricCanvas.on('selection:created', (e) => {
-        const selected = e.selected?.[0];
-        if (selected && (selected as any).elementData) {
-          onElementSelect((selected as any).elementData);
-        }
-      });
-
-      fabricCanvas.on('selection:updated', (e) => {
-        const selected = e.selected?.[0];
-        if (selected && (selected as any).elementData) {
-          onElementSelect((selected as any).elementData);
-        }
-      });
-
-      fabricCanvas.on('selection:cleared', () => {
-        onElementSelect(null);
-      });
-
-      // Handle double-click for editing
-      fabricCanvas.on('mouse:dblclick', (e) => {
-        const target = e.target;
-        if (target && (target as any).elementData) {
-          onElementSelect((target as any).elementData);
-        }
-      });
-
-      return () => {
-        fabricCanvas.dispose();
-      };
     }
-  }, [onElementSelect, canvas]);
 
-  // Listen for onAddElement prop changes
+    return () => {
+      canvas.dispose();
+    };
+  }, []);
+
   useEffect(() => {
-    if (canvas) {
-      (window as any).addLifeElement = (type: string) => addLifeElement(type);
-    }
-  }, [canvas]);
+    if (!fabricCanvasRef.current) return;
 
-  const addLifeElement = (type: string) => {
-    if (!canvas) return;
+    const canvas = fabricCanvasRef.current;
 
-    const elementData = {
-      id: Date.now().toString(),
-      name: `New ${type}`,
-      date: new Date().toISOString().split('T')[0],
-      type: type,
-      important: 'medium',
-      hardLevel: 'medium',
-      trigger: '',
-      description: ''
+    const handleCanvasChange = () => {
+      if (onCanvasChange) {
+        onCanvasChange(canvas.toJSON());
+      }
     };
 
-    // Create visual representation
+    canvas.on('object:added', handleCanvasChange);
+    canvas.on('object:removed', handleCanvasChange);
+    canvas.on('object:modified', handleCanvasChange);
+
+    return () => {
+      canvas.off('object:added', handleCanvasChange);
+      canvas.off('object:removed', handleCanvasChange);
+      canvas.off('object:modified', handleCanvasChange);
+    };
+  }, [onCanvasChange]);
+
+  const addRectangle = () => {
+    if (!fabricCanvasRef.current) return;
+
     const rect = new Rect({
-      width: 150,
-      height: 100,
-      fill: getTypeColor(type),
+      left: 100,
+      top: 100,
+      width: 100,
+      height: 60,
+      fill: '#ff6b6b',
       stroke: '#333',
       strokeWidth: 2,
-      rx: 10,
-      ry: 10,
-      left: Math.random() * 400 + 100,
-      top: Math.random() * 300 + 100
     });
 
-    const text = new IText(elementData.name, {
-      fontSize: 14,
-      fill: '#333',
-      textAlign: 'center',
-      originX: 'center',
-      originY: 'center',
-      top: (rect.top || 0) + 50,
-      left: (rect.left || 0) + 75
-    });
-
-    // Group them together
-    const group = new Group([rect, text], {
-      left: rect.left,
-      top: rect.top
-    });
-
-    // Attach element data
-    (group as any).elementData = elementData;
-    (rect as any).elementData = elementData;
-    (text as any).elementData = elementData;
-
-    canvas.add(group);
-    canvas.setActiveObject(group);
-    canvas.renderAll();
+    fabricCanvasRef.current.add(rect);
   };
 
-  const createConnection = (from: any, to: any) => {
-    if (!canvas || !from || !to) return;
+  const addCircle = () => {
+    if (!fabricCanvasRef.current) return;
 
-    const fromLeft = from.left || 0;
-    const fromTop = from.top || 0;
-    const fromWidth = from.width || 0;
-    const fromHeight = from.height || 0;
+    const circle = new Circle({
+      left: 150,
+      top: 150,
+      radius: 50,
+      fill: '#4ecdc4',
+      stroke: '#333',
+      strokeWidth: 2,
+    });
+
+    fabricCanvasRef.current.add(circle);
+  };
+
+  const addTextBox = () => {
+    if (!fabricCanvasRef.current) return;
+
+    const textbox = new Textbox('Your text here', {
+      left: 200,
+      top: 200,
+      width: 200,
+      fontSize: 16,
+      fill: '#333',
+    });
+
+    fabricCanvasRef.current.add(textbox);
+  };
+
+  const addArrow = () => {
+    if (!fabricCanvasRef.current) return;
+
+    const canvas = fabricCanvasRef.current;
     
-    const toLeft = to.left || 0;
-    const toTop = to.top || 0;
-    const toWidth = to.width || 0;
-    const toHeight = to.height || 0;
-
-    const line = new Line([
-      fromLeft + fromWidth / 2,
-      fromTop + fromHeight / 2,
-      toLeft + toWidth / 2,
-      toTop + toHeight / 2
-    ], {
+    const line = new Line([250, 250, 350, 250], {
       stroke: '#666',
       strokeWidth: 2,
       selectable: false,
-      evented: false
+      evented: false,
     });
 
     canvas.add(line);
-    // Send line to back using the objects array approach for Fabric.js v6
+    // Send line to back by moving it to index 0
     const objects = canvas.getObjects();
     const lineIndex = objects.indexOf(line);
     if (lineIndex > -1) {
       canvas.remove(line);
-      canvas.insertAt(line, 0);
+      objects.unshift(line);
+      canvas.clear();
+      objects.forEach(obj => canvas.add(obj));
     }
     canvas.renderAll();
   };
 
-  const getTypeColor = (type: string) => {
-    const colors: { [key: string]: string } = {
-      career: '#3b82f6',
-      family: '#ef4444',
-      health: '#10b981',
-      learning: '#f59e0b',
-      finance: '#8b5cf6',
-      entertainment: '#ec4899',
-      travel: '#06b6d4',
-      spiritual: '#84cc16'
-    };
-    return colors[type] || '#6b7280';
+  useEffect(() => {
+    switch (selectedTool) {
+      case 'rectangle':
+        addRectangle();
+        break;
+      case 'circle':
+        addCircle();
+        break;
+      case 'text':
+        addTextBox();
+        break;
+      case 'arrow':
+        addArrow();
+        break;
+    }
+  }, [selectedTool]);
+
+  const clearCanvas = () => {
+    if (fabricCanvasRef.current) {
+      fabricCanvasRef.current.clear();
+    }
+  };
+
+  const deleteSelected = () => {
+    if (!fabricCanvasRef.current) return;
+
+    const activeObjects = fabricCanvasRef.current.getActiveObjects();
+    if (activeObjects.length > 0) {
+      activeObjects.forEach(obj => {
+        fabricCanvasRef.current?.remove(obj);
+      });
+      fabricCanvasRef.current.discardActiveObject();
+      fabricCanvasRef.current.renderAll();
+    }
   };
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden">
-      <canvas ref={canvasRef} />
+    <div className="relative">
+      <canvas ref={canvasRef} className="border border-gray-300 rounded-lg" />
+      <div className="absolute top-4 right-4 flex gap-2">
+        <button
+          onClick={clearCanvas}
+          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+        >
+          Clear
+        </button>
+        <button
+          onClick={deleteSelected}
+          className="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600"
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 };
