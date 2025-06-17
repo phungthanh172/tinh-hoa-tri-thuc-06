@@ -1,106 +1,103 @@
+
 import React, { useState } from 'react';
-import { ArrowLeft, Save, Share2, Undo, Redo, Palette, Plus, Zap } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 import LifePathCanvas from '@/components/lifepath/LifePathCanvas';
 import LifePathToolbar from '@/components/lifepath/LifePathToolbar';
-import BlockLibrary from '@/components/lifepath/BlockLibrary';
+import ElementPropertiesPanel from '@/components/lifepath/ElementPropertiesPanel';
 import TemplateSelector from '@/components/lifepath/TemplateSelector';
 
 const LifePath = () => {
-  const { toast } = useToast();
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [showTemplates, setShowTemplates] = useState(true);
-  const [canvasRef, setCanvasRef] = useState(null);
+  const [selectedElement, setSelectedElement] = useState<any>(null);
+  const [connectionMode, setConnectionMode] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
+
+  const handleAddElement = (type: string) => {
+    console.log('Adding element:', type);
+    // This will be handled by the canvas component
+  };
+
+  const handleElementSelect = (element: any) => {
+    setSelectedElement(element);
+  };
+
+  const handleToggleConnectionMode = () => {
+    setConnectionMode(!connectionMode);
+  };
 
   const handleSave = () => {
-    toast({
-      title: "Life Path Saved",
-      description: "Your life path design has been saved successfully!",
-    });
+    console.log('Saving life path...');
+    // Implement save functionality
   };
 
   const handleShare = () => {
-    toast({
-      title: "Share Link Generated",
-      description: "Your life path is now shareable via the copied link!",
-    });
+    console.log('Sharing life path...');
+    // Implement share functionality
   };
 
-  const handleTemplateSelect = (template) => {
-    setSelectedTemplate(template);
+  const handleElementUpdate = (elementId: string, updatedElement: any) => {
+    console.log('Updating element:', elementId, updatedElement);
+    // Implement element update functionality
+  };
+
+  const handleTemplateSelect = (template: any) => {
+    console.log('Selected template:', template);
     setShowTemplates(false);
-    toast({
-      title: "Template Applied",
-      description: `${template.name} template has been loaded to your canvas.`,
-    });
+    // Implement template loading functionality
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="container-fluid p-4">
-        {/* Header Actions */}
+      <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center space-x-4">
-            <Link to="/profile">
-              <Button variant="outline">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Profile
-              </Button>
-            </Link>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Life Path Designer
-            </h1>
-            <Button 
-              variant="outline" 
-              onClick={() => setShowTemplates(true)}
-              className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white border-0 hover:from-blue-600 hover:to-indigo-600"
-            >
-              <Zap className="w-4 h-4 mr-2" />
-              Templates
-            </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Life Path Designer</h1>
+            <p className="text-gray-600 mt-2">Design your personal journey by mapping out your life domains and goals</p>
           </div>
-          
-          <div className="flex space-x-3">
-            <Button variant="outline" onClick={handleSave}>
-              <Save className="w-4 h-4 mr-2" />
-              Save
-            </Button>
-            <Button onClick={handleShare} className="bg-gradient-to-r from-green-500 to-teal-500 text-white hover:from-green-600 hover:to-teal-600">
-              <Share2 className="w-4 h-4 mr-2" />
-              Share
-            </Button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowTemplates(true)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Templates
+            </button>
           </div>
         </div>
 
-        {/* Template Selector Modal */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-3">
+            <LifePathToolbar
+              onAddElement={handleAddElement}
+              connectionMode={connectionMode}
+              onToggleConnectionMode={handleToggleConnectionMode}
+              onSave={handleSave}
+              onShare={handleShare}
+            />
+            
+            <LifePathCanvas
+              selectedElement={selectedElement}
+              onElementSelect={handleElementSelect}
+              connectionMode={connectionMode}
+              onAddElement={handleAddElement}
+            />
+          </div>
+
+          <div className="lg:col-span-1">
+            <ElementPropertiesPanel
+              selectedElement={selectedElement}
+              onElementUpdate={handleElementUpdate}
+            />
+          </div>
+        </div>
+
         {showTemplates && (
           <TemplateSelector
-            onSelect={handleTemplateSelect}
+            onTemplateSelect={handleTemplateSelect}
             onClose={() => setShowTemplates(false)}
           />
         )}
-
-        {/* Main Interface */}
-        <div className="grid grid-cols-12 gap-4 h-[calc(100vh-200px)]">
-          {/* Block Library Sidebar */}
-          <div className="col-span-3">
-            <BlockLibrary />
-          </div>
-
-          {/* Canvas Area */}
-          <div className="col-span-9">
-            <div className="bg-white rounded-lg shadow-lg h-full overflow-hidden">
-              <LifePathToolbar canvasRef={canvasRef} />
-              <LifePathCanvas onCanvasReady={setCanvasRef} />
-            </div>
-          </div>
-        </div>
       </div>
 
       <Footer />

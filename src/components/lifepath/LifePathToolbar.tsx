@@ -41,6 +41,14 @@ const LifePathToolbar = ({
     { type: 'spiritual', label: 'Spiritual', color: '#84cc16', icon: '🧘‍♀️' }
   ];
 
+  const handleAddElement = (type: string) => {
+    onAddElement(type);
+    // Also trigger the global function for canvas
+    if ((window as any).addLifeElement) {
+      (window as any).addLifeElement(type);
+    }
+  };
+
   return (
     <Card className="mb-4">
       <CardContent className="p-4">
@@ -52,7 +60,7 @@ const LifePathToolbar = ({
                 key={block.type}
                 variant="outline"
                 size="sm"
-                onClick={() => onAddElement(block.type)}
+                onClick={() => handleAddElement(block.type)}
                 className="h-auto py-2 px-3 flex flex-col items-center gap-1"
               >
                 <span className="text-lg">{block.icon}</span>

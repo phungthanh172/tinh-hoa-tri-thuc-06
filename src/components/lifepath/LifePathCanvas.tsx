@@ -2,27 +2,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric';
 
-// Extend fabric types to include our custom elementData
-declare module 'fabric' {
-  namespace fabric {
-    interface Object {
-      elementData?: any;
-    }
-  }
-}
-
 interface LifePathCanvasProps {
   selectedElement: any;
   onElementSelect: (element: any) => void;
   connectionMode: boolean;
+  onAddElement: (type: string) => void;
 }
 
-const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode }: LifePathCanvasProps) => {
+const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode, onAddElement }: LifePathCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
 
   useEffect(() => {
-    if (canvasRef.current) {
+    if (canvasRef.current && !canvas) {
       const fabricCanvas = new fabric.Canvas(canvasRef.current, {
         width: 1200,
         height: 800,
@@ -34,15 +26,15 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode }: Li
       // Handle object selection
       fabricCanvas.on('selection:created', (e) => {
         const selected = e.selected?.[0];
-        if (selected && selected.elementData) {
-          onElementSelect(selected.elementData);
+        if (selected && (selected as any).elementData) {
+          onElementSelect((selected as any).elementData);
         }
       });
 
       fabricCanvas.on('selection:updated', (e) => {
         const selected = e.selected?.[0];
-        if (selected && selected.elementData) {
-          onElementSelect(selected.elementData);
+        if (selected && (selected as any).elementData) {
+          onElementSelect((selected as any).elementData);
         }
       });
 
@@ -53,8 +45,8 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode }: Li
       // Handle double-click for editing
       fabricCanvas.on('mouse:dblclick', (e) => {
         const target = e.target;
-        if (target && target.elementData) {
-          onElementSelect(target.elementData);
+        if (target && (target as any).elementData) {
+          onElementSelect((target as any).elementData);
         }
       });
 
@@ -62,7 +54,19 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode }: Li
         fabricCanvas.dispose();
       };
     }
-  }, [onElementSelect]);
+  }, [onElementSelect, canvas]);
+
+  // Expose addLifeElement function
+  React.useImperativeHandle(React.createRef(), () => ({
+    addLifeElement: (type: string) => addLifeElement(type)
+  }));
+
+  // Listen for onAddElement prop changes
+  useEffect(() => {
+    if (canvas) {
+      (window as any).addLifeElement = (type: string) => addLifeElement(type);
+    }
+  }, [canvas]);
 
   const addLifeElement = (type: string) => {
     if (!canvas) return;
@@ -97,8 +101,8 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode }: Li
       textAlign: 'center',
       originX: 'center',
       originY: 'center',
-      top: rect.top! + 50,
-      left: rect.left! + 75
+      top: (rect.top || 0) + 50,
+      left: (rect.left || 0) + 75
     });
 
     // Group them together
@@ -120,11 +124,21 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode }: Li
   const createConnection = (from: fabric.Object, to: fabric.Object) => {
     if (!canvas || !from || !to) return;
 
+    const fromLeft = (from as any).left || 0;
+    const fromTop = (from as any).top || 0;
+    const fromWidth = (from as any).width || 0;
+    const fromHeight = (from as any).height || 0;
+    
+    const toLeft = (to as any).left || 0;
+    const toTop = (to as any).top || 0;
+    const toWidth = (to as any).width || 0;
+    const toHeight = (to as any).height || 0;
+
     const line = new fabric.Line([
-      from.left! + from.width! / 2,
-      from.top! + from.height! / 2,
-      to.left! + to.width! / 2,
-      to.top! + to.height! / 2
+      fromLeft + fromWidth / 2,
+      fromTop + fromHeight / 2,
+      toLeft + toWidth / 2,
+      toTop + toHeight / 2
     ], {
       stroke: '#666',
       strokeWidth: 2,
@@ -138,7 +152,7 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode }: Li
   };
 
   const getTypeColor = (type: string) => {
-    const colors = {
+    const colors: { [key: string]: string } = {
       career: '#3b82f6',
       family: '#ef4444',
       health: '#10b981',
@@ -148,13 +162,8 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode }: Li
       travel: '#06b6d4',
       spiritual: '#84cc16'
     };
-    return colors[type as keyof typeof colors] || '#6b7280';
+    return colors[type] || '#6b7280';
   };
-
-  // Export function for toolbar
-  React.useImperativeHandle(React.createRef(), () => ({
-    addLifeElement
-  }));
 
   return (
     <div className="border border-gray-300 rounded-lg overflow-hidden">
