@@ -25,6 +25,12 @@ import BlogPost from "./pages/BlogPost";
 import WriteBlog from "./pages/WriteBlog";
 import EliteEducation from "./pages/EliteEducation";
 import LifePath from "./pages/LifePath";
+import StudentDashboard from "./pages/StudentDashboard";
+import StudentNotifications from "./pages/StudentNotifications";
+import StudentWishlist from "./pages/StudentWishlist";
+import StudentMessages from "./pages/StudentMessages";
+import StudentCertificates from "./pages/StudentCertificates";
+import PurchaseHistory from "./pages/PurchaseHistory";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +61,12 @@ const App = () => (
               <Route path="/instructor/course/:id/edit" element={<CourseCreator />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/learning-progress" element={<LearningProgress />} />
+              <Route path="/student/dashboard" element={<StudentDashboard />} />
+              <Route path="/student/notifications" element={<StudentNotifications />} />
+              <Route path="/student/wishlist" element={<StudentWishlist />} />
+              <Route path="/student/messages" element={<StudentMessages />} />
+              <Route path="/student/certificates" element={<StudentCertificates />} />
+              <Route path="/student/purchase-history" element={<PurchaseHistory />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <FloatingChatBox />
