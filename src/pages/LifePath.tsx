@@ -35,15 +35,20 @@ const LifePath = () => {
     // Implement share functionality
   };
 
-  const handleElementUpdate = (elementId: string, updatedElement: any) => {
-    console.log('Updating element:', elementId, updatedElement);
+  const handleElementUpdate = (updatedElement: any) => {
+    console.log('Updating element:', updatedElement);
     // Implement element update functionality
+    setSelectedElement(updatedElement);
   };
 
   const handleTemplateSelect = (template: any) => {
     console.log('Selected template:', template);
     setShowTemplates(false);
     // Implement template loading functionality
+  };
+
+  const handleCloseProperties = () => {
+    setSelectedElement(null);
   };
 
   return (
@@ -85,16 +90,19 @@ const LifePath = () => {
           </div>
 
           <div className="lg:col-span-1">
-            <ElementPropertiesPanel
-              selectedElement={selectedElement}
-              onElementUpdate={handleElementUpdate}
-            />
+            {selectedElement && (
+              <ElementPropertiesPanel
+                element={selectedElement}
+                onUpdate={handleElementUpdate}
+                onClose={handleCloseProperties}
+              />
+            )}
           </div>
         </div>
 
         {showTemplates && (
           <TemplateSelector
-            onTemplateSelect={handleTemplateSelect}
+            onSelect={handleTemplateSelect}
             onClose={() => setShowTemplates(false)}
           />
         )}

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { fabric } from 'fabric';
+import { Canvas as FabricCanvas, Rect, IText, Group, Line } from 'fabric';
 
 interface LifePathCanvasProps {
   selectedElement: any;
@@ -11,11 +11,11 @@ interface LifePathCanvasProps {
 
 const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode, onAddElement }: LifePathCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
+  const [canvas, setCanvas] = useState<FabricCanvas | null>(null);
 
   useEffect(() => {
     if (canvasRef.current && !canvas) {
-      const fabricCanvas = new fabric.Canvas(canvasRef.current, {
+      const fabricCanvas = new FabricCanvas(canvasRef.current, {
         width: 1200,
         height: 800,
         backgroundColor: '#f8f9fa'
@@ -56,11 +56,6 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode, onAd
     }
   }, [onElementSelect, canvas]);
 
-  // Expose addLifeElement function
-  React.useImperativeHandle(React.createRef(), () => ({
-    addLifeElement: (type: string) => addLifeElement(type)
-  }));
-
   // Listen for onAddElement prop changes
   useEffect(() => {
     if (canvas) {
@@ -76,14 +71,14 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode, onAd
       name: `New ${type}`,
       date: new Date().toISOString().split('T')[0],
       type: type,
-      importance: 'medium',
+      important: 'medium',
       hardLevel: 'medium',
       trigger: '',
       description: ''
     };
 
     // Create visual representation
-    const rect = new fabric.Rect({
+    const rect = new Rect({
       width: 150,
       height: 100,
       fill: getTypeColor(type),
@@ -95,7 +90,7 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode, onAd
       top: Math.random() * 300 + 100
     });
 
-    const text = new fabric.IText(elementData.name, {
+    const text = new IText(elementData.name, {
       fontSize: 14,
       fill: '#333',
       textAlign: 'center',
@@ -106,7 +101,7 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode, onAd
     });
 
     // Group them together
-    const group = new fabric.Group([rect, text], {
+    const group = new Group([rect, text], {
       left: rect.left,
       top: rect.top
     });
@@ -121,20 +116,20 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode, onAd
     canvas.renderAll();
   };
 
-  const createConnection = (from: fabric.Object, to: fabric.Object) => {
+  const createConnection = (from: any, to: any) => {
     if (!canvas || !from || !to) return;
 
-    const fromLeft = (from as any).left || 0;
-    const fromTop = (from as any).top || 0;
-    const fromWidth = (from as any).width || 0;
-    const fromHeight = (from as any).height || 0;
+    const fromLeft = from.left || 0;
+    const fromTop = from.top || 0;
+    const fromWidth = from.width || 0;
+    const fromHeight = from.height || 0;
     
-    const toLeft = (to as any).left || 0;
-    const toTop = (to as any).top || 0;
-    const toWidth = (to as any).width || 0;
-    const toHeight = (to as any).height || 0;
+    const toLeft = to.left || 0;
+    const toTop = to.top || 0;
+    const toWidth = to.width || 0;
+    const toHeight = to.height || 0;
 
-    const line = new fabric.Line([
+    const line = new Line([
       fromLeft + fromWidth / 2,
       fromTop + fromHeight / 2,
       toLeft + toWidth / 2,
