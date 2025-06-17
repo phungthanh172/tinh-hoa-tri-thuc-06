@@ -1,149 +1,117 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Undo, Redo, ZoomIn, ZoomOut, Move, Square, Circle, Type, Trash2, Link, Hand } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { 
+  Plus, 
+  Move, 
+  Link, 
+  Save, 
+  Share2, 
+  Undo, 
+  Redo,
+  Download,
+  Upload
+} from 'lucide-react';
 
-const LifePathToolbar = ({ canvasRef }) => {
-  const [activeTool, setActiveTool] = useState('select');
+interface LifePathToolbarProps {
+  onAddElement: (type: string) => void;
+  connectionMode: boolean;
+  onToggleConnectionMode: () => void;
+  onSave: () => void;
+  onShare: () => void;
+}
 
-  const handleUndo = () => {
-    // Implement undo functionality
-    console.log('Undo');
-  };
-
-  const handleRedo = () => {
-    // Implement redo functionality
-    console.log('Redo');
-  };
-
-  const handleZoomIn = () => {
-    if (canvasRef) {
-      const zoom = canvasRef.getZoom();
-      canvasRef.setZoom(Math.min(zoom * 1.1, 3));
-    }
-  };
-
-  const handleZoomOut = () => {
-    if (canvasRef) {
-      const zoom = canvasRef.getZoom();
-      canvasRef.setZoom(Math.max(zoom * 0.9, 0.1));
-    }
-  };
-
-  const handleDelete = () => {
-    if (canvasRef) {
-      const activeObjects = canvasRef.getActiveObjects();
-      activeObjects.forEach(obj => canvasRef.remove(obj));
-      canvasRef.discardActiveObject();
-      canvasRef.renderAll();
-    }
-  };
-
-  const handleToolSelect = (tool) => {
-    setActiveTool(tool);
-    if (canvasRef) {
-      // Reset canvas interaction mode
-      canvasRef.isDrawingMode = false;
-      canvasRef.selection = tool === 'select';
-      canvasRef.defaultCursor = tool === 'pan' ? 'grab' : 'default';
-    }
-  };
-
-  const addRectangle = () => {
-    if (canvasRef) {
-      const rect = new fabric.Rect({
-        left: 100,
-        top: 100,
-        fill: '#3b82f6',
-        width: 100,
-        height: 100,
-        rx: 8,
-        ry: 8,
-      });
-      canvasRef.add(rect);
-    }
-  };
-
-  const addCircle = () => {
-    if (canvasRef) {
-      const circle = new fabric.Circle({
-        left: 100,
-        top: 100,
-        fill: '#ef4444',
-        radius: 50,
-      });
-      canvasRef.add(circle);
-    }
-  };
-
-  const addText = () => {
-    if (canvasRef) {
-      const text = new fabric.IText('Click to edit', {
-        left: 100,
-        top: 100,
-        fontSize: 16,
-        fill: '#1f2937',
-      });
-      canvasRef.add(text);
-    }
-  };
+const LifePathToolbar = ({ 
+  onAddElement, 
+  connectionMode, 
+  onToggleConnectionMode,
+  onSave,
+  onShare 
+}: LifePathToolbarProps) => {
+  const lifeBlocks = [
+    { type: 'career', label: 'Career', color: '#3b82f6', icon: '💼' },
+    { type: 'family', label: 'Family', color: '#ef4444', icon: '👨‍👩‍👧‍👦' },
+    { type: 'health', label: 'Health', color: '#10b981', icon: '🏃‍♂️' },
+    { type: 'learning', label: 'Learning', color: '#f59e0b', icon: '📚' },
+    { type: 'finance', label: 'Finance', color: '#8b5cf6', icon: '💰' },
+    { type: 'entertainment', label: 'Entertainment', color: '#ec4899', icon: '🎯' },
+    { type: 'travel', label: 'Travel', color: '#06b6d4', icon: '✈️' },
+    { type: 'spiritual', label: 'Spiritual', color: '#84cc16', icon: '🧘‍♀️' }
+  ];
 
   return (
-    <div className="flex items-center justify-between p-3 border-b bg-gray-50">
-      <div className="flex items-center space-x-2">
-        <Button variant="ghost" size="sm" onClick={handleUndo}>
-          <Undo className="w-4 h-4" />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={handleRedo}>
-          <Redo className="w-4 h-4" />
-        </Button>
-        <div className="w-px h-6 bg-gray-300 mx-2" />
-        <Button variant="ghost" size="sm" onClick={handleZoomOut}>
-          <ZoomOut className="w-4 h-4" />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={handleZoomIn}>
-          <ZoomIn className="w-4 h-4" />
-        </Button>
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <Button 
-          variant={activeTool === 'select' ? 'default' : 'ghost'} 
-          size="sm" 
-          onClick={() => handleToolSelect('select')}
-        >
-          <Move className="w-4 h-4" />
-        </Button>
-        <Button 
-          variant={activeTool === 'pan' ? 'default' : 'ghost'} 
-          size="sm" 
-          onClick={() => handleToolSelect('pan')}
-        >
-          <Hand className="w-4 h-4" />
-        </Button>
-        <Button 
-          variant={activeTool === 'connect' ? 'default' : 'ghost'} 
-          size="sm" 
-          onClick={() => handleToolSelect('connect')}
-        >
-          <Link className="w-4 h-4" />
-        </Button>
-        <div className="w-px h-6 bg-gray-300 mx-2" />
-        <Button variant="ghost" size="sm" onClick={addRectangle}>
-          <Square className="w-4 h-4" />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={addCircle}>
-          <Circle className="w-4 h-4" />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={addText}>
-          <Type className="w-4 h-4" />
-        </Button>
-        <div className="w-px h-6 bg-gray-300 mx-2" />
-        <Button variant="ghost" size="sm" onClick={handleDelete} className="text-red-500 hover:text-red-700">
-          <Trash2 className="w-4 h-4" />
-        </Button>
-      </div>
-    </div>
+    <Card className="mb-4">
+      <CardContent className="p-4">
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Life Domain Blocks */}
+          <div className="flex flex-wrap gap-2">
+            {lifeBlocks.map((block) => (
+              <Button
+                key={block.type}
+                variant="outline"
+                size="sm"
+                onClick={() => onAddElement(block.type)}
+                className="h-auto py-2 px-3 flex flex-col items-center gap-1"
+              >
+                <span className="text-lg">{block.icon}</span>
+                <span className="text-xs">{block.label}</span>
+              </Button>
+            ))}
+          </div>
+
+          <Separator orientation="vertical" className="h-8" />
+
+          {/* Tools */}
+          <div className="flex gap-2">
+            <Button
+              variant={connectionMode ? "default" : "outline"}
+              size="sm"
+              onClick={onToggleConnectionMode}
+              className="flex items-center gap-1"
+            >
+              <Link className="w-4 h-4" />
+              Connect
+            </Button>
+            
+            <Button variant="outline" size="sm">
+              <Move className="w-4 h-4" />
+            </Button>
+          </div>
+
+          <Separator orientation="vertical" className="h-8" />
+
+          {/* Actions */}
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm">
+              <Undo className="w-4 h-4" />
+            </Button>
+            <Button variant="outline" size="sm">
+              <Redo className="w-4 h-4" />
+            </Button>
+            
+            <Button variant="outline" size="sm" onClick={onSave}>
+              <Save className="w-4 h-4 mr-1" />
+              Save
+            </Button>
+            
+            <Button variant="outline" size="sm" onClick={onShare}>
+              <Share2 className="w-4 h-4 mr-1" />
+              Share
+            </Button>
+
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4" />
+            </Button>
+
+            <Button variant="outline" size="sm">
+              <Upload className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
