@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Plus, BookOpen, Users, DollarSign, BarChart3, Settings, Video, FileText, HelpCircle, User, MessageSquare, Megaphone, PenTool } from 'lucide-react';
+import { Plus, BookOpen, Users, DollarSign, BarChart3, Settings, Video, FileText, HelpCircle, User, MessageSquare, Megaphone, PenTool, TrendingUp, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +13,9 @@ import StudentInteraction from '@/components/instructor/StudentInteraction';
 import EarningsTracker from '@/components/instructor/EarningsTracker';
 import PromotionalTools from '@/components/instructor/PromotionalTools';
 import BlogManagement from '@/components/blog/BlogManagement';
+import CourseAnalytics from '@/components/instructor/CourseAnalytics';
+import PayoutSettings from '@/components/instructor/PayoutSettings';
+import CourseManagement from '@/components/instructor/CourseManagement';
 
 const InstructorDashboard = () => {
   const [courses] = useState([
@@ -236,14 +238,16 @@ const InstructorDashboard = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-9">
             <TabsTrigger value="courses">My Courses</TabsTrigger>
+            <TabsTrigger value="management">Management</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="blog">Blog Posts</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="earnings">Earnings</TabsTrigger>
+            <TabsTrigger value="payouts">Payouts</TabsTrigger>
             <TabsTrigger value="promotion">Promotion</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
 
           <TabsContent value="courses">
@@ -308,6 +312,14 @@ const InstructorDashboard = () => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="management">
+            <CourseManagement />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <CourseAnalytics />
+          </TabsContent>
+
           <TabsContent value="blog">
             <BlogManagement />
           </TabsContent>
@@ -324,19 +336,12 @@ const InstructorDashboard = () => {
             <EarningsTracker />
           </TabsContent>
 
-          <TabsContent value="promotion">
-            <PromotionalTools />
+          <TabsContent value="payouts">
+            <PayoutSettings />
           </TabsContent>
 
-          <TabsContent value="analytics">
-            <Card>
-              <CardHeader>
-                <CardTitle>Course Analytics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Analytics dashboard coming soon...</p>
-              </CardContent>
-            </Card>
+          <TabsContent value="promotion">
+            <PromotionalTools />
           </TabsContent>
         </Tabs>
       </div>
