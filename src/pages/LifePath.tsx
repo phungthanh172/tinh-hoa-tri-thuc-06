@@ -11,10 +11,12 @@ const LifePath = () => {
   const [selectedElement, setSelectedElement] = useState<any>(null);
   const [connectionMode, setConnectionMode] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [selectedTool, setSelectedTool] = useState('');
+  const [canvasData, setCanvasData] = useState<any>(null);
 
   const handleAddElement = (type: string) => {
     console.log('Adding element:', type);
-    // This will be handled by the canvas component
+    setSelectedTool(type);
   };
 
   const handleElementSelect = (element: any) => {
@@ -51,6 +53,10 @@ const LifePath = () => {
     setSelectedElement(null);
   };
 
+  const handleCanvasChange = (data: any) => {
+    setCanvasData(data);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -82,10 +88,9 @@ const LifePath = () => {
             />
             
             <LifePathCanvas
-              selectedElement={selectedElement}
-              onElementSelect={handleElementSelect}
-              connectionMode={connectionMode}
-              onAddElement={handleAddElement}
+              selectedTool={selectedTool}
+              canvasData={canvasData}
+              onCanvasChange={handleCanvasChange}
             />
           </div>
 
