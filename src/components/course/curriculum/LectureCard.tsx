@@ -1,22 +1,13 @@
 
 import React from 'react';
-import { GripVertical, Trash2, Video, FileText, HelpCircle, Upload } from 'lucide-react';
+import { GripVertical, Trash2, Video, FileText, HelpCircle, Upload, FileDown, Clipboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-interface Lecture {
-  id: string;
-  title: string;
-  type: 'video' | 'text' | 'quiz';
-  duration?: string;
-  description?: string;
-  content?: string;
-  videoFile?: File;
-}
+import { Lecture } from './types';
 
 interface LectureCardProps {
   lecture: Lecture;
@@ -38,6 +29,8 @@ const LectureCard: React.FC<LectureCardProps> = ({
       case 'video': return <Video className="w-4 h-4" />;
       case 'text': return <FileText className="w-4 h-4" />;
       case 'quiz': return <HelpCircle className="w-4 h-4" />;
+      case 'assignment': return <Clipboard className="w-4 h-4" />;
+      case 'resource': return <FileDown className="w-4 h-4" />;
       default: return <Video className="w-4 h-4" />;
     }
   };
@@ -86,6 +79,8 @@ const LectureCard: React.FC<LectureCardProps> = ({
                     <SelectItem value="video">Video</SelectItem>
                     <SelectItem value="text">Text</SelectItem>
                     <SelectItem value="quiz">Quiz</SelectItem>
+                    <SelectItem value="assignment">Assignment</SelectItem>
+                    <SelectItem value="resource">Resource</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -110,7 +105,7 @@ const LectureCard: React.FC<LectureCardProps> = ({
                   <input
                     type="file"
                     accept="video/*"
-                    onChange={(e) => e.target.files?.[0] && onUpdateLecture(sectionId, lecture.id, 'videoFile', e.target.files[0])}
+                    onChange={(e) => e.target.files?.[0] && onUpdateLecture(sectionId, lecture.id, 'file', e.target.files[0])}
                     className="hidden"
                     id={`video-${lecture.id}`}
                   />
@@ -119,9 +114,9 @@ const LectureCard: React.FC<LectureCardProps> = ({
                       <span className="text-xs">Upload Video</span>
                     </Button>
                   </Label>
-                  {lecture.videoFile && (
+                  {lecture.file && (
                     <p className="text-xs text-green-600 mt-1">
-                      {lecture.videoFile.name}
+                      {lecture.file.name}
                     </p>
                   )}
                 </div>
@@ -137,6 +132,31 @@ const LectureCard: React.FC<LectureCardProps> = ({
                   placeholder="Enter lecture content..."
                   className="min-h-[80px] text-sm"
                 />
+              </div>
+            )}
+
+            {lecture.type === 'resource' && (
+              <div>
+                <Label className="text-xs">Resource Upload</Label>
+                <div className="border-2 border-dashed border-gray-300 rounded p-3 text-center">
+                  <FileDown className="w-6 h-6 text-gray-400 mx-auto mb-1" />
+                  <input
+                    type="file"
+                    onChange={(e) => e.target.files?.[0] && onUpdateLecture(sectionId, lecture.id, 'file', e.target.files[0])}
+                    className="hidden"
+                    id={`resource-${lecture.id}`}
+                  />
+                  <Label htmlFor={`resource-${lecture.id}`}>
+                    <Button variant="outline" size="sm" asChild>
+                      <span className="text-xs">Upload Resource</span>
+                    </Button>
+                  </Label>
+                  {lecture.file && (
+                    <p className="text-xs text-green-600 mt-1">
+                      {lecture.file.name}
+                    </p>
+                  )}
+                </div>
               </div>
             )}
           </div>
