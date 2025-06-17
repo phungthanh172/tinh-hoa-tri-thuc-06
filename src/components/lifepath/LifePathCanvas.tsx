@@ -117,12 +117,8 @@ const LifePathCanvas = ({ selectedTool, canvasData, onCanvasChange }: LifePathCa
 
     canvas.add(line);
     // Move line to back by removing and re-adding at index 0
-    const objects = canvas.getObjects();
-    const lineIndex = objects.indexOf(line);
-    if (lineIndex > -1) {
-      canvas.remove(line);
-      canvas.insertAt(line, 0);
-    }
+    canvas.remove(line);
+    canvas.insertAt(line, 0);
     canvas.renderAll();
   };
 

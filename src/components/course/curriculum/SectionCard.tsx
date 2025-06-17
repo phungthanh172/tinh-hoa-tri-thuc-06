@@ -5,42 +5,30 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import LectureCard from './LectureCard';
-
-interface Lecture {
-  id: string;
-  title: string;
-  type: 'video' | 'text' | 'quiz';
-  duration?: string;
-  description?: string;
-  content?: string;
-  videoFile?: File;
-}
-
-interface Section {
-  id: string;
-  title: string;
-  description: string;
-  lectures: Lecture[];
-}
+import { Section, Lecture } from './types';
 
 interface SectionCardProps {
   section: Section;
   sectionIndex: number;
-  onUpdateSection: (sectionId: string, field: string, value: string) => void;
-  onDeleteSection: (sectionId: string) => void;
-  onAddLecture: (sectionId: string) => void;
-  onUpdateLecture: (sectionId: string, lectureId: string, field: string, value: string | File) => void;
-  onDeleteLecture: (sectionId: string, lectureId: string) => void;
+  onUpdate: (updates: Partial<Section>) => void;
+  onDelete: () => void;
+  onDuplicate: () => void;
+  onAddLecture: () => void;
+  onUpdateLecture: (lectureId: string, updates: Partial<Lecture>) => void;
+  onDeleteLecture: (lectureId: string) => void;
+  onDuplicateLecture: (lecture: Lecture) => void;
 }
 
 const SectionCard: React.FC<SectionCardProps> = ({
   section,
   sectionIndex,
-  onUpdateSection,
-  onDeleteSection,
+  onUpdate,
+  onDelete,
+  onDuplicate,
   onAddLecture,
   onUpdateLecture,
   onDeleteLecture,
+  onDuplicateLecture,
 }) => {
   return (
     <Card className="border-l-4 border-l-purple-500">
@@ -53,7 +41,7 @@ const SectionCard: React.FC<SectionCardProps> = ({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onDeleteSection(section.id)}
+            onClick={onDelete}
             className="text-red-600 hover:text-red-700"
           >
             <Trash2 className="w-4 h-4" />
@@ -62,13 +50,13 @@ const SectionCard: React.FC<SectionCardProps> = ({
         <div className="space-y-2">
           <Input
             value={section.title}
-            onChange={(e) => onUpdateSection(section.id, 'title', e.target.value)}
+            onChange={(e) => onUpdate({ title: e.target.value })}
             placeholder="Section title"
             className="font-semibold"
           />
           <Input
             value={section.description}
-            onChange={(e) => onUpdateSection(section.id, 'description', e.target.value)}
+            onChange={(e) => onUpdate({ description: e.target.value })}
             placeholder="Section description"
             className="text-sm"
           />
@@ -82,15 +70,19 @@ const SectionCard: React.FC<SectionCardProps> = ({
               lecture={lecture}
               lectureIndex={lectureIndex}
               sectionId={section.id}
-              onUpdateLecture={onUpdateLecture}
-              onDeleteLecture={onDeleteLecture}
+              onUpdateLecture={(sectionId, lectureId, field, value) => {
+                if (typeof field === 'string' && typeof value === 'string') {
+                  onUpdateLecture(lectureId, { [field]: value });
+                }
+              }}
+              onDeleteLecture={(sectionId, lectureId) => onDeleteLecture(lectureId)}
             />
           ))}
           
           <Button
             variant="outline"
             size="sm"
-            onClick={() => onAddLecture(section.id)}
+            onClick={onAddLecture}
             className="w-full"
           >
             <Plus className="w-4 h-4 mr-2" />
