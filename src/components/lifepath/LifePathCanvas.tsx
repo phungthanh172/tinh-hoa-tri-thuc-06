@@ -142,7 +142,8 @@ const LifePathCanvas = ({ selectedElement, onElementSelect, connectionMode, onAd
     });
 
     canvas.add(line);
-    canvas.sendToBack(line);
+    // Use moveTo instead of sendToBack for Fabric.js v6
+    canvas.moveTo(line, 0);
     canvas.renderAll();
   };
 
