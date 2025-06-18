@@ -54,7 +54,6 @@ const VideoLearnerSection: React.FC<VideoLearnerSectionProps> = ({
             videoUrl="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
             title={lecture.title}
             duration={450}
-            quality={videoQuality}
             captionsEnabled={captionsEnabled}
             playbackSpeed={parseFloat(playbackSpeed)}
             autoPlay={autoPlay}
