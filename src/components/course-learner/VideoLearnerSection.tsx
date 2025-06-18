@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Settings, Download, Share2, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -54,9 +53,6 @@ const VideoLearnerSection: React.FC<VideoLearnerSectionProps> = ({
             videoUrl="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
             title={lecture.title}
             duration={450}
-            captionsEnabled={captionsEnabled}
-            playbackSpeed={parseFloat(playbackSpeed)}
-            autoPlay={autoPlay}
             onComplete={() => console.log('Lecture completed')}
           />
         );
