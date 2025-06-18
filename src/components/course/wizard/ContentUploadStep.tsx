@@ -7,7 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload, Video, FileText, Link, Play, Trash2 } from 'lucide-react';
+import { Upload, Video, FileText, Link, Play, Trash2, Edit, Eye, Plus } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
 
 interface ContentUploadStepProps {
   courseData: any;
@@ -16,9 +18,14 @@ interface ContentUploadStepProps {
 }
 
 const ContentUploadStep = ({ courseData, setCourseData }: ContentUploadStepProps) => {
-  const [uploadedContent, setUploadedContent] = useState([]);
+  const [uploadedContent, setUploadedContent] = useState([
+    { id: '1', name: 'Introduction Video.mp4', type: 'video', size: '25.6 MB', uploadDate: '2024-01-15', status: 'completed' },
+    { id: '2', name: 'Course Overview.pdf', type: 'document', size: '2.1 MB', uploadDate: '2024-01-14', status: 'completed' },
+    { id: '3', name: 'Welcome Audio.mp3', type: 'audio', size: '8.3 MB', uploadDate: '2024-01-13', status: 'completed' },
+  ]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [editingResource, setEditingResource] = useState(null);
 
   const handleFileUpload = (files: FileList | null) => {
     if (!files) return;
@@ -38,14 +45,47 @@ const ContentUploadStep = ({ courseData, setCourseData }: ContentUploadStepProps
           const newContent = {
             id: Date.now().toString(),
             name: file.name,
-            type: file.type.startsWith('video/') ? 'video' : 'file',
+            type: file.type.startsWith('video/') ? 'video' : file.type.startsWith('audio/') ? 'audio' : 'document',
             size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
-            url: URL.createObjectURL(file)
+            uploadDate: new Date().toISOString().split('T')[0],
+            status: 'completed'
           };
           setUploadedContent(prev => [...prev, newContent]);
         }
       }, 200);
     });
+  };
+
+  const handleDeleteResource = (resourceId: string) => {
+    setUploadedContent(prev => prev.filter(item => item.id !== resourceId));
+  };
+
+  const handleEditResource = (resource: any) => {
+    setEditingResource(resource);
+  };
+
+  const handleSaveEdit = (updatedResource: any) => {
+    setUploadedContent(prev => 
+      prev.map(item => item.id === updatedResource.id ? updatedResource : item)
+    );
+    setEditingResource(null);
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'video': return <Video className="w-4 h-4" />;
+      case 'audio': return <Play className="w-4 h-4" />;
+      default: return <FileText className="w-4 h-4" />;
+    }
+  };
+
+  const getTypeBadgeColor = (type: string) => {
+    switch (type) {
+      case 'video': return 'bg-blue-100 text-blue-800';
+      case 'audio': return 'bg-green-100 text-green-800';
+      case 'document': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
@@ -55,10 +95,11 @@ const ContentUploadStep = ({ courseData, setCourseData }: ContentUploadStepProps
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="direct-upload" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="direct-upload">Direct Upload</TabsTrigger>
             <TabsTrigger value="external-video">External Video</TabsTrigger>
             <TabsTrigger value="text-editor">Text Content</TabsTrigger>
+            <TabsTrigger value="resource-management">Resource Management</TabsTrigger>
           </TabsList>
 
           <TabsContent value="direct-upload" className="space-y-6">
@@ -95,36 +136,6 @@ const ContentUploadStep = ({ courseData, setCourseData }: ContentUploadStepProps
                   <span>{uploadProgress}%</span>
                 </div>
                 <Progress value={uploadProgress} />
-              </div>
-            )}
-
-            {/* Uploaded Content List */}
-            {uploadedContent.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-medium">Uploaded Content</h4>
-                {uploadedContent.map((content) => (
-                  <div key={content.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      {content.type === 'video' ? (
-                        <Video className="w-5 h-5 text-blue-500" />
-                      ) : (
-                        <FileText className="w-5 h-5 text-gray-500" />
-                      )}
-                      <div>
-                        <p className="font-medium">{content.name}</p>
-                        <p className="text-sm text-gray-600">{content.size}</p>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
-                        <Play className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
               </div>
             )}
           </TabsContent>
@@ -196,6 +207,112 @@ const ContentUploadStep = ({ courseData, setCourseData }: ContentUploadStepProps
                   <FileText className="w-4 h-4 mr-2" />
                   Save Text Lecture
                 </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="resource-management" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-lg">Resource Management</CardTitle>
+                  <Button variant="outline" size="sm">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add New Resource
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Size</TableHead>
+                      <TableHead>Upload Date</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {uploadedContent.map((resource) => (
+                      <TableRow key={resource.id}>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            {getTypeIcon(resource.type)}
+                            <span className="font-medium">{resource.name}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getTypeBadgeColor(resource.type)}>
+                            {resource.type.charAt(0).toUpperCase() + resource.type.slice(1)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{resource.size}</TableCell>
+                        <TableCell>{resource.uploadDate}</TableCell>
+                        <TableCell>
+                          <Badge variant={resource.status === 'completed' ? 'default' : 'secondary'}>
+                            {resource.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex space-x-2">
+                            <Button variant="outline" size="sm">
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleEditResource(resource)}
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleDeleteResource(resource.id)}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+
+                {editingResource && (
+                  <Card className="mt-6">
+                    <CardHeader>
+                      <CardTitle className="text-lg">Edit Resource</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <Label htmlFor="edit-name">Resource Name</Label>
+                        <Input
+                          id="edit-name"
+                          value={editingResource.name}
+                          onChange={(e) => setEditingResource({...editingResource, name: e.target.value})}
+                        />
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button 
+                          onClick={() => handleSaveEdit(editingResource)}
+                          className="bg-purple-600 hover:bg-purple-700"
+                        >
+                          Save Changes
+                        </Button>
+                        <Button 
+                          variant="outline"
+                          onClick={() => setEditingResource(null)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

@@ -21,12 +21,12 @@ const CourseCreationWizard = ({ courseData, setCourseData, isEditing }: CourseCr
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
-    { title: 'Course Basics', component: CourseBasicsStep },
-    { title: 'Curriculum', component: CurriculumStep },
-    { title: 'Content Upload', component: ContentUploadStep },
-    { title: 'Quizzes & Assignments', component: QuizAssignmentStep },
-    { title: 'Settings & Metadata', component: SettingsMetadataStep },
-    { title: 'Preview & Publish', component: PreviewPublishStep }
+    { title: 'Course Basics', component: CourseBasicsStep, key: 'basics' },
+    { title: 'Curriculum', component: CurriculumStep, key: 'curriculum' },
+    { title: 'Content Upload', component: ContentUploadStep, key: 'content-upload' },
+    { title: 'Quizzes & Assignments', component: QuizAssignmentStep, key: 'quizzes' },
+    { title: 'Settings & Metadata', component: SettingsMetadataStep, key: 'settings' },
+    { title: 'Preview & Publish', component: PreviewPublishStep, key: 'preview' }
   ];
 
   const progress = ((currentStep + 1) / steps.length) * 100;
@@ -40,6 +40,13 @@ const CourseCreationWizard = ({ courseData, setCourseData, isEditing }: CourseCr
   const prevStep = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const switchToTab = (tabKey: string) => {
+    const stepIndex = steps.findIndex(step => step.key === tabKey);
+    if (stepIndex !== -1) {
+      setCurrentStep(stepIndex);
     }
   };
 
@@ -86,6 +93,7 @@ const CourseCreationWizard = ({ courseData, setCourseData, isEditing }: CourseCr
         courseData={courseData}
         setCourseData={setCourseData}
         isEditing={isEditing}
+        onSwitchToTab={switchToTab}
       />
 
       {/* Navigation Buttons */}

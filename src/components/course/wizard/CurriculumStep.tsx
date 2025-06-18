@@ -12,9 +12,10 @@ interface CurriculumStepProps {
   courseData: any;
   setCourseData: (data: any) => void;
   isEditing: boolean;
+  onSwitchToTab?: (tabName: string) => void;
 }
 
-const CurriculumStep = ({ courseData, setCourseData }: CurriculumStepProps) => {
+const CurriculumStep = ({ courseData, setCourseData, isEditing, onSwitchToTab }: CurriculumStepProps) => {
   const [sections, setSections] = useState([
     {
       id: '1',
@@ -27,11 +28,20 @@ const CurriculumStep = ({ courseData, setCourseData }: CurriculumStepProps) => {
           title: 'Welcome to the Course',
           type: 'video',
           duration: '5:30',
-          description: ''
+          description: '',
+          resourceId: ''
         }
       ]
     }
   ]);
+
+  // Mock uploaded resources - in real app this would come from props or context
+  const uploadedResources = [
+    { id: '1', name: 'Introduction Video.mp4', type: 'video' },
+    { id: '2', name: 'Course Overview.pdf', type: 'pdf' },
+    { id: '3', name: 'Welcome Audio.mp3', type: 'audio' },
+    { id: '4', name: 'JavaScript Basics.txt', type: 'text' },
+  ];
 
   const addSection = () => {
     const newSection = {
@@ -50,7 +60,8 @@ const CurriculumStep = ({ courseData, setCourseData }: CurriculumStepProps) => {
       title: 'New Lecture',
       type: 'video',
       duration: '0:00',
-      description: ''
+      description: '',
+      resourceId: ''
     };
     
     setSections(sections.map(section => 
@@ -74,6 +85,36 @@ const CurriculumStep = ({ courseData, setCourseData }: CurriculumStepProps) => {
     setSections(sections.map(section => 
       section.id === sectionId ? { ...section, isOpen: !section.isOpen } : section
     ));
+  };
+
+  const updateLecture = (sectionId: string, lectureId: string, field: string, value: string) => {
+    setSections(sections.map(section => 
+      section.id === sectionId 
+        ? {
+            ...section,
+            lectures: section.lectures.map(lecture => 
+              lecture.id === lectureId ? { ...lecture, [field]: value } : lecture
+            )
+          }
+        : section
+    ));
+  };
+
+  const deleteLecture = (sectionId: string, lectureId: string) => {
+    setSections(sections.map(section => 
+      section.id === sectionId 
+        ? {
+            ...section,
+            lectures: section.lectures.filter(lecture => lecture.id !== lectureId)
+          }
+        : section
+    ));
+  };
+
+  const handleAddNewResource = () => {
+    if (onSwitchToTab) {
+      onSwitchToTab('content-upload');
+    }
   };
 
   return (
@@ -141,39 +182,15 @@ const CurriculumStep = ({ courseData, setCourseData }: CurriculumStepProps) => {
                         {section.lectures.map((lecture, lectureIndex) => (
                           <div key={lecture.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                             <GripVertical className="w-4 h-4 text-gray-400 cursor-grab" />
-                            <div className="flex-1 grid grid-cols-3 gap-3">
+                            <div className="flex-1 grid grid-cols-4 gap-3">
                               <Input
                                 value={lecture.title}
-                                onChange={(e) => {
-                                  const updatedSections = sections.map(s => 
-                                    s.id === section.id 
-                                      ? {
-                                          ...s,
-                                          lectures: s.lectures.map(l => 
-                                            l.id === lecture.id ? { ...l, title: e.target.value } : l
-                                          )
-                                        }
-                                      : s
-                                  );
-                                  setSections(updatedSections);
-                                }}
+                                onChange={(e) => updateLecture(section.id, lecture.id, 'title', e.target.value)}
                                 placeholder="Lecture title"
                               />
                               <Select
                                 value={lecture.type}
-                                onValueChange={(value) => {
-                                  const updatedSections = sections.map(s => 
-                                    s.id === section.id 
-                                      ? {
-                                          ...s,
-                                          lectures: s.lectures.map(l => 
-                                            l.id === lecture.id ? { ...l, type: value } : l
-                                          )
-                                        }
-                                      : s
-                                  );
-                                  setSections(updatedSections);
-                                }}
+                                onValueChange={(value) => updateLecture(section.id, lecture.id, 'type', value)}
                               >
                                 <SelectTrigger>
                                   <SelectValue />
@@ -186,38 +203,40 @@ const CurriculumStep = ({ courseData, setCourseData }: CurriculumStepProps) => {
                                   <SelectItem value="resource">Resource</SelectItem>
                                 </SelectContent>
                               </Select>
+                              <Select
+                                value={lecture.resourceId}
+                                onValueChange={(value) => {
+                                  if (value === 'add-new') {
+                                    handleAddNewResource();
+                                  } else {
+                                    updateLecture(section.id, lecture.id, 'resourceId', value);
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select resource" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {uploadedResources.map((resource) => (
+                                    <SelectItem key={resource.id} value={resource.id}>
+                                      {resource.name}
+                                    </SelectItem>
+                                  ))}
+                                  <SelectItem value="add-new" className="text-purple-600 font-medium">
+                                    + Add New Resource
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
                               <Input
                                 value={lecture.duration}
-                                onChange={(e) => {
-                                  const updatedSections = sections.map(s => 
-                                    s.id === section.id 
-                                      ? {
-                                          ...s,
-                                          lectures: s.lectures.map(l => 
-                                            l.id === lecture.id ? { ...l, duration: e.target.value } : l
-                                          )
-                                        }
-                                      : s
-                                  );
-                                  setSections(updatedSections);
-                                }}
+                                onChange={(e) => updateLecture(section.id, lecture.id, 'duration', e.target.value)}
                                 placeholder="Duration (e.g., 10:30)"
                               />
                             </div>
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {
-                                const updatedSections = sections.map(s => 
-                                  s.id === section.id 
-                                    ? {
-                                        ...s,
-                                        lectures: s.lectures.filter(l => l.id !== lecture.id)
-                                      }
-                                    : s
-                                );
-                                setSections(updatedSections);
-                              }}
+                              onClick={() => deleteLecture(section.id, lecture.id)}
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
