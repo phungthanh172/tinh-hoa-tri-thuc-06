@@ -3,13 +3,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
 import CourseDetail from './pages/CourseDetail';
-import InstructorDetail from './pages/InstructorDetail';
-import CategoryDetail from './pages/CategoryDetail';
-import SearchResults from './pages/SearchResults';
-import Checkout from './pages/Checkout';
-import Confirmation from './pages/Confirmation';
-import ContactUs from './pages/ContactUs';
-import AboutUs from './pages/AboutUs';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import InstructorDashboard from './pages/InstructorDashboard';
@@ -31,13 +24,6 @@ function App() {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/course/:id" element={<CourseDetail />} />
-              <Route path="/instructor/:id" element={<InstructorDetail />} />
-              <Route path="/category/:id" element={<CategoryDetail />} />
-              <Route path="/search" element={<SearchResults />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/confirmation" element={<Confirmation />} />
-              <Route path="/contact" element={<ContactUs />} />
-              <Route path="/about" element={<AboutUs />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogPost />} />
               <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
