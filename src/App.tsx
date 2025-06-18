@@ -1,80 +1,56 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import CourseDetail from './pages/CourseDetail';
+import InstructorDetail from './pages/InstructorDetail';
+import CategoryDetail from './pages/CategoryDetail';
+import SearchResults from './pages/SearchResults';
+import Checkout from './pages/Checkout';
+import Confirmation from './pages/Confirmation';
+import ContactUs from './pages/ContactUs';
+import AboutUs from './pages/AboutUs';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import InstructorDashboard from './pages/InstructorDashboard';
+import AdminDashboard from './pages/AdminDashboard';
+import StudentDashboard from './components/student/StudentDashboard';
+import CourseLearner from './pages/CourseLearner';
+import LearningProgress from './pages/LearningProgress';
+import CertificateViewer from './components/student/CertificateViewer';
+import { QueryClient } from './queryClient';
+import { ProgressProvider } from '@/contexts/ProgressContext';
+import { GamificationProvider } from '@/contexts/GamificationContext';
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ProgressProvider } from "@/contexts/ProgressContext";
-import { GamificationProvider } from "@/contexts/GamificationContext";
-import FloatingChatBox from "@/components/FloatingChatBox";
-import Index from "./pages/Index";
-import Courses from "./pages/Courses";
-import CourseDetail from "./pages/CourseDetail";
-import CourseLearner from "./pages/CourseLearner";
-import Auth from "./pages/Auth";
-import Profile from "./pages/Profile";
-import Cart from "./pages/Cart";
-import NotFound from "./pages/NotFound";
-import InstructorDashboard from "./pages/InstructorDashboard";
-import CourseCreator from "./pages/CourseCreator";
-import LearningProgress from "./pages/LearningProgress";
-import Search from "./pages/Search";
-import AdminDashboard from "./pages/AdminDashboard";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import WriteBlog from "./pages/WriteBlog";
-import EliteEducation from "./pages/EliteEducation";
-import LifePath from "./pages/LifePath";
-import StudentDashboard from "./pages/StudentDashboard";
-import StudentNotifications from "./pages/StudentNotifications";
-import StudentWishlist from "./pages/StudentWishlist";
-import StudentMessages from "./pages/StudentMessages";
-import StudentCertificates from "./pages/StudentCertificates";
-import PurchaseHistory from "./pages/PurchaseHistory";
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ProgressProvider>
-      <GamificationProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+function App() {
+  return (
+    <QueryClient>
+      <ProgressProvider>
+        <GamificationProvider>
+          <Router>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/courses" element={<Courses />} />
+              <Route path="/" element={<Home />} />
               <Route path="/course/:id" element={<CourseDetail />} />
-              <Route path="/course/:id/learn" element={<CourseLearner />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/life-path" element={<LifePath />} />
-              <Route path="/cart" element={<Cart />} />
+              <Route path="/instructor/:id" element={<InstructorDetail />} />
+              <Route path="/category/:id" element={<CategoryDetail />} />
+              <Route path="/search" element={<SearchResults />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/confirmation" element={<Confirmation />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/about" element={<AboutUs />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogPost />} />
-              <Route path="/blog/write" element={<WriteBlog />} />
-              <Route path="/elite-education" element={<EliteEducation />} />
               <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
-              <Route path="/instructor/course/create" element={<CourseCreator />} />
-              <Route path="/instructor/course/:id/edit" element={<CourseCreator />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/learning-progress" element={<LearningProgress />} />
               <Route path="/student/dashboard" element={<StudentDashboard />} />
-              <Route path="/student/notifications" element={<StudentNotifications />} />
-              <Route path="/student/wishlist" element={<StudentWishlist />} />
-              <Route path="/student/messages" element={<StudentMessages />} />
-              <Route path="/student/certificates" element={<StudentCertificates />} />
-              <Route path="/student/purchase-history" element={<PurchaseHistory />} />
-              <Route path="*" element={<NotFound />} />
+              <Route path="/course/:id/learn" element={<CourseLearner />} />
+              <Route path="/learning-progress" element={<LearningProgress />} />
+              <Route path="/student/certificates" element={<CertificateViewer />} />
             </Routes>
-            <FloatingChatBox />
-          </BrowserRouter>
-        </TooltipProvider>
-      </GamificationProvider>
-    </ProgressProvider>
-  </QueryClientProvider>
-);
+          </Router>
+        </GamificationProvider>
+      </ProgressProvider>
+    </QueryClient>
+  );
+}
 
 export default App;
