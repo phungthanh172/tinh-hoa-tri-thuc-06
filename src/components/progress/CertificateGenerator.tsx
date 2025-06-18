@@ -27,7 +27,7 @@ const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
     // Implementation would generate and download PDF
   };
 
-  const handle-ShareToLinkedIn = () => {
+  const handleShareToLinkedIn = () => {
     const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
       `https://certificates.learnhub.com/verify/${certificateId}`
     )}`;

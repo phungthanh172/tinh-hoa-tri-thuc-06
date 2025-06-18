@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
+import Index from './pages/Index';
 import CourseDetail from './pages/CourseDetail';
 import InstructorDetail from './pages/InstructorDetail';
 import CategoryDetail from './pages/CategoryDetail';
@@ -28,7 +29,7 @@ function App() {
         <GamificationProvider>
           <Router>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Index />} />
               <Route path="/course/:id" element={<CourseDetail />} />
               <Route path="/instructor/:id" element={<InstructorDetail />} />
               <Route path="/category/:id" element={<CategoryDetail />} />
