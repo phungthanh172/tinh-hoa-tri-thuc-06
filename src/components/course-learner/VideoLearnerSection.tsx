@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -49,14 +48,12 @@ const VideoLearnerSection: React.FC<VideoLearnerSectionProps> = ({
           <SlideViewer 
             title={lecture.title} 
             totalSlides={lecture.totalSlides || 12}
-            slideUrl={lecture.url}
           />
         );
       case 'quiz':
         return (
           <QuizViewer 
-            title={lecture.title} 
-            questions={lecture.questions || []}
+            title={lecture.title}
           />
         );
       case 'text':

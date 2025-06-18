@@ -8,6 +8,29 @@ import VideoLearnerSection from '@/components/course-learner/VideoLearnerSection
 import CourseLearnerTabs from '@/components/course-learner/CourseLearnerTabs';
 import CourseContentSidebar from '@/components/course-learner/CourseContentSidebar';
 
+interface Lecture {
+  id: string;
+  title: string;
+  duration: string;
+  completed: boolean;
+  isCurrentlyPlaying: boolean;
+  type: string;
+  url?: string;
+  content?: string;
+  totalSlides?: number;
+  transcript?: string;
+  questions?: any[];
+  interactiveType?: string;
+  chapters?: any[];
+  resources?: any[];
+}
+
+interface Section {
+  id: string;
+  title: string;
+  lectures: Lecture[];
+}
+
 const CourseLearner = () => {
   const { id } = useParams();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -50,7 +73,7 @@ const CourseLearner = () => {
             type: 'pdf',
             url: '/setup-guide.pdf'
           }
-        ]
+        ] as Lecture[]
       },
       {
         id: '2',
@@ -93,7 +116,7 @@ const CourseLearner = () => {
               }
             ]
           }
-        ]
+        ] as Lecture[]
       },
       {
         id: '3',
@@ -126,9 +149,9 @@ const CourseLearner = () => {
             type: 'interactive',
             interactiveType: 'simulation'
           }
-        ]
+        ] as Lecture[]
       }
-    ]
+    ] as Section[]
   };
 
   const currentLecture = course.sections

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Download, Bookmark, Share2, Print, Eye, EyeOff } from 'lucide-react';
+import { Download, Bookmark, Share2, FileText, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -91,7 +91,7 @@ const PI = 3.14159;
             Share
           </Button>
           <Button variant="outline" size="sm">
-            <Print className="w-4 h-4 mr-1" />
+            <FileText className="w-4 h-4 mr-1" />
             Print
           </Button>
         </div>
