@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Users, BookOpen, DollarSign, Settings, BarChart3, Shield, FileText, AlertTriangle, Activity, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AdminOverview from '@/components/admin/AdminOverview';
 import UserManagement from '@/components/admin/UserManagement';
 import CourseModeration from '@/components/admin/CourseModeration';
 import FinancialOversight from '@/components/admin/FinancialOversight';
@@ -20,14 +22,14 @@ import ManagerFeatureNews from '@/components/admin/ManagerFeatureNews';
 const AdminDashboard = () => {
   const [adminStats] = useState({
     totalUsers: 12450,
+    activeUsers: 1890,
     activeInstructors: 325,
     pendingCourses: 18,
     totalRevenue: 245680.50,
     monthlyGrowth: 12.5,
     supportTickets: 7,
     systemHealth: 'Healthy',
-    reportedContent: 3,
-    activeUsers: 1890
+    reportedContent: 3
   });
 
   return (
@@ -46,107 +48,9 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Enhanced Admin Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Users</p>
-                  <p className="text-2xl font-bold">{adminStats.totalUsers.toLocaleString()}</p>
-                </div>
-                <Users className="w-8 h-8 text-blue-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Active Users</p>
-                  <p className="text-2xl font-bold">{adminStats.activeUsers}</p>
-                </div>
-                <Activity className="w-8 h-8 text-green-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Instructors</p>
-                  <p className="text-2xl font-bold">{adminStats.activeInstructors}</p>
-                </div>
-                <Users className="w-8 h-8 text-green-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Pending Courses</p>
-                  <p className="text-2xl font-bold">{adminStats.pendingCourses}</p>
-                </div>
-                <BookOpen className="w-8 h-8 text-yellow-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                  <p className="text-2xl font-bold">${adminStats.totalRevenue.toLocaleString()}</p>
-                </div>
-                <DollarSign className="w-8 h-8 text-purple-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Monthly Growth</p>
-                  <p className="text-2xl font-bold">+{adminStats.monthlyGrowth}%</p>
-                </div>
-                <BarChart3 className="w-8 h-8 text-green-500" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Support Tickets</p>
-                  <p className="text-2xl font-bold">{adminStats.supportTickets}</p>
-                </div>
-                <AlertTriangle className="w-8 h-8 text-red-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Reported Content</p>
-                  <p className="text-2xl font-bold">{adminStats.reportedContent}</p>
-                </div>
-                <MessageSquare className="w-8 h-8 text-orange-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-11">
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-12">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
@@ -159,6 +63,10 @@ const AdminDashboard = () => {
             <TabsTrigger value="system">System</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="overview">
+            <AdminOverview stats={adminStats} />
+          </TabsContent>
 
           <TabsContent value="users">
             <UserManagement />
