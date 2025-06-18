@@ -8,40 +8,13 @@ import VideoLearnerSection from '@/components/course-learner/VideoLearnerSection
 import CourseLearnerTabs from '@/components/course-learner/CourseLearnerTabs';
 import CourseContentSidebar from '@/components/course-learner/CourseContentSidebar';
 
-interface Lecture {
-  id: string;
-  title: string;
-  duration: string;
-  completed: boolean;
-  isCurrentlyPlaying: boolean;
-  type: 'video' | 'pdf' | 'quiz' | 'text' | 'audio' | 'interactive';
-  downloadable?: boolean;
-  language?: string;
-  resources?: Array<{ name: string; url: string; type: string; }>;
-  content?: string;
-  interactiveType?: 'simulation' | 'code-editor' | 'jupyter' | 'flashcards' | 'virtual-lab';
-}
-
-interface Section {
-  id: string;
-  title: string;
-  lectures: Lecture[];
-}
-
-interface Course {
-  id: number;
-  title: string;
-  completionPercentage: number;
-  sections: Section[];
-}
-
 const CourseLearner = () => {
   const { id } = useParams();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentLectureId, setCurrentLectureId] = useState('1');
 
   // Enhanced mock course data with different content types
-  const course: Course = {
+  const course = {
     id: 1,
     title: "The Complete JavaScript Course 2024: From Zero to Expert!",
     completionPercentage: 35,
@@ -70,8 +43,7 @@ const CourseLearner = () => {
             completed: true, 
             isCurrentlyPlaying: false, 
             type: 'pdf',
-            downloadable: true,
-            language: 'English'
+            downloadable: true
           },
           { 
             id: '3', 
@@ -79,9 +51,7 @@ const CourseLearner = () => {
             duration: '8:45', 
             completed: false, 
             isCurrentlyPlaying: false, 
-            type: 'quiz',
-            downloadable: false,
-            language: 'English'
+            type: 'quiz'
           },
           { 
             id: '4', 
@@ -90,9 +60,7 @@ const CourseLearner = () => {
             completed: false, 
             isCurrentlyPlaying: false, 
             type: 'text',
-            content: 'This is a comprehensive introduction to programming concepts...',
-            downloadable: false,
-            language: 'English'
+            content: 'This is a comprehensive introduction to programming concepts...'
           },
           { 
             id: '5', 
@@ -101,8 +69,7 @@ const CourseLearner = () => {
             completed: false, 
             isCurrentlyPlaying: false, 
             type: 'audio',
-            downloadable: true,
-            language: 'English'
+            downloadable: true
           }
         ]
       },
@@ -117,9 +84,7 @@ const CourseLearner = () => {
             completed: false, 
             isCurrentlyPlaying: false, 
             type: 'interactive',
-            interactiveType: 'code-editor',
-            downloadable: false,
-            language: 'English'
+            interactiveType: 'code-editor'
           },
           { 
             id: '7', 
@@ -128,9 +93,7 @@ const CourseLearner = () => {
             completed: false, 
             isCurrentlyPlaying: false, 
             type: 'interactive',
-            interactiveType: 'flashcards',
-            downloadable: false,
-            language: 'English'
+            interactiveType: 'flashcards'
           },
           { 
             id: '8', 
@@ -140,7 +103,6 @@ const CourseLearner = () => {
             isCurrentlyPlaying: false, 
             type: 'video',
             downloadable: true,
-            language: 'English',
             resources: [
               { name: 'Code Examples', url: '/examples.zip', type: 'ZIP' },
               { name: 'Exercise Files', url: '/exercises.pdf', type: 'PDF' }
@@ -152,24 +114,24 @@ const CourseLearner = () => {
   };
 
   const currentLecture = course.sections
-    .flatMap((section: Section) => section.lectures)
-    .find((lecture: Lecture) => lecture.id === currentLectureId);
+    .flatMap(section => section.lectures)
+    .find(lecture => lecture.id === currentLectureId);
 
   const handleLectureSelect = (lectureId: string) => {
     setCurrentLectureId(lectureId);
   };
 
   const handleNextLecture = () => {
-    const allLectures = course.sections.flatMap((section: Section) => section.lectures);
-    const currentIndex = allLectures.findIndex((lecture: Lecture) => lecture.id === currentLectureId);
+    const allLectures = course.sections.flatMap(section => section.lectures);
+    const currentIndex = allLectures.findIndex(lecture => lecture.id === currentLectureId);
     if (currentIndex < allLectures.length - 1) {
       setCurrentLectureId(allLectures[currentIndex + 1].id);
     }
   };
 
   const handlePreviousLecture = () => {
-    const allLectures = course.sections.flatMap((section: Section) => section.lectures);
-    const currentIndex = allLectures.findIndex((lecture: Lecture) => lecture.id === currentLectureId);
+    const allLectures = course.sections.flatMap(section => section.lectures);
+    const currentIndex = allLectures.findIndex(lecture => lecture.id === currentLectureId);
     if (currentIndex > 0) {
       setCurrentLectureId(allLectures[currentIndex - 1].id);
     }
