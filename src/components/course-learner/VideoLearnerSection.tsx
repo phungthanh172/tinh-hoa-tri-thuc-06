@@ -6,6 +6,9 @@ import VideoPlayer from '@/components/progress/VideoPlayer';
 import PDFViewer from './viewers/PDFViewer';
 import SlideViewer from './viewers/SlideViewer';
 import QuizViewer from './viewers/QuizViewer';
+import TextLectureViewer from './viewers/TextLectureViewer';
+import AudioPlayer from './viewers/AudioPlayer';
+import InteractiveContentViewer from './viewers/InteractiveContentViewer';
 
 interface VideoLearnerSectionProps {
   courseId: string;
@@ -35,23 +38,77 @@ const VideoLearnerSection: React.FC<VideoLearnerSectionProps> = ({
   const renderContent = () => {
     switch (lecture.type) {
       case 'pdf':
-        return <PDFViewer title={lecture.title} />;
+        return (
+          <PDFViewer 
+            title={lecture.title} 
+            pdfUrl={lecture.url || "/placeholder.svg"}
+          />
+        );
       case 'slide':
-        return <SlideViewer title={lecture.title} />;
+        return (
+          <SlideViewer 
+            title={lecture.title} 
+            totalSlides={lecture.totalSlides || 12}
+            slideUrl={lecture.url}
+          />
+        );
       case 'quiz':
-        return <QuizViewer title={lecture.title} />;
+        return (
+          <QuizViewer 
+            title={lecture.title} 
+            questions={lecture.questions || []}
+          />
+        );
+      case 'text':
+        return (
+          <TextLectureViewer
+            title={lecture.title}
+            content={lecture.content || ""}
+            resources={lecture.resources || []}
+          />
+        );
+      case 'audio':
+        return (
+          <AudioPlayer
+            title={lecture.title}
+            audioUrl={lecture.url || "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav"}
+            transcript={lecture.transcript}
+            chapters={lecture.chapters}
+          />
+        );
+      case 'interactive':
+        return (
+          <InteractiveContentViewer
+            title={lecture.title}
+            interactiveType={lecture.interactiveType || 'simulation'}
+            content={lecture.content}
+          />
+        );
       case 'video':
       default:
         return (
           <VideoPlayer
             courseId={courseId}
             lectureId={lectureId}
-            videoUrl="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
+            videoUrl={lecture.url || "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"}
             title={lecture.title}
             duration={450}
             onComplete={() => console.log('Lecture completed')}
           />
         );
+    }
+  };
+
+  const getContentTypeLabel = (type: string) => {
+    switch (type) {
+      case 'video': return 'Video Lecture';
+      case 'pdf': return 'PDF Document';
+      case 'slide': return 'Slide Presentation';
+      case 'quiz': return 'Interactive Quiz';
+      case 'text': return 'Text Lecture';
+      case 'audio': return 'Audio Lecture';
+      case 'interactive': return 'Interactive Content';
+      default: return 'Content';
     }
   };
 
@@ -77,10 +134,7 @@ const VideoLearnerSection: React.FC<VideoLearnerSectionProps> = ({
           <div className="text-center">
             <h2 className="text-lg font-semibold text-gray-800">{lecture.title}</h2>
             <p className="text-sm text-gray-600">
-              {lecture.type === 'video' ? 'Video' : 
-               lecture.type === 'pdf' ? 'PDF Document' :
-               lecture.type === 'slide' ? 'Slide Presentation' :
-               lecture.type === 'quiz' ? 'Quiz' : 'Content'} • {lecture.duration}
+              {getContentTypeLabel(lecture.type)} • {lecture.duration}
             </p>
           </div>
 

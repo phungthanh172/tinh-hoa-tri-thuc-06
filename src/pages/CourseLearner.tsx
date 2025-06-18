@@ -13,7 +13,7 @@ const CourseLearner = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [currentLectureId, setCurrentLectureId] = useState('1');
 
-  // Mock course data with different content types
+  // Enhanced mock course data with comprehensive content types
   const course = {
     id: 1,
     title: "The Complete JavaScript Course 2024: From Zero to Expert!",
@@ -23,17 +23,109 @@ const CourseLearner = () => {
         id: '1',
         title: 'Getting Started',
         lectures: [
-          { id: '1', title: 'Course Introduction', duration: '5:30', completed: true, isCurrentlyPlaying: true, type: 'video' },
-          { id: '2', title: 'JavaScript Fundamentals PDF', duration: '10:15', completed: true, isCurrentlyPlaying: false, type: 'pdf' },
-          { id: '3', title: 'Variables and Data Types Quiz', duration: '8:45', completed: false, isCurrentlyPlaying: false, type: 'quiz' }
+          { 
+            id: '1', 
+            title: 'Course Introduction Video', 
+            duration: '5:30', 
+            completed: true, 
+            isCurrentlyPlaying: true, 
+            type: 'video',
+            url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4'
+          },
+          { 
+            id: '2', 
+            title: 'JavaScript Fundamentals Guide', 
+            duration: '15:20', 
+            completed: true, 
+            isCurrentlyPlaying: false, 
+            type: 'text',
+            content: '<h2>JavaScript Fundamentals</h2><p>Complete guide to JavaScript basics...</p>'
+          },
+          { 
+            id: '3', 
+            title: 'Setup and Installation PDF', 
+            duration: '10:15', 
+            completed: false, 
+            isCurrentlyPlaying: false, 
+            type: 'pdf',
+            url: '/setup-guide.pdf'
+          }
         ]
       },
       {
         id: '2',
-        title: 'JavaScript Fundamentals',
+        title: 'Core Concepts',
         lectures: [
-          { id: '4', title: 'Functions Presentation', duration: '12:30', completed: false, isCurrentlyPlaying: false, type: 'slide' },
-          { id: '5', title: 'Functions and Scope Video', duration: '15:20', completed: false, isCurrentlyPlaying: false, type: 'video' }
+          { 
+            id: '4', 
+            title: 'Variables and Data Types Slides', 
+            duration: '12:30', 
+            completed: false, 
+            isCurrentlyPlaying: false, 
+            type: 'slide',
+            totalSlides: 15
+          },
+          { 
+            id: '5', 
+            title: 'Functions Deep Dive Audio', 
+            duration: '25:45', 
+            completed: false, 
+            isCurrentlyPlaying: false, 
+            type: 'audio',
+            url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav',
+            transcript: 'In this audio lecture, we explore JavaScript functions...'
+          },
+          { 
+            id: '6', 
+            title: 'Knowledge Check Quiz', 
+            duration: '8:00', 
+            completed: false, 
+            isCurrentlyPlaying: false, 
+            type: 'quiz',
+            questions: [
+              {
+                question: "What is a variable in JavaScript?",
+                options: [
+                  { text: "A container for data", correct: true },
+                  { text: "A function", correct: false },
+                  { text: "A loop", correct: false }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: '3',
+        title: 'Interactive Learning',
+        lectures: [
+          { 
+            id: '7', 
+            title: 'Code Challenge Editor', 
+            duration: '30:00', 
+            completed: false, 
+            isCurrentlyPlaying: false, 
+            type: 'interactive',
+            interactiveType: 'code-editor'
+          },
+          { 
+            id: '8', 
+            title: 'JavaScript Flashcards', 
+            duration: '15:00', 
+            completed: false, 
+            isCurrentlyPlaying: false, 
+            type: 'interactive',
+            interactiveType: 'flashcards'
+          },
+          { 
+            id: '9', 
+            title: 'DOM Manipulation Simulation', 
+            duration: '20:00', 
+            completed: false, 
+            isCurrentlyPlaying: false, 
+            type: 'interactive',
+            interactiveType: 'simulation'
+          }
         ]
       }
     ]
