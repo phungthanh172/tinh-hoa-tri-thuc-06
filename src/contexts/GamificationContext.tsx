@@ -6,38 +6,53 @@ interface Badge {
   name: string;
   description: string;
   icon: string;
-  earnedDate?: Date;
-  isEarned: boolean;
+  color: string;
+  requirement: {
+    type: 'courses_completed' | 'quiz_score' | 'streak_days' | 'certificates_earned' | 'learning_path_completed';
+    value: number;
+    courseId?: string;
+    pathId?: string;
+  };
 }
 
 interface Achievement {
   id: string;
+  badgeId: string;
+  earnedDate: Date;
+  courseId?: string;
+  pathId?: string;
+}
+
+interface LearningPath {
+  id: string;
   title: string;
   description: string;
-  type: 'completion' | 'streak' | 'quiz' | 'milestone';
-  points: number;
-  unlocked: boolean;
-  unlockedDate?: Date;
+  courses: string[];
+  estimatedHours: number;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  certificate: {
+    title: string;
+    description: string;
+  };
 }
 
 interface UserProgress {
-  totalPoints: number;
-  level: number;
-  streakDays: number;
-  totalCoursesCompleted: number;
-  totalQuizzesCompleted: number;
-  averageQuizScore: number;
-  badges: Badge[];
+  userId: string;
   achievements: Achievement[];
+  streakDays: number;
+  lastActiveDate: Date;
+  totalCoursesCompleted: number;
+  totalCertificatesEarned: number;
 }
 
 interface GamificationContextType {
+  badges: Badge[];
+  learningPaths: LearningPath[];
   userProgress: UserProgress;
-  awardBadge: (badgeId: string) => void;
-  unlockAchievement: (achievementId: string) => void;
-  addPoints: (points: number) => void;
-  updateStreak: (days: number) => void;
-  getNextLevelProgress: () => number;
+  checkForNewAchievements: (courseId?: string, pathId?: string) => Achievement[];
+  getLearningPathProgress: (pathId: string) => number;
+  isLearningPathCompleted: (pathId: string) => boolean;
+  updateUserProgress: (updates: Partial<UserProgress>) => void;
 }
 
 const GamificationContext = createContext<GamificationContextType | undefined>(undefined);
@@ -50,141 +65,165 @@ export const useGamification = () => {
   return context;
 };
 
+const defaultBadges: Badge[] = [
+  {
+    id: 'first-course',
+    name: 'First Steps',
+    description: 'Complete your first course',
+    icon: '🌟',
+    color: 'bg-yellow-500',
+    requirement: { type: 'courses_completed', value: 1 }
+  },
+  {
+    id: 'course-collector',
+    name: 'Course Collector',
+    description: 'Complete 5 courses',
+    icon: '📚',
+    color: 'bg-blue-500',
+    requirement: { type: 'courses_completed', value: 5 }
+  },
+  {
+    id: 'quiz-master',
+    name: 'Quiz Master',
+    description: 'Score 100% on any quiz',
+    icon: '🎯',
+    color: 'bg-green-500',
+    requirement: { type: 'quiz_score', value: 100 }
+  },
+  {
+    id: 'learning-streak',
+    name: 'Learning Streak',
+    description: 'Learn for 7 consecutive days',
+    icon: '🔥',
+    color: 'bg-red-500',
+    requirement: { type: 'streak_days', value: 7 }
+  },
+  {
+    id: 'certified-learner',
+    name: 'Certified Learner',
+    description: 'Earn your first certificate',
+    icon: '🏆',
+    color: 'bg-purple-500',
+    requirement: { type: 'certificates_earned', value: 1 }
+  }
+];
+
+const defaultLearningPaths: LearningPath[] = [
+  {
+    id: 'web-development',
+    title: 'Complete Web Development',
+    description: 'Master frontend and backend development with modern technologies',
+    courses: ['1', '2', '3'],
+    estimatedHours: 120,
+    difficulty: 'Intermediate',
+    certificate: {
+      title: 'Full Stack Web Developer',
+      description: 'Certified in modern web development technologies'
+    }
+  },
+  {
+    id: 'javascript-mastery',
+    title: 'JavaScript Mastery',
+    description: 'From basics to advanced JavaScript concepts',
+    courses: ['1'],
+    estimatedHours: 40,
+    difficulty: 'Beginner',
+    certificate: {
+      title: 'JavaScript Expert',
+      description: 'Proficient in JavaScript programming'
+    }
+  }
+];
+
 interface GamificationProviderProps {
   children: ReactNode;
 }
 
 export const GamificationProvider: React.FC<GamificationProviderProps> = ({ children }) => {
+  const [badges] = useState<Badge[]>(defaultBadges);
+  const [learningPaths] = useState<LearningPath[]>(defaultLearningPaths);
   const [userProgress, setUserProgress] = useState<UserProgress>({
-    totalPoints: 1250,
-    level: 3,
-    streakDays: 7,
-    totalCoursesCompleted: 2,
-    totalQuizzesCompleted: 8,
-    averageQuizScore: 87,
-    badges: [
-      {
-        id: 'first-course',
-        name: 'First Steps',
-        description: 'Complete your first course',
-        icon: '🎯',
-        earnedDate: new Date('2024-01-20'),
-        isEarned: true
-      },
-      {
-        id: 'quiz-master',
-        name: 'Quiz Master',
-        description: 'Score 90% or higher on 5 quizzes',
-        icon: '🧠',
-        earnedDate: new Date('2024-02-15'),
-        isEarned: true
-      },
-      {
-        id: 'streak-week',
-        name: 'Week Warrior',
-        description: 'Learn for 7 consecutive days',
-        icon: '🔥',
-        earnedDate: new Date(),
-        isEarned: true
-      },
-      {
-        id: 'video-binge',
-        name: 'Video Binge',
-        description: 'Watch 50 hours of content',
-        icon: '📺',
-        isEarned: false
-      }
-    ],
-    achievements: [
-      {
-        id: 'js-master',
-        title: 'JavaScript Master',
-        description: 'Complete 3 JavaScript courses',
-        type: 'completion',
-        points: 500,
-        unlocked: true,
-        unlockedDate: new Date('2024-02-10')
-      },
-      {
-        id: 'quick-learner',
-        title: 'Quick Learner',
-        description: 'Complete a course in under a week',
-        type: 'milestone',
-        points: 200,
-        unlocked: true,
-        unlockedDate: new Date('2024-01-22')
-      },
-      {
-        id: 'perfectionist',
-        title: 'Perfectionist',
-        description: 'Get 100% on 3 quizzes',
-        type: 'quiz',
-        points: 300,
-        unlocked: false
-      }
-    ]
+    userId: 'user-1',
+    achievements: [],
+    streakDays: 3,
+    lastActiveDate: new Date(),
+    totalCoursesCompleted: 0,
+    totalCertificatesEarned: 0
   });
 
-  const awardBadge = (badgeId: string) => {
-    setUserProgress(prev => ({
-      ...prev,
-      badges: prev.badges.map(badge =>
-        badge.id === badgeId
-          ? { ...badge, isEarned: true, earnedDate: new Date() }
-          : badge
-      )
-    }));
-  };
+  const checkForNewAchievements = (courseId?: string, pathId?: string): Achievement[] => {
+    const newAchievements: Achievement[] = [];
+    
+    badges.forEach(badge => {
+      const alreadyEarned = userProgress.achievements.some(a => a.badgeId === badge.id);
+      if (alreadyEarned) return;
 
-  const unlockAchievement = (achievementId: string) => {
-    setUserProgress(prev => {
-      const achievement = prev.achievements.find(a => a.id === achievementId);
-      if (achievement && !achievement.unlocked) {
-        return {
-          ...prev,
-          totalPoints: prev.totalPoints + achievement.points,
-          achievements: prev.achievements.map(a =>
-            a.id === achievementId
-              ? { ...a, unlocked: true, unlockedDate: new Date() }
-              : a
-          )
-        };
+      let shouldEarn = false;
+      
+      switch (badge.requirement.type) {
+        case 'courses_completed':
+          shouldEarn = userProgress.totalCoursesCompleted >= badge.requirement.value;
+          break;
+        case 'certificates_earned':
+          shouldEarn = userProgress.totalCertificatesEarned >= badge.requirement.value;
+          break;
+        case 'streak_days':
+          shouldEarn = userProgress.streakDays >= badge.requirement.value;
+          break;
+        case 'learning_path_completed':
+          shouldEarn = pathId === badge.requirement.pathId && isLearningPathCompleted(pathId);
+          break;
       }
-      return prev;
+
+      if (shouldEarn) {
+        const achievement: Achievement = {
+          id: `${badge.id}-${Date.now()}`,
+          badgeId: badge.id,
+          earnedDate: new Date(),
+          courseId,
+          pathId
+        };
+        newAchievements.push(achievement);
+      }
     });
+
+    if (newAchievements.length > 0) {
+      setUserProgress(prev => ({
+        ...prev,
+        achievements: [...prev.achievements, ...newAchievements]
+      }));
+    }
+
+    return newAchievements;
   };
 
-  const addPoints = (points: number) => {
-    setUserProgress(prev => ({
-      ...prev,
-      totalPoints: prev.totalPoints + points
-    }));
+  const getLearningPathProgress = (pathId: string): number => {
+    const path = learningPaths.find(p => p.id === pathId);
+    if (!path) return 0;
+    
+    // This would integrate with ProgressContext to get actual course completion
+    // For now, returning mock data
+    return 65;
   };
 
-  const updateStreak = (days: number) => {
-    setUserProgress(prev => ({
-      ...prev,
-      streakDays: days
-    }));
+  const isLearningPathCompleted = (pathId: string): boolean => {
+    return getLearningPathProgress(pathId) === 100;
   };
 
-  const getNextLevelProgress = () => {
-    const pointsPerLevel = 500;
-    const currentLevelPoints = (userProgress.level - 1) * pointsPerLevel;
-    const nextLevelPoints = userProgress.level * pointsPerLevel;
-    const progressPoints = userProgress.totalPoints - currentLevelPoints;
-    return (progressPoints / (nextLevelPoints - currentLevelPoints)) * 100;
+  const updateUserProgress = (updates: Partial<UserProgress>) => {
+    setUserProgress(prev => ({ ...prev, ...updates }));
   };
 
   return (
     <GamificationContext.Provider
       value={{
+        badges,
+        learningPaths,
         userProgress,
-        awardBadge,
-        unlockAchievement,
-        addPoints,
-        updateStreak,
-        getNextLevelProgress
+        checkForNewAchievements,
+        getLearningPathProgress,
+        isLearningPathCompleted,
+        updateUserProgress
       }}
     >
       {children}
