@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Users, BookOpen, DollarSign, Settings, BarChart3, Shield, FileText, AlertTriangle, Activity, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,6 +17,9 @@ import SystemMonitoring from '@/components/admin/SystemMonitoring';
 import AdminBlogManagement from '@/components/admin/BlogManagement';
 import FeatureManagement from '@/components/admin/FeatureManagement';
 import ManagerFeatureNews from '@/components/admin/ManagerFeatureNews';
+import ABTestingAnalytics from '@/components/admin/ABTestingAnalytics';
+import ScheduledReports from '@/components/admin/ScheduledReports';
+import ThirdPartyIntegrations from '@/components/admin/ThirdPartyIntegrations';
 
 const AdminDashboard = () => {
   const [adminStats] = useState({
@@ -109,7 +111,30 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="reports">
-            <AdminReporting />
+            <Tabs defaultValue="analytics" className="space-y-6">
+              <TabsList>
+                <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                <TabsTrigger value="ab-testing">A/B Testing</TabsTrigger>
+                <TabsTrigger value="scheduled">Scheduled Reports</TabsTrigger>
+                <TabsTrigger value="integrations">Integrations</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="analytics">
+                <AdminReporting />
+              </TabsContent>
+              
+              <TabsContent value="ab-testing">
+                <ABTestingAnalytics />
+              </TabsContent>
+              
+              <TabsContent value="scheduled">
+                <ScheduledReports />
+              </TabsContent>
+              
+              <TabsContent value="integrations">
+                <ThirdPartyIntegrations />
+              </TabsContent>
+            </Tabs>
           </TabsContent>
         </Tabs>
       </div>
