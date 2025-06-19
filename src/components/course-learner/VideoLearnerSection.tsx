@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import VideoPlayer from '@/components/progress/VideoPlayer';
+import DRMSecurePlayer from '@/components/security/DRMSecurePlayer';
 import PDFViewer from './viewers/PDFViewer';
 import SlideViewer from './viewers/SlideViewer';
 import QuizViewer from './viewers/QuizViewer';
@@ -35,12 +35,23 @@ const VideoLearnerSection: React.FC<VideoLearnerSectionProps> = ({
   }
 
   const renderContent = () => {
+    // Mock user data - in real implementation, get from auth context
+    const mockUserId = 'user_123';
+    const mockUserEmail = 'student@example.com';
+
     switch (lecture.type) {
       case 'pdf':
         return (
-          <PDFViewer 
-            title={lecture.title} 
-            pdfUrl={lecture.url || "/placeholder.svg"}
+          <DRMSecurePlayer
+            contentId={lectureId}
+            courseId={courseId}
+            userId={mockUserId}
+            userEmail={mockUserEmail}
+            contentUrl={lecture.url || "/placeholder.svg"}
+            contentType="pdf"
+            title={lecture.title}
+            drmEnabled={true}
+            watermarkEnabled={true}
           />
         );
       case 'slide':
@@ -66,11 +77,16 @@ const VideoLearnerSection: React.FC<VideoLearnerSectionProps> = ({
         );
       case 'audio':
         return (
-          <AudioPlayer
+          <DRMSecurePlayer
+            contentId={lectureId}
+            courseId={courseId}
+            userId={mockUserId}
+            userEmail={mockUserEmail}
+            contentUrl={lecture.url || "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav"}
+            contentType="audio"
             title={lecture.title}
-            audioUrl={lecture.url || "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav"}
-            transcript={lecture.transcript}
-            chapters={lecture.chapters}
+            drmEnabled={true}
+            watermarkEnabled={true}
           />
         );
       case 'interactive':
@@ -84,13 +100,16 @@ const VideoLearnerSection: React.FC<VideoLearnerSectionProps> = ({
       case 'video':
       default:
         return (
-          <VideoPlayer
+          <DRMSecurePlayer
+            contentId={lectureId}
             courseId={courseId}
-            lectureId={lectureId}
-            videoUrl={lecture.url || "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"}
+            userId={mockUserId}
+            userEmail={mockUserEmail}
+            contentUrl={lecture.url || "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"}
+            contentType="video"
             title={lecture.title}
-            duration={450}
-            onComplete={() => console.log('Lecture completed')}
+            drmEnabled={true}
+            watermarkEnabled={true}
           />
         );
     }
