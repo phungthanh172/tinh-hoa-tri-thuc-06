@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,6 +11,7 @@ interface CourseBasicsStepProps {
   courseData: any;
   setCourseData: (data: any) => void;
   isEditing: boolean;
+  onSwitchToTab?: (tabName: string) => void;
 }
 
 const CourseBasicsStep = ({ courseData, setCourseData }: CourseBasicsStepProps) => {
