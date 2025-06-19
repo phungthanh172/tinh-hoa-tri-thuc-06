@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -180,7 +179,7 @@ const CourseAnalytics = () => {
             {/* Revenue Chart */}
             <Card>
               <CardHeader>
-                <CardTitle>Monthly Revenue</Car dTitle>
+                <CardTitle>Monthly Revenue</CardTitle>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
