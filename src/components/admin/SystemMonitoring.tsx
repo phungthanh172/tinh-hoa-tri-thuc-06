@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import SystemHealthOverview from './system-monitoring/SystemHealthOverview';
 import ResourceUsageChart from './system-monitoring/ResourceUsageChart';
@@ -6,6 +5,9 @@ import PerformanceChart from './system-monitoring/PerformanceChart';
 import SecurityAlertsCard from './system-monitoring/SecurityAlertsCard';
 import AdminAuditLog from './system-monitoring/AdminAuditLog';
 import SystemActions from './system-monitoring/SystemActions';
+import ScalabilityDashboard from './ScalabilityDashboard';
+import CDNManagement from './CDNManagement';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const SystemMonitoring = () => {
   const [systemMetrics] = useState({
@@ -78,23 +80,41 @@ const SystemMonitoring = () => {
 
   return (
     <div className="space-y-6">
-      {/* System Health Overview */}
-      <SystemHealthOverview systemMetrics={systemMetrics} />
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="overview">System Overview</TabsTrigger>
+          <TabsTrigger value="scalability">Scalability & Performance</TabsTrigger>
+          <TabsTrigger value="cdn">CDN & Global Delivery</TabsTrigger>
+        </TabsList>
 
-      {/* Resource Usage & Performance */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ResourceUsageChart systemMetrics={systemMetrics} />
-        <PerformanceChart performanceData={performanceData} />
-      </div>
+        <TabsContent value="overview" className="space-y-6">
+          {/* System Health Overview */}
+          <SystemHealthOverview systemMetrics={systemMetrics} />
 
-      {/* Security & Audit */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SecurityAlertsCard securityAlerts={securityAlerts} />
-        <AdminAuditLog auditLogs={auditLogs} />
-      </div>
+          {/* Resource Usage & Performance */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ResourceUsageChart systemMetrics={systemMetrics} />
+            <PerformanceChart performanceData={performanceData} />
+          </div>
 
-      {/* System Actions */}
-      <SystemActions onSystemAction={handleSystemAction} />
+          {/* Security & Audit */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <SecurityAlertsCard securityAlerts={securityAlerts} />
+            <AdminAuditLog auditLogs={auditLogs} />
+          </div>
+
+          {/* System Actions */}
+          <SystemActions onSystemAction={handleSystemAction} />
+        </TabsContent>
+
+        <TabsContent value="scalability">
+          <ScalabilityDashboard />
+        </TabsContent>
+
+        <TabsContent value="cdn">
+          <CDNManagement />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
