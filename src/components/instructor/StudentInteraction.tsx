@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MessageSquare, Send, Bell, Users, Filter, Search, Calendar, Video, Pin, Archive, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -289,7 +288,7 @@ const StudentInteraction = () => {
                   <div key={message.id} className={`flex items-center space-x-3 p-3 rounded-lg border ${message.unread ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50'}`}>
                     <Avatar className="w-10 h-10">
                       <AvatarImage src={message.avatar} />
-                      <AvatarFallback>{message.student[0]}</AvatarFallBack>
+                      <AvatarFallback>{message.student[0]}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
