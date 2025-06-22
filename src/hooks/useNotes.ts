@@ -1,0 +1,221 @@
+
+import { useState, useEffect, useMemo } from 'react';
+import { Note, NoteVersion, SearchFilters } from '@/types/note';
+import { extractLinks, extractTags, generateId, searchNotes } from '@/utils/noteUtils';
+
+const INITIAL_NOTES: Note[] = [
+  {
+    id: 'welcome',
+    title: 'Welcome to Your Knowledge Base',
+    content: `# Welcome to Your Knowledge Base
+
+This is your personal knowledge management system, inspired by tools like Obsidian and Roam Research.
+
+## Features
+
+- **Wiki-style linking**: Use [[Note Title]] to create links between notes
+- **Tags**: Use #tag to categorize your notes
+- **Graph view**: Visualize connections between your notes
+- **Advanced search**: Find notes by content, tags, or date
+- **Version history**: Track changes to your notes over time
+
+## Getting Started
+
+1. Create a new note using the "New Note" button
+2. Start writing and use [[links]] and #tags
+3. Explore the graph view to see connections
+4. Use the search to find specific content
+
+## Examples
+
+You can link to [[Personal Projects]] or add tags like #tutorial #knowledge-management
+
+Try editing this note to see how the system works!`,
+    path: 'Welcome',
+    links: ['Personal Projects'],
+    tags: ['tutorial', 'knowledge-management'],
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+    versions: []
+  },
+  {
+    id: 'projects',
+    title: 'Personal Projects',
+    content: `# Personal Projects
+
+This note contains information about my ongoing projects.
+
+## Current Projects
+
+### Knowledge Base System
+- Building a personal knowledge management tool
+- Features: linking, tagging, graph visualization
+- Status: In progress
+- Tags: #project #development #knowledge
+
+### Learning Goals
+- Master React and TypeScript
+- Learn about graph databases
+- Understand information architecture
+- Tags: #learning #goals #development
+
+## Ideas for Future Projects
+
+- Mobile app for note-taking
+- Integration with external tools
+- Collaborative features
+
+## Resources
+
+- [[Welcome to Your Knowledge Base]] - Main documentation
+- Research on #knowledge-management systems
+- Tools like Obsidian, Roam Research, and Notion
+
+---
+
+*Last updated: ${new Date().toLocaleDateString()}*`,
+    path: 'Projects/Personal Projects',
+    links: ['Welcome to Your Knowledge Base'],
+    tags: ['project', 'development', 'knowledge', 'learning', 'goals', 'knowledge-management'],
+    createdAt: new Date('2024-01-02'),
+    updatedAt: new Date(),
+    versions: []
+  }
+];
+
+export const useNotes = () => {
+  const [notes, setNotes] = useState<Note[]>(INITIAL_NOTES);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isAdvancedSearch, setIsAdvancedSearch] = useState(false);
+  const [advancedFilters, setAdvancedFilters] = useState<SearchFilters>({
+    contentType: 'all',
+    dateRange: 'all',
+    tags: [],
+    folders: []
+  });
+
+  // Auto-select first note on initial load
+  useEffect(() => {
+    if (notes.length > 0 && !selectedNote) {
+      setSelectedNote(notes[0]);
+    }
+  }, [notes, selectedNote]);
+
+  const filteredNotes = useMemo(() => {
+    if (!searchQuery && !isAdvancedSearch) return notes;
+    return searchNotes(notes, searchQuery, isAdvancedSearch ? advancedFilters : undefined);
+  }, [notes, searchQuery, isAdvancedSearch, advancedFilters]);
+
+  const createNote = (title: string = 'New Note', content: string = ''): Note => {
+    const newNote: Note = {
+      id: generateId(),
+      title,
+      content,
+      path: title,
+      links: extractLinks(content),
+      tags: extractTags(content),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      versions: []
+    };
+
+    setNotes(prev => [newNote, ...prev]);
+    return newNote;
+  };
+
+  const updateNote = (noteId: string, updates: Partial<Note>) => {
+    setNotes(prev => prev.map(note => {
+      if (note.id === noteId) {
+        const updatedNote = { ...note, ...updates };
+        
+        // Update links and tags if content changed
+        if (updates.content) {
+          updatedNote.links = extractLinks(updates.content);
+          updatedNote.tags = extractTags(updates.content);
+        }
+        
+        // Create version if content changed significantly
+        if (updates.content && updates.content !== note.content) {
+          const version: NoteVersion = {
+            id: generateId(),
+            content: note.content,
+            title: note.title,
+            timestamp: new Date(note.updatedAt),
+            changes: 'Content updated'
+          };
+          updatedNote.versions = [version, ...note.versions].slice(0, 10); // Keep last 10 versions
+        }
+        
+        updatedNote.updatedAt = new Date();
+        
+        // Update selected note if it's the one being updated
+        if (selectedNote?.id === noteId) {
+          setSelectedNote(updatedNote);
+        }
+        
+        return updatedNote;
+      }
+      return note;
+    }));
+  };
+
+  const deleteNote = (noteId: string) => {
+    setNotes(prev => prev.filter(note => note.id !== noteId));
+    if (selectedNote?.id === noteId) {
+      setSelectedNote(notes.find(note => note.id !== noteId) || null);
+    }
+  };
+
+  const selectNote = (noteId: string) => {
+    const note = notes.find(n => n.id === noteId);
+    if (note) {
+      setSelectedNote(note);
+    }
+  };
+
+  const exportVault = async () => {
+    // This would implement ZIP export functionality
+    // For now, we'll just create a simple export
+    const exportData = {
+      notes: notes.map(note => ({
+        ...note,
+        createdAt: note.createdAt.toISOString(),
+        updatedAt: note.updatedAt.toISOString(),
+        versions: note.versions.map(v => ({
+          ...v,
+          timestamp: v.timestamp.toISOString()
+        }))
+      })),
+      exportedAt: new Date().toISOString(),
+      version: '1.0.0'
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `knowledge-base-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  return {
+    notes,
+    selectedNote,
+    searchQuery,
+    isAdvancedSearch,
+    advancedFilters,
+    filteredNotes,
+    createNote,
+    updateNote,
+    deleteNote,
+    selectNote,
+    setSearchQuery,
+    setIsAdvancedSearch,
+    setAdvancedFilters,
+    exportVault
+  };
+};

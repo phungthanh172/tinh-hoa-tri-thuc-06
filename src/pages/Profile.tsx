@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { User, Settings, BookOpen, Award, Star, Clock, Users, Camera, Edit3, Mail, Phone, MapPin, Calendar, Heart, Share2, Download, Save, X, Route } from 'lucide-react';
+import { User, Settings, BookOpen, Award, Star, Clock, Users, Camera, Edit3, Mail, Phone, MapPin, Calendar, Heart, Share2, Download, Save, X, Route, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -179,6 +180,12 @@ const Profile = () => {
                         <Button variant="default" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                           <Route className="w-4 h-4 mr-2" />
                           Design Life Path
+                        </Button>
+                      </Link>
+                      <Link to="/knowledge-management" className="w-full">
+                        <Button variant="default" className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600">
+                          <Brain className="w-4 h-4 mr-2" />
+                          Knowledge Management
                         </Button>
                       </Link>
                     </div>
