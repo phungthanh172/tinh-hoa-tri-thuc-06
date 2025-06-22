@@ -1,9 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
-import { Save, Clock, FileText } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Save, Clock, FileText, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Editor } from '@tinymce/tinymce-react';
 import { Note } from '@/types/note';
 import { toast } from 'sonner';
 
@@ -16,6 +16,7 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
   const [title, setTitle] = useState(note.title);
   const [content, setContent] = useState(note.content);
   const [isEditing, setIsEditing] = useState(false);
+  const editorRef = useRef<any>(null);
 
   useEffect(() => {
     setTitle(note.title);
@@ -36,6 +37,10 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
     setTitle(note.title);
     setContent(note.content);
     setIsEditing(false);
+  };
+
+  const handleEditorChange = (content: string) => {
+    setContent(content);
   };
 
   return (
@@ -74,7 +79,7 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
               </div>
             ) : (
               <Button size="sm" onClick={() => setIsEditing(true)}>
-                <FileText className="w-4 h-4 mr-1" />
+                <Edit className="w-4 h-4 mr-1" />
                 Edit
               </Button>
             )}
@@ -85,17 +90,29 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
       {/* Content */}
       <div className="flex-1 p-4">
         {isEditing ? (
-          <Textarea
+          <Editor
+            apiKey="no-api-key"
+            onInit={(evt, editor) => editorRef.current = editor}
             value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full h-full resize-none border-none p-0 focus:ring-0"
-            placeholder="Start writing your note..."
+            onEditorChange={handleEditorChange}
+            init={{
+              height: '100%',
+              menubar: false,
+              plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+              ],
+              toolbar: 'undo redo | blocks | ' +
+                'bold italic forecolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help',
+              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+            }}
           />
         ) : (
           <div className="prose prose-sm max-w-none">
-            <pre className="whitespace-pre-wrap font-sans text-gray-900">
-              {note.content}
-            </pre>
+            <div dangerouslySetInnerHTML={{ __html: note.content }} />
           </div>
         )}
       </div>

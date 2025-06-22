@@ -107,12 +107,13 @@ export const useNotes = () => {
     return searchNotes(notes, searchQuery, isAdvancedSearch ? advancedFilters : undefined);
   }, [notes, searchQuery, isAdvancedSearch, advancedFilters]);
 
-  const createNote = (title: string = 'New Note', content: string = ''): Note => {
+  const createNote = (title: string = 'New Note', content: string = '', folderPath?: string): Note => {
+    const notePath = folderPath && folderPath !== 'Root' ? `${folderPath}/${title}` : title;
     const newNote: Note = {
       id: generateId(),
       title,
       content,
-      path: title,
+      path: notePath,
       links: extractLinks(content),
       tags: extractTags(content),
       createdAt: new Date(),
@@ -174,6 +175,43 @@ export const useNotes = () => {
     }
   };
 
+  const renameNote = (noteId: string, newTitle: string) => {
+    const note = notes.find(n => n.id === noteId);
+    if (note) {
+      const folderPath = note.path.includes('/') ? note.path.split('/').slice(0, -1).join('/') : '';
+      const newPath = folderPath ? `${folderPath}/${newTitle}` : newTitle;
+      
+      updateNote(noteId, { 
+        title: newTitle, 
+        path: newPath 
+      });
+    }
+  };
+
+  const renameFolder = (oldPath: string, newPath: string) => {
+    setNotes(prev => prev.map(note => {
+      if (note.path.startsWith(oldPath + '/') || note.path === oldPath) {
+        const relativePath = note.path.slice(oldPath.length);
+        const newNotePath = newPath + relativePath;
+        return { ...note, path: newNotePath };
+      }
+      return note;
+    }));
+  };
+
+  const moveNote = (noteId: string, targetFolder: string) => {
+    const note = notes.find(n => n.id === noteId);
+    if (note) {
+      const newPath = targetFolder === 'Root' ? note.title : `${targetFolder}/${note.title}`;
+      updateNote(noteId, { path: newPath });
+    }
+  };
+
+  const createNoteInFolder = (folderPath?: string) => {
+    const newNote = createNote('New Note', '# New Note\n\nStart writing your thoughts here...', folderPath);
+    selectNote(newNote.id);
+  };
+
   const exportVault = async () => {
     // This would implement ZIP export functionality
     // For now, we'll just create a simple export
@@ -213,6 +251,10 @@ export const useNotes = () => {
     updateNote,
     deleteNote,
     selectNote,
+    renameNote,
+    renameFolder,
+    moveNote,
+    createNoteInFolder,
     setSearchQuery,
     setIsAdvancedSearch,
     setAdvancedFilters,

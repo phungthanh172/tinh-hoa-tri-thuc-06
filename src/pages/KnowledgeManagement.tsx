@@ -26,6 +26,10 @@ const KnowledgeManagement = () => {
     selectNote,
     updateNote,
     deleteNote,
+    renameNote,
+    renameFolder,
+    moveNote,
+    createNoteInFolder,
     setSearchQuery,
     setIsAdvancedSearch,
     exportVault
@@ -136,6 +140,10 @@ const KnowledgeManagement = () => {
                   selectedNoteId={selectedNote?.id}
                   onSelectNote={selectNote}
                   onDeleteNote={deleteNote}
+                  onRenameNote={renameNote}
+                  onRenameFolder={renameFolder}
+                  onMoveNote={moveNote}
+                  onCreateNote={createNoteInFolder}
                 />
               )}
             </div>
