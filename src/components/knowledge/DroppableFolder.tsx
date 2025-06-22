@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { Folder, FolderOpen, Edit2, Plus, ChevronDown, ChevronRight } from 'lucide-react';
+import { Folder, FolderOpen, Edit2, Plus, ChevronDown, ChevronRight, Copy, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Note } from '@/types/note';
 import { toast } from 'sonner';
 import DraggableNote from './DraggableNote';
@@ -19,6 +20,9 @@ interface DroppableFolderProps {
   onRenameFolder: (oldPath: string, newPath: string) => void;
   onMoveNote: (noteId: string, targetFolder: string) => void;
   onCreateNote: (folderPath: string) => void;
+  onDuplicateNote: (noteId: string) => void;
+  onReorderNotes: (folderPath: string, sourceIndex: number, targetIndex: number) => void;
+  onDeleteFolder: (folderPath: string) => void;
   allFolders: string[];
 }
 
@@ -34,30 +38,52 @@ const DroppableFolder = ({
   onRenameFolder,
   onMoveNote,
   onCreateNote,
+  onDuplicateNote,
+  onReorderNotes,
+  onDeleteFolder,
   allFolders
 }: DroppableFolderProps) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const [newFolderName, setNewFolderName] = useState(folder);
   const [dragOver, setDragOver] = useState(false);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, index?: number) => {
     e.preventDefault();
     setDragOver(true);
+    if (index !== undefined) {
+      setDragOverIndex(index);
+    }
   };
 
   const handleDragLeave = () => {
     setDragOver(false);
+    setDragOverIndex(null);
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = (e: React.DragEvent, targetIndex?: number) => {
     e.preventDefault();
     setDragOver(false);
+    setDragOverIndex(null);
     
     try {
       const data = JSON.parse(e.dataTransfer.getData('text/plain'));
       if (data.type === 'note') {
-        onMoveNote(data.noteId, folder);
-        toast.success(`Moved "${data.title}" to ${folder}`);
+        const sourceNote = notes.find(note => note.id === data.noteId);
+        if (sourceNote && sourceNote.path.includes(folder)) {
+          // Reordering within the same folder
+          if (targetIndex !== undefined) {
+            const sourceIndex = notes.findIndex(note => note.id === data.noteId);
+            if (sourceIndex !== -1 && sourceIndex !== targetIndex) {
+              onReorderNotes(folder, sourceIndex, targetIndex);
+              toast.success('Note reordered');
+            }
+          }
+        } else {
+          // Moving to different folder
+          onMoveNote(data.noteId, folder);
+          toast.success(`Moved "${data.title}" to ${folder}`);
+        }
       }
     } catch (error) {
       console.error('Failed to parse drag data:', error);
@@ -81,6 +107,21 @@ const DroppableFolder = ({
     }
   };
 
+  const handleDeleteFolder = () => {
+    if (window.confirm(`Are you sure you want to delete the folder "${folder}" and all its notes?`)) {
+      onDeleteFolder(folder);
+      toast.success('Folder deleted');
+    }
+  };
+
+  const handleDuplicateFolder = () => {
+    const newFolderName = `${folder} (Copy)`;
+    notes.forEach(note => {
+      onDuplicateNote(note.id);
+    });
+    toast.success('Folder duplicated');
+  };
+
   // Sort notes by title
   const sortedNotes = [...notes].sort((a, b) => a.title.localeCompare(b.title));
 
@@ -88,12 +129,12 @@ const DroppableFolder = ({
     <div className="mb-4">
       {folder !== 'Root' && (
         <div
-          className={`flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 border-b transition-colors ${
+          className={`flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 border-b transition-colors group ${
             dragOver ? 'bg-blue-50 border-blue-200' : ''
           }`}
-          onDragOver={handleDragOver}
+          onDragOver={(e) => handleDragOver(e)}
           onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
+          onDrop={(e) => handleDrop(e)}
         >
           <div className="flex items-center space-x-2 flex-1">
             <button
@@ -135,14 +176,35 @@ const DroppableFolder = ({
             >
               <Plus className="w-3 h-3" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsRenaming(true)}
-              className="opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <Edit2 className="w-3 h-3" />
-            </Button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Edit2 className="w-3 h-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setIsRenaming(true)}>
+                  <Edit2 className="w-4 h-4 mr-2" />
+                  Rename Folder
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleDuplicateFolder}>
+                  <Copy className="w-4 h-4 mr-2" />
+                  Duplicate Folder
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={handleDeleteFolder}
+                  className="text-red-600"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete Folder
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       )}
@@ -163,17 +225,24 @@ const DroppableFolder = ({
             </div>
           )}
           
-          {sortedNotes.map((note) => (
-            <DraggableNote
+          {sortedNotes.map((note, index) => (
+            <div
               key={note.id}
-              note={note}
-              isSelected={selectedNoteId === note.id}
-              onSelect={onSelectNote}
-              onDelete={onDeleteNote}
-              onRename={onRenameNote}
-              onMoveToFolder={onMoveNote}
-              folders={allFolders.filter(f => f !== folder)}
-            />
+              className={`${dragOverIndex === index ? 'border-t-2 border-blue-500' : ''}`}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDrop={(e) => handleDrop(e, index)}
+            >
+              <DraggableNote
+                note={note}
+                isSelected={selectedNoteId === note.id}
+                onSelect={onSelectNote}
+                onDelete={onDeleteNote}
+                onRename={onRenameNote}
+                onMoveToFolder={onMoveNote}
+                onDuplicate={onDuplicateNote}
+                folders={allFolders.filter(f => f !== folder)}
+              />
+            </div>
           ))}
         </div>
       )}

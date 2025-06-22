@@ -212,6 +212,65 @@ export const useNotes = () => {
     selectNote(newNote.id);
   };
 
+  const duplicateNote = (noteId: string) => {
+    const note = notes.find(n => n.id === noteId);
+    if (note) {
+      const folderPath = note.path.includes('/') ? note.path.split('/').slice(0, -1).join('/') : '';
+      const duplicatedNote = createNote(
+        `${note.title} (Copy)`,
+        note.content,
+        folderPath || 'Root'
+      );
+      selectNote(duplicatedNote.id);
+    }
+  };
+
+  const reorderNotes = (folderPath: string, sourceIndex: number, targetIndex: number) => {
+    setNotes(prev => {
+      const folderNotes = prev.filter(note => {
+        const noteFolder = note.path.includes('/') ? note.path.split('/').slice(0, -1).join('/') : 'Root';
+        return noteFolder === folderPath;
+      });
+      
+      const otherNotes = prev.filter(note => {
+        const noteFolder = note.path.includes('/') ? note.path.split('/').slice(0, -1).join('/') : 'Root';
+        return noteFolder !== folderPath;
+      });
+
+      // Reorder the folder notes
+      const reorderedFolderNotes = [...folderNotes];
+      const [movedNote] = reorderedFolderNotes.splice(sourceIndex, 1);
+      reorderedFolderNotes.splice(targetIndex, 0, movedNote);
+
+      return [...reorderedFolderNotes, ...otherNotes];
+    });
+  };
+
+  const createFolder = (folderName: string) => {
+    // Create a placeholder note in the new folder to ensure it appears
+    createNote('New Note', '# New Note\n\nStart writing your thoughts here...', folderName);
+  };
+
+  const deleteFolder = (folderPath: string) => {
+    setNotes(prev => prev.filter(note => {
+      const noteFolder = note.path.includes('/') ? note.path.split('/').slice(0, -1).join('/') : 'Root';
+      return noteFolder !== folderPath;
+    }));
+    
+    // If selected note was in deleted folder, select another note
+    if (selectedNote) {
+      const selectedNoteFolder = selectedNote.path.includes('/') ? 
+        selectedNote.path.split('/').slice(0, -1).join('/') : 'Root';
+      if (selectedNoteFolder === folderPath) {
+        const remainingNotes = notes.filter(note => {
+          const noteFolder = note.path.includes('/') ? note.path.split('/').slice(0, -1).join('/') : 'Root';
+          return noteFolder !== folderPath;
+        });
+        setSelectedNote(remainingNotes[0] || null);
+      }
+    }
+  };
+
   const exportVault = async () => {
     // This would implement ZIP export functionality
     // For now, we'll just create a simple export
@@ -255,6 +314,10 @@ export const useNotes = () => {
     renameFolder,
     moveNote,
     createNoteInFolder,
+    duplicateNote,
+    reorderNotes,
+    createFolder,
+    deleteFolder,
     setSearchQuery,
     setIsAdvancedSearch,
     setAdvancedFilters,

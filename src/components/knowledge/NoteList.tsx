@@ -1,7 +1,10 @@
 
 import React, { useState } from 'react';
-import { FileText } from 'lucide-react';
+import { FileText, Plus, FolderPlus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Note } from '@/types/note';
+import { toast } from 'sonner';
 import DroppableFolder from './DroppableFolder';
 
 interface NoteListProps {
@@ -13,6 +16,10 @@ interface NoteListProps {
   onRenameFolder: (oldPath: string, newPath: string) => void;
   onMoveNote: (noteId: string, targetFolder: string) => void;
   onCreateNote: (folderPath?: string) => void;
+  onDuplicateNote: (noteId: string) => void;
+  onReorderNotes: (folderPath: string, sourceIndex: number, targetIndex: number) => void;
+  onCreateFolder: (folderName: string) => void;
+  onDeleteFolder: (folderPath: string) => void;
 }
 
 const NoteList = ({ 
@@ -23,9 +30,15 @@ const NoteList = ({
   onRenameNote,
   onRenameFolder,
   onMoveNote,
-  onCreateNote
+  onCreateNote,
+  onDuplicateNote,
+  onReorderNotes,
+  onCreateFolder,
+  onDeleteFolder
 }: NoteListProps) => {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['Root']));
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
 
   const toggleFolder = (folder: string) => {
     const newExpanded = new Set(expandedFolders);
@@ -35,6 +48,24 @@ const NoteList = ({
       newExpanded.add(folder);
     }
     setExpandedFolders(newExpanded);
+  };
+
+  const handleCreateFolder = () => {
+    if (newFolderName.trim()) {
+      onCreateFolder(newFolderName.trim());
+      setNewFolderName('');
+      setIsCreatingFolder(false);
+      toast.success('Folder created');
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleCreateFolder();
+    } else if (e.key === 'Escape') {
+      setNewFolderName('');
+      setIsCreatingFolder(false);
+    }
   };
 
   // Group notes by folder
@@ -49,6 +80,38 @@ const NoteList = ({
 
   return (
     <div className="h-full overflow-y-auto">
+      {/* Create Folder Section */}
+      <div className="p-4 border-b bg-gray-50">
+        <div className="flex items-center space-x-2">
+          {isCreatingFolder ? (
+            <div className="flex-1 flex items-center space-x-2">
+              <Input
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                onBlur={handleCreateFolder}
+                onKeyDown={handleKeyPress}
+                placeholder="Folder name..."
+                className="text-sm"
+                autoFocus
+              />
+              <Button size="sm" onClick={handleCreateFolder}>
+                Create
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsCreatingFolder(true)}
+              className="w-full"
+            >
+              <FolderPlus className="w-4 h-4 mr-2" />
+              Create Folder
+            </Button>
+          )}
+        </div>
+      </div>
+
       {Object.entries(notesByFolder).map(([folder, folderNotes]) => (
         <DroppableFolder
           key={folder}
@@ -63,6 +126,9 @@ const NoteList = ({
           onRenameFolder={onRenameFolder}
           onMoveNote={onMoveNote}
           onCreateNote={onCreateNote}
+          onDuplicateNote={onDuplicateNote}
+          onReorderNotes={onReorderNotes}
+          onDeleteFolder={onDeleteFolder}
           allFolders={allFolders}
         />
       ))}

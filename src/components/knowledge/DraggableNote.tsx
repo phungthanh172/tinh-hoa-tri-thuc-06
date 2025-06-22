@@ -15,6 +15,7 @@ interface DraggableNoteProps {
   onDelete: (noteId: string) => void;
   onRename: (noteId: string, newTitle: string) => void;
   onMoveToFolder: (noteId: string, folderPath: string) => void;
+  onDuplicate: (noteId: string) => void;
   folders: string[];
 }
 
@@ -25,6 +26,7 @@ const DraggableNote = ({
   onDelete, 
   onRename, 
   onMoveToFolder,
+  onDuplicate,
   folders 
 }: DraggableNoteProps) => {
   const [isRenaming, setIsRenaming] = useState(false);
@@ -65,6 +67,7 @@ const DraggableNote = ({
 
   const handleDuplicateNote = (e: React.MouseEvent) => {
     e.stopPropagation();
+    onDuplicate(note.id);
     toast.success('Note duplicated');
   };
 
@@ -153,7 +156,7 @@ const DraggableNote = ({
               <Edit2 className="w-4 h-4 mr-2" />
               Rename
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={(e) => handleDuplicateNote(e)}>
+            <DropdownMenuItem onClick={handleDuplicateNote}>
               <Copy className="w-4 h-4 mr-2" />
               Duplicate
             </DropdownMenuItem>

@@ -30,6 +30,10 @@ const KnowledgeManagement = () => {
     renameFolder,
     moveNote,
     createNoteInFolder,
+    duplicateNote,
+    reorderNotes,
+    createFolder,
+    deleteFolder,
     setSearchQuery,
     setIsAdvancedSearch,
     exportVault
@@ -144,6 +148,10 @@ const KnowledgeManagement = () => {
                   onRenameFolder={renameFolder}
                   onMoveNote={moveNote}
                   onCreateNote={createNoteInFolder}
+                  onDuplicateNote={duplicateNote}
+                  onReorderNotes={reorderNotes}
+                  onCreateFolder={createFolder}
+                  onDeleteFolder={deleteFolder}
                 />
               )}
             </div>
