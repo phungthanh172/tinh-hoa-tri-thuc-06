@@ -48,6 +48,10 @@ const KnowledgeManagement = () => {
     toast.success('New note created');
   };
 
+  const handleCreateFolder = (folderName: string) => {
+    createFolder(folderName);
+  };
+
   const handleExport = async () => {
     try {
       await exportVault();
@@ -150,7 +154,7 @@ const KnowledgeManagement = () => {
                   onCreateNote={createNoteInFolder}
                   onDuplicateNote={duplicateNote}
                   onReorderNotes={reorderNotes}
-                  onCreateFolder={createFolder}
+                  onCreateFolder={handleCreateFolder}
                   onDeleteFolder={deleteFolder}
                 />
               )}

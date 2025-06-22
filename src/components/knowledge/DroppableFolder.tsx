@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Folder, FolderOpen, Edit2, Plus, ChevronDown, ChevronRight, Copy, Trash2 } from 'lucide-react';
+import { Folder, FolderOpen, Edit2, Plus, ChevronDown, ChevronRight, Copy, Trash2, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -115,7 +115,6 @@ const DroppableFolder = ({
   };
 
   const handleDuplicateFolder = () => {
-    const newFolderName = `${folder} (Copy)`;
     notes.forEach(note => {
       onDuplicateNote(note.id);
     });
@@ -124,6 +123,9 @@ const DroppableFolder = ({
 
   // Sort notes by title
   const sortedNotes = [...notes].sort((a, b) => a.title.localeCompare(b.title));
+
+  // Filter available folders for moving, including Root option
+  const availableFolders = ['Root', ...allFolders.filter(f => f !== folder)];
 
   return (
     <div className="mb-4">
@@ -240,7 +242,7 @@ const DroppableFolder = ({
                 onRename={onRenameNote}
                 onMoveToFolder={onMoveNote}
                 onDuplicate={onDuplicateNote}
-                folders={allFolders.filter(f => f !== folder)}
+                folders={availableFolders}
               />
             </div>
           ))}

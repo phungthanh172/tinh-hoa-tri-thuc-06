@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { FileText, Hash, Calendar, MoreVertical, Edit2, Trash2, Copy, FolderOpen } from 'lucide-react';
+import { FileText, Hash, Calendar, MoreVertical, Edit2, Trash2, Copy, FolderOpen, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -69,6 +69,12 @@ const DraggableNote = ({
     e.stopPropagation();
     onDuplicate(note.id);
     toast.success('Note duplicated');
+  };
+
+  const handleMoveToFolder = (folderPath: string) => {
+    onMoveToFolder(note.id, folderPath);
+    const folderName = folderPath === 'Root' ? 'Root' : folderPath;
+    toast.success(`Moved to ${folderName}`);
   };
 
   return (
@@ -165,11 +171,14 @@ const DraggableNote = ({
                 key={folder}
                 onClick={(e) => {
                   e.stopPropagation();
-                  onMoveToFolder(note.id, folder);
-                  toast.success(`Moved to ${folder}`);
+                  handleMoveToFolder(folder);
                 }}
               >
-                <FolderOpen className="w-4 h-4 mr-2" />
+                {folder === 'Root' ? (
+                  <Home className="w-4 h-4 mr-2" />
+                ) : (
+                  <FolderOpen className="w-4 h-4 mr-2" />
+                )}
                 Move to {folder}
               </DropdownMenuItem>
             ))}
