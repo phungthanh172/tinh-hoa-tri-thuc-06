@@ -143,8 +143,8 @@ const KnowledgeManagement = () => {
 
           {/* Main Content Area */}
           <div className="flex-1 flex flex-col bg-white rounded-lg shadow-sm border">
-            <div className="p-4 border-b">
-              <Tabs value={activeView} onValueChange={(value) => setActiveView(value as 'editor' | 'graph')}>
+            <Tabs value={activeView} onValueChange={(value) => setActiveView(value as 'editor' | 'graph')}>
+              <div className="p-4 border-b">
                 <TabsList>
                   <TabsTrigger value="editor" className="flex items-center space-x-2">
                     <FileText className="w-4 h-4" />
@@ -155,35 +155,35 @@ const KnowledgeManagement = () => {
                     <span>Graph</span>
                   </TabsTrigger>
                 </TabsList>
-              </Tabs>
-            </div>
+              </div>
 
-            <div className="flex-1 overflow-hidden">
-              <TabsContent value="editor" className="h-full mt-0">
-                {selectedNote ? (
-                  <NoteEditor
-                    note={selectedNote}
-                    onUpdate={updateNote}
-                  />
-                ) : (
-                  <div className="h-full flex items-center justify-center text-gray-500">
-                    <div className="text-center">
-                      <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                      <p className="text-lg font-medium mb-2">No note selected</p>
-                      <p className="text-sm">Select a note from the sidebar or create a new one</p>
+              <div className="flex-1 overflow-hidden">
+                <TabsContent value="editor" className="h-full mt-0">
+                  {selectedNote ? (
+                    <NoteEditor
+                      note={selectedNote}
+                      onUpdate={updateNote}
+                    />
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-gray-500">
+                      <div className="text-center">
+                        <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                        <p className="text-lg font-medium mb-2">No note selected</p>
+                        <p className="text-sm">Select a note from the sidebar or create a new one</p>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </TabsContent>
+                  )}
+                </TabsContent>
 
-              <TabsContent value="graph" className="h-full mt-0">
-                <GraphView
-                  notes={notes}
-                  selectedNoteId={selectedNote?.id}
-                  onSelectNote={selectNote}
-                />
-              </TabsContent>
-            </div>
+                <TabsContent value="graph" className="h-full mt-0">
+                  <GraphView
+                    notes={notes}
+                    selectedNoteId={selectedNote?.id}
+                    onSelectNote={selectNote}
+                  />
+                </TabsContent>
+              </div>
+            </Tabs>
           </div>
 
           {/* Right Sidebar - Backlinks */}
