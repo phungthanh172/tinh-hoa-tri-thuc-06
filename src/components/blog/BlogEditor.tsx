@@ -2,9 +2,8 @@
 import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import RichTextEditor from './RichTextEditor';
+import RichTextEditor from '@/components/ui/rich-text-editor';
 
 interface BlogEditorProps {
   formData: {
@@ -75,12 +74,12 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ formData, onInputChange }) => {
 
           <div>
             <Label htmlFor="excerpt">Excerpt</Label>
-            <Textarea
-              id="excerpt"
-              placeholder="Write a brief summary of your post..."
+            <RichTextEditor
               value={formData.excerpt}
-              onChange={(e) => onInputChange('excerpt', e.target.value)}
-              rows={3}
+              onChange={(value) => onInputChange('excerpt', value)}
+              placeholder="Write a brief summary of your post..."
+              height={120}
+              simple={true}
             />
             <p className="text-xs text-gray-500 mt-1">
               Brief description shown in post previews and search results
@@ -88,11 +87,12 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ formData, onInputChange }) => {
           </div>
 
           <div>
-            <Label htmlFor="content">Content * (Markdown Supported)</Label>
+            <Label htmlFor="content">Content *</Label>
             <RichTextEditor
               value={formData.content}
               onChange={(value) => onInputChange('content', value)}
-              placeholder="Write your blog post content here using Markdown..."
+              placeholder="Write your blog post content here..."
+              height={400}
             />
           </div>
         </CardContent>
@@ -119,16 +119,15 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ formData, onInputChange }) => {
 
           <div>
             <Label htmlFor="metaDescription">Meta Description</Label>
-            <Textarea
-              id="metaDescription"
-              placeholder="Brief description for search engines..."
+            <RichTextEditor
               value={formData.metaDescription}
-              onChange={(e) => onInputChange('metaDescription', e.target.value)}
-              rows={3}
-              maxLength={160}
+              onChange={(value) => onInputChange('metaDescription', value)}
+              placeholder="Brief description for search engines..."
+              height={100}
+              simple={true}
             />
             <p className="text-xs text-gray-500 mt-1">
-              {formData.metaDescription.length}/160 characters. Description shown in search results.
+              {formData.metaDescription.replace(/<[^>]*>/g, '').length}/160 characters. Description shown in search results.
             </p>
           </div>
 
