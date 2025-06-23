@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, FileText, Network, Settings, Download, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -41,6 +40,18 @@ const KnowledgeManagement = () => {
 
   const [activeView, setActiveView] = useState<'editor' | 'graph'>('editor');
   const [showBacklinks, setShowBacklinks] = useState(false);
+
+  // Handle note selection from advanced search
+  useEffect(() => {
+    const handleSelectNote = (event: CustomEvent) => {
+      selectNote(event.detail);
+    };
+
+    window.addEventListener('selectNote', handleSelectNote as EventListener);
+    return () => {
+      window.removeEventListener('selectNote', handleSelectNote as EventListener);
+    };
+  }, [selectNote]);
 
   const handleCreateNote = () => {
     const newNote = createNote('New Note', '# New Note\n\nStart writing your thoughts here...');
