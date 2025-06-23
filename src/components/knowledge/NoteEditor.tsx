@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Save, Clock, FileText, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -45,7 +46,7 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b bg-white">
+      <div className="p-6 border-b bg-white flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex-1">
             {isEditing ? (
@@ -87,9 +88,9 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 min-h-0">
         {isEditing ? (
-          <div className="h-full p-6">
+          <div className="h-full">
             <Editor
               apiKey="kmcedy9ul404vlmhecvhrq3vw9pwr9izf5ajsp71leoew9zc"
               onInit={(evt, editor) => editorRef.current = editor}
@@ -97,7 +98,9 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
               onEditorChange={handleEditorChange}
               init={{
                 height: '100%',
+                width: '100%',
                 menubar: false,
+                resize: false,
                 plugins: [
                   'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
                   'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
@@ -115,7 +118,9 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
                     color: #374151;
                     max-width: none;
                     margin: 0;
-                    padding: 0;
+                    padding: 16px;
+                    height: 100%;
+                    box-sizing: border-box;
                   }
                 `,
                 skin: 'oxide',

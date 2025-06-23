@@ -68,149 +68,152 @@ const AdvancedSearch = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-4 space-y-6 border-b">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Advanced Search</h3>
-          <Button variant="outline" size="sm" onClick={clearAllFilters}>
-            Clear All
-          </Button>
-        </div>
-
-        {/* Search Input */}
-        <div className="space-y-2">
-          <Label className="text-sm font-medium flex items-center">
-            <Search className="w-4 h-4 mr-1" />
-            Search Query
-          </Label>
-          <Input
-            placeholder="Enter search terms..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full"
-          />
-        </div>
-
-        {/* Content Type Filter */}
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">Search In</Label>
-          <Select
-            value={advancedFilters.contentType}
-            onValueChange={(value) => handleFilterChange('contentType', value)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Content</SelectItem>
-              <SelectItem value="title">Title Only</SelectItem>
-              <SelectItem value="content">Content Only</SelectItem>
-              <SelectItem value="path">Path Only</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Date Range Filter */}
-        <div className="space-y-2">
-          <Label className="text-sm font-medium flex items-center">
-            <Calendar className="w-4 h-4 mr-1" />
-            Date Range
-          </Label>
-          <Select
-            value={advancedFilters.dateRange}
-            onValueChange={(value) => handleFilterChange('dateRange', value)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Time</SelectItem>
-              <SelectItem value="7days">Last 7 Days</SelectItem>
-              <SelectItem value="30days">Last 30 Days</SelectItem>
-              <SelectItem value="90days">Last 90 Days</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Tags Filter */}
-        <div className="space-y-2">
-          <Label className="text-sm font-medium flex items-center">
-            <Hash className="w-4 h-4 mr-1" />
-            Tags
-          </Label>
-          
-          {advancedFilters.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-2">
-              {advancedFilters.tags.map(tag => (
-                <Badge
-                  key={tag}
-                  variant="secondary"
-                  className="cursor-pointer"
-                  onClick={() => removeTag(tag)}
-                >
-                  #{tag} ×
-                </Badge>
-              ))}
-            </div>
-          )}
-
-          <div className="space-y-1 max-h-32 overflow-y-auto">
-            {allTags.map(tag => (
-              <Button
-                key={tag}
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-xs"
-                onClick={() => addTag(tag)}
-                disabled={advancedFilters.tags.includes(tag)}
-              >
-                #{tag}
-              </Button>
-            ))}
+      {/* Search Filters Section */}
+      <div className="flex-shrink-0 border-b" style={{ maxHeight: '60%', overflowY: 'auto' }}>
+        <div className="p-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Advanced Search</h3>
+            <Button variant="outline" size="sm" onClick={clearAllFilters}>
+              Clear All
+            </Button>
           </div>
-        </div>
 
-        {/* Folders Filter */}
-        <div className="space-y-2">
-          <Label className="text-sm font-medium flex items-center">
-            <Folder className="w-4 h-4 mr-1" />
-            Folders
-          </Label>
-          
-          {advancedFilters.folders.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-2">
-              {advancedFilters.folders.map(folder => (
-                <Badge
-                  key={folder}
-                  variant="secondary"
-                  className="cursor-pointer"
-                  onClick={() => removeFolder(folder)}
+          {/* Search Input */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium flex items-center">
+              <Search className="w-4 h-4 mr-1" />
+              Search Query
+            </Label>
+            <Input
+              placeholder="Enter search terms..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full"
+            />
+          </div>
+
+          {/* Content Type Filter */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Search In</Label>
+            <Select
+              value={advancedFilters.contentType}
+              onValueChange={(value) => handleFilterChange('contentType', value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Content</SelectItem>
+                <SelectItem value="title">Title Only</SelectItem>
+                <SelectItem value="content">Content Only</SelectItem>
+                <SelectItem value="path">Path Only</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Date Range Filter */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium flex items-center">
+              <Calendar className="w-4 h-4 mr-1" />
+              Date Range
+            </Label>
+            <Select
+              value={advancedFilters.dateRange}
+              onValueChange={(value) => handleFilterChange('dateRange', value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="7days">Last 7 Days</SelectItem>
+                <SelectItem value="30days">Last 30 Days</SelectItem>
+                <SelectItem value="90days">Last 90 Days</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Tags Filter */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium flex items-center">
+              <Hash className="w-4 h-4 mr-1" />
+              Tags
+            </Label>
+            
+            {advancedFilters.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 mb-2">
+                {advancedFilters.tags.map(tag => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="cursor-pointer"
+                    onClick={() => removeTag(tag)}
+                  >
+                    #{tag} ×
+                  </Badge>
+                ))}
+              </div>
+            )}
+
+            <div className="space-y-1 max-h-24 overflow-y-auto">
+              {allTags.map(tag => (
+                <Button
+                  key={tag}
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start text-xs"
+                  onClick={() => addTag(tag)}
+                  disabled={advancedFilters.tags.includes(tag)}
                 >
-                  {folder} ×
-                </Badge>
+                  #{tag}
+                </Button>
               ))}
             </div>
-          )}
+          </div>
 
-          <div className="space-y-1 max-h-32 overflow-y-auto">
-            {allFolders.map(folder => (
-              <Button
-                key={folder}
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-xs"
-                onClick={() => addFolder(folder)}
-                disabled={advancedFilters.folders.includes(folder)}
-              >
-                <Folder className="w-3 h-3 mr-1" />
-                {folder}
-              </Button>
-            ))}
+          {/* Folders Filter */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium flex items-center">
+              <Folder className="w-4 h-4 mr-1" />
+              Folders
+            </Label>
+            
+            {advancedFilters.folders.length > 0 && (
+              <div className="flex flex-wrap gap-1 mb-2">
+                {advancedFilters.folders.map(folder => (
+                  <Badge
+                    key={folder}
+                    variant="secondary"
+                    className="cursor-pointer"
+                    onClick={() => removeFolder(folder)}
+                  >
+                    {folder} ×
+                  </Badge>
+                ))}
+              </div>
+            )}
+
+            <div className="space-y-1 max-h-24 overflow-y-auto">
+              {allFolders.map(folder => (
+                <Button
+                  key={folder}
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start text-xs"
+                  onClick={() => addFolder(folder)}
+                  disabled={advancedFilters.folders.includes(folder)}
+                >
+                  <Folder className="w-3 h-3 mr-1" />
+                  {folder}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Search Results */}
-      <div className="flex-1 overflow-y-auto">
+      {/* Search Results Section */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
         {filteredResults.length > 0 ? (
           <div className="p-4">
             <div className="mb-4">
