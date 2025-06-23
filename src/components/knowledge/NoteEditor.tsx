@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Save, Clock, FileText, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -92,7 +91,7 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
         {isEditing ? (
           <div className="h-full p-6">
             <Editor
-              apiKey="no-api-key"
+              apiKey="kmcedy9ul404vlmhecvhrq3vw9pwr9izf5ajsp71leoew9zc"
               onInit={(evt, editor) => editorRef.current = editor}
               value={content}
               onEditorChange={handleEditorChange}
@@ -130,7 +129,7 @@ const NoteEditor = ({ note, onUpdate }: NoteEditorProps) => {
               <div 
                 className="prose prose-lg prose-gray max-w-none
                   prose-headings:font-bold prose-headings:text-gray-900
-                  prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-0
+                  prose-h1: prose-h1:mb-6 prose-h1:mt-0
                   prose-h2:text-2xl prose-h2:mb-5 prose-h2:mt-8
                   prose-h3:text-xl prose-h3:mb-4 prose-h3:mt-6
                   prose-p:text-gray-700 prose-p:leading-7 prose-p:mb-4

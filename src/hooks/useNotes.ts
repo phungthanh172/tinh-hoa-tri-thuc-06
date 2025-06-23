@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from 'react';
 import { Note, NoteVersion, SearchFilters } from '@/types/note';
 import { extractLinks, extractTags, generateId, searchNotes } from '@/utils/noteUtils';
@@ -36,7 +35,8 @@ Try editing this note to see how the system works!`,
     tags: ['tutorial', 'knowledge-management'],
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
-    versions: []
+    versions: [],
+    index: 0
   },
   {
     id: 'projects',
@@ -79,7 +79,8 @@ This note contains information about my ongoing projects.
     tags: ['project', 'development', 'knowledge', 'learning', 'goals', 'knowledge-management'],
     createdAt: new Date('2024-01-02'),
     updatedAt: new Date(),
-    versions: []
+    versions: [],
+    index: 1
   }
 ];
 
@@ -107,6 +108,16 @@ export const useNotes = () => {
     return searchNotes(notes, searchQuery, isAdvancedSearch ? advancedFilters : undefined);
   }, [notes, searchQuery, isAdvancedSearch, advancedFilters]);
 
+  const getNextIndex = (folderPath?: string) => {
+    if (!folderPath || folderPath === 'Root') {
+      const rootNotes = notes.filter(n => !n.path.includes('/'));
+      return rootNotes.length > 0 ? Math.max(...rootNotes.map(n => n.index)) + 1 : 0;
+    } else {
+      const folderNotes = notes.filter(n => n.path.startsWith(folderPath + '/'));
+      return folderNotes.length > 0 ? Math.max(...folderNotes.map(n => n.index)) + 1 : 0;
+    }
+  };
+
   const createNote = (title: string = 'New Note', content: string = '', folderPath?: string): Note => {
     const notePath = folderPath && folderPath !== 'Root' ? `${folderPath}/${title}` : title;
     const newNote: Note = {
@@ -118,10 +129,22 @@ export const useNotes = () => {
       tags: extractTags(content),
       createdAt: new Date(),
       updatedAt: new Date(),
-      versions: []
+      versions: [],
+      index: getNextIndex(folderPath)
     };
 
-    setNotes(prev => [newNote, ...prev]);
+    setNotes(prev => {
+      const updated = [newNote, ...prev];
+      return updated.sort((a, b) => {
+        const aFolder = a.path.includes('/') ? a.path.split('/').slice(0, -1).join('/') : 'Root';
+        const bFolder = b.path.includes('/') ? b.path.split('/').slice(0, -1).join('/') : 'Root';
+        
+        if (aFolder !== bFolder) {
+          return aFolder.localeCompare(bFolder);
+        }
+        return a.index - b.index;
+      });
+    });
     return newNote;
   };
 
@@ -203,7 +226,8 @@ export const useNotes = () => {
     const note = notes.find(n => n.id === noteId);
     if (note) {
       const newPath = targetFolder === 'Root' ? note.title : `${targetFolder}/${note.title}`;
-      updateNote(noteId, { path: newPath });
+      const newIndex = getNextIndex(targetFolder);
+      updateNote(noteId, { path: newPath, index: newIndex });
     }
   };
 
@@ -230,7 +254,7 @@ export const useNotes = () => {
       const folderNotes = prev.filter(note => {
         const noteFolder = note.path.includes('/') ? note.path.split('/').slice(0, -1).join('/') : 'Root';
         return noteFolder === folderPath;
-      });
+      }).sort((a, b) => a.index - b.index);
       
       const otherNotes = prev.filter(note => {
         const noteFolder = note.path.includes('/') ? note.path.split('/').slice(0, -1).join('/') : 'Root';
@@ -242,7 +266,20 @@ export const useNotes = () => {
       const [movedNote] = reorderedFolderNotes.splice(sourceIndex, 1);
       reorderedFolderNotes.splice(targetIndex, 0, movedNote);
 
-      return [...reorderedFolderNotes, ...otherNotes];
+      // Update indexes
+      reorderedFolderNotes.forEach((note, index) => {
+        note.index = index;
+      });
+
+      return [...reorderedFolderNotes, ...otherNotes].sort((a, b) => {
+        const aFolder = a.path.includes('/') ? a.path.split('/').slice(0, -1).join('/') : 'Root';
+        const bFolder = b.path.includes('/') ? b.path.split('/').slice(0, -1).join('/') : 'Root';
+        
+        if (aFolder !== bFolder) {
+          return aFolder.localeCompare(bFolder);
+        }
+        return a.index - b.index;
+      });
     });
   };
 

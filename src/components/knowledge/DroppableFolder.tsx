@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Folder, FolderOpen, Edit2, Plus, ChevronDown, ChevronRight, Copy, Trash2, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -73,7 +72,7 @@ const DroppableFolder = ({
         if (sourceNote && sourceNote.path.includes(folder)) {
           // Reordering within the same folder
           if (targetIndex !== undefined) {
-            const sourceIndex = notes.findIndex(note => note.id === data.noteId);
+            const sourceIndex = sortedNotes.findIndex(note => note.id === data.noteId);
             if (sourceIndex !== -1 && sourceIndex !== targetIndex) {
               onReorderNotes(folder, sourceIndex, targetIndex);
               toast.success('Note reordered');
@@ -121,8 +120,8 @@ const DroppableFolder = ({
     toast.success('Folder duplicated');
   };
 
-  // Sort notes by title
-  const sortedNotes = [...notes].sort((a, b) => a.title.localeCompare(b.title));
+  // Sort notes by index instead of title
+  const sortedNotes = [...notes].sort((a, b) => a.index - b.index);
 
   // Filter available folders for moving, including Root option
   const availableFolders = ['Root', ...allFolders.filter(f => f !== folder)];

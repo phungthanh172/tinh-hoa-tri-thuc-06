@@ -17,6 +17,7 @@ export interface Note {
   createdAt: Date;
   updatedAt: Date;
   versions: NoteVersion[];
+  index: number; // Add index field for ordering
 }
 
 export interface GraphNode {
