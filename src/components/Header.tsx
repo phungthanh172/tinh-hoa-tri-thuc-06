@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Search, ShoppingCart, Globe, Menu, User, Bell, ChevronDown } from 'lucide-react';
+import { Search, ShoppingCart, Globe, Menu, User, Bell, ChevronDown, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -10,20 +9,21 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Link, useNavigate } from 'react-router-dom';
 import { Language, Labels, LabelsVI } from '@/constants/labels';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [language, setLanguage] = useState(Language.EN);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
-  // Mock login status - in a real app, this would come from auth context/state
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
@@ -34,6 +34,26 @@ const Header = () => {
 
   const handleToggleLanguage = (lang: Language) => {
     setLanguage(lang);
+  };
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Logged out successfully');
+    navigate('/');
+  };
+
+  const getUserDashboardLink = () => {
+    if (!user) return '/';
+    switch (user.role) {
+      case 'admin':
+        return '/admin/dashboard';
+      case 'instructor':
+        return '/instructor/dashboard';
+      case 'student':
+        return '/student/dashboard';
+      default:
+        return '/';
+    }
   };
 
   const t = (labelKey: keyof typeof Labels) =>
@@ -94,7 +114,7 @@ const Header = () => {
     <header className="border-b bg-white sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo và Categories */}
+          {/* Logo and Categories */}
           <div className="flex items-center space-x-8">
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-purple-600 rounded"></div>
@@ -160,20 +180,24 @@ const Header = () => {
             <Link to="/elite-education" className="hidden lg:block text-gray-600 hover:text-purple-600">
               {t("ELITE_EDUCATION")}
             </Link>
-            <Link to="/instructor/dashboard" className="hidden lg:block text-gray-600 hover:text-purple-600">
-              {t("BECOME_TEACHER")}
-            </Link>
+            
+            {user && user.role === 'instructor' && (
+              <Link to="/instructor/dashboard" className="hidden lg:block text-gray-600 hover:text-purple-600">
+                {t("BECOME_TEACHER")}
+              </Link>
+            )}
+            
             <Link to="/blog" className="hidden lg:block text-gray-600 hover:text-purple-600">
               {t("BLOG")}
             </Link>
             
-            {isLoggedIn && (
+            {user && (
               <Link to="/courses" className="hidden lg:block text-gray-600 hover:text-purple-600">
                 {t("MY_LEARNING")}
               </Link>
             )}
 
-            {isLoggedIn && (
+            {user && (
               <button className="relative">
                 <Bell className="w-6 h-6 text-gray-600" />
                 <Badge className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center">
@@ -189,13 +213,41 @@ const Header = () => {
               </Badge>
             </Link>
 
-            {isLoggedIn ? (
-              <Link to="/profile">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" />
-                  <AvatarFallback>U</AvatarFallback>
-                </Avatar>
-              </Link>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center space-x-2">
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={user.avatar} />
+                      <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-3 py-2 border-b">
+                    <p className="font-medium">{user.name}</p>
+                    <p className="text-sm text-gray-500">{user.email}</p>
+                    <p className="text-xs text-purple-600 capitalize">{user.role}</p>
+                  </div>
+                  <DropdownMenuItem asChild>
+                    <Link to={getUserDashboardLink()}>
+                      <User className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">
+                      <User className="w-4 h-4 mr-2" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <>
                 <Button variant="outline" size="sm" asChild>
@@ -237,4 +289,3 @@ const Header = () => {
 };
 
 export default Header;
-
