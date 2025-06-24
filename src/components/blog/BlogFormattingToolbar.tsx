@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { bold, italic, list, quote } from 'lucide-react';
+import { Bold, Italic, List, Quote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 
@@ -10,10 +10,10 @@ interface BlogFormattingToolbarProps {
 
 const BlogFormattingToolbar = ({ onInsertFormat }: BlogFormattingToolbarProps) => {
   const formatButtons = [
-    { icon: bold, action: () => onInsertFormat('**', '**'), title: 'Bold' },
-    { icon: italic, action: () => onInsertFormat('*', '*'), title: 'Italic' },
-    { icon: quote, action: () => onInsertFormat('> '), title: 'Quote' },
-    { icon: list, action: () => onInsertFormat('- '), title: 'List' },
+    { icon: Bold, action: () => onInsertFormat('**', '**'), title: 'Bold' },
+    { icon: Italic, action: () => onInsertFormat('*', '*'), title: 'Italic' },
+    { icon: Quote, action: () => onInsertFormat('> '), title: 'Quote' },
+    { icon: List, action: () => onInsertFormat('- '), title: 'List' },
   ];
 
   return (
