@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Download, RefreshCw, CreditCard } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,18 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-
-interface Payout {
-  id: number;
-  instructor: string;
-  amount: number;
-  period: string;
-  status: string;
-  dueDate: string;
-  courses: number;
-  processedDate?: string;
-  holdReason?: string;
-}
+import { Payout } from '@/types/payout';
 
 interface InstructorPayoutsSectionProps {
   payouts: Payout[];
@@ -166,7 +154,7 @@ const InstructorPayoutsSection: React.FC<InstructorPayoutsSectionProps> = ({
                     }>
                       {payout.status}
                     </Badge>
-                    {payout.status === 'Hold' && (
+                    {payout.status === 'Hold' && payout.holdReason && (
                       <div className="text-xs text-red-600 mt-1">{payout.holdReason}</div>
                     )}
                   </TableCell>
@@ -198,7 +186,7 @@ const InstructorPayoutsSection: React.FC<InstructorPayoutsSectionProps> = ({
                             <div className="flex space-x-2">
                               <Button 
                                 className="flex-1"
-                                onClick={() => onPayoutAction(payout.id, 'process')}
+                                onClick={() => onPayoutAction(payout.id, 'approve')}
                               >
                                 Process Payout
                               </Button>
@@ -215,7 +203,7 @@ const InstructorPayoutsSection: React.FC<InstructorPayoutsSectionProps> = ({
                           {payout.status === 'Hold' && (
                             <Button 
                               className="w-full"
-                              onClick={() => onPayoutAction(payout.id, 'release')}
+                              onClick={() => onPayoutAction(payout.id, 'approve')}
                             >
                               Release Hold
                             </Button>

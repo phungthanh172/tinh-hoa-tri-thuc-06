@@ -4,6 +4,7 @@ import FinancialOverviewCards from './financial/FinancialOverviewCards';
 import InstructorPayoutsSection from './financial/InstructorPayoutsSection';
 import RefundManagementSection from './financial/RefundManagementSection';
 import { toast } from 'sonner';
+import { Payout } from '@/types/payout';
 
 const FinancialOversight = () => {
   const [financialData] = useState({
@@ -15,7 +16,7 @@ const FinancialOversight = () => {
     monthlyGrowth: 15.8
   });
 
-  const [payouts, setPayouts] = useState([
+  const [payouts, setPayouts] = useState<Payout[]>([
     {
       id: 1,
       instructor: "John Smith",
@@ -77,13 +78,28 @@ const FinancialOversight = () => {
         switch (action) {
           case 'approve':
             toast.success(`Payout approved for ${payout.instructor}`);
-            return { ...payout, status: 'Processed', processedDate: new Date().toISOString().split('T')[0] };
+            return { 
+              ...payout, 
+              status: 'Processed' as const, 
+              processedDate: new Date().toISOString().split('T')[0],
+              holdReason: undefined
+            };
           case 'hold':
             toast.warning(`Payout put on hold for ${payout.instructor}`);
-            return { ...payout, status: 'Hold', holdReason: 'Manual review required' };
+            return { 
+              ...payout, 
+              status: 'Hold' as const, 
+              holdReason: 'Manual review required',
+              processedDate: undefined
+            };
           case 'reject':
             toast.error(`Payout rejected for ${payout.instructor}`);
-            return { ...payout, status: 'Rejected' };
+            return { 
+              ...payout, 
+              status: 'Rejected' as const,
+              processedDate: undefined,
+              holdReason: undefined
+            };
           default:
             return payout;
         }
