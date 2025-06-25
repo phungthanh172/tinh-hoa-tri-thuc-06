@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Users, BookOpen, DollarSign, Settings, BarChart3, Shield, FileText, AlertTriangle, Activity, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ import ManagerFeatureNews from '@/components/admin/ManagerFeatureNews';
 import ABTestingAnalytics from '@/components/admin/ABTestingAnalytics';
 import ScheduledReports from '@/components/admin/ScheduledReports';
 import ThirdPartyIntegrations from '@/components/admin/ThirdPartyIntegrations';
+import ChatManagement from '@/components/admin/ChatManagement';
 
 const AdminDashboard = () => {
   const [adminStats] = useState({
@@ -55,6 +57,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
             <TabsTrigger value="news">News</TabsTrigger>
@@ -62,7 +65,6 @@ const AdminDashboard = () => {
             <TabsTrigger value="financial">Financial</TabsTrigger>
             <TabsTrigger value="platform">Platform</TabsTrigger>
             <TabsTrigger value="support">Support</TabsTrigger>
-            <TabsTrigger value="system">System</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
 
@@ -76,6 +78,10 @@ const AdminDashboard = () => {
 
           <TabsContent value="courses">
             <CourseModeration />
+          </TabsContent>
+
+          <TabsContent value="chat">
+            <ChatManagement />
           </TabsContent>
 
           <TabsContent value="content">
@@ -104,10 +110,6 @@ const AdminDashboard = () => {
 
           <TabsContent value="support">
             <SupportManagement />
-          </TabsContent>
-
-          <TabsContent value="system">
-            <SystemMonitoring />
           </TabsContent>
 
           <TabsContent value="reports">
