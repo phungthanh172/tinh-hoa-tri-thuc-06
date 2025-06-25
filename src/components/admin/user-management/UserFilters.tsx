@@ -1,8 +1,10 @@
 
 import React from 'react';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, RefreshCw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface UserFiltersProps {
   searchTerm: string;
@@ -21,6 +23,34 @@ const UserFilters = ({
   roleFilter,
   setRoleFilter
 }: UserFiltersProps) => {
+  
+  const handleReset = () => {
+    setSearchTerm('');
+    setStatusFilter('all');
+    setRoleFilter('all');
+    toast.success('Filters reset successfully');
+    console.log('User filters reset');
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    if (value.length > 2) {
+      console.log(`Searching users with term: ${value}`);
+    }
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value);
+    console.log(`Status filter changed to: ${value}`);
+    toast.success(`Showing ${value === 'all' ? 'all' : value} users`);
+  };
+
+  const handleRoleChange = (value: string) => {
+    setRoleFilter(value);
+    console.log(`Role filter changed to: ${value}`);
+    toast.success(`Showing ${value === 'all' ? 'all roles' : value + 's'}`);
+  };
+
   return (
     <div className="flex flex-col md:flex-row gap-4 mb-6">
       <div className="flex-1 relative">
@@ -28,11 +58,11 @@ const UserFilters = ({
         <Input
           placeholder="Search users by name or email..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => handleSearchChange(e.target.value)}
           className="pl-10"
         />
       </div>
-      <Select value={statusFilter} onValueChange={setStatusFilter}>
+      <Select value={statusFilter} onValueChange={handleStatusChange}>
         <SelectTrigger className="w-40">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
@@ -43,7 +73,7 @@ const UserFilters = ({
           <SelectItem value="inactive">Inactive</SelectItem>
         </SelectContent>
       </Select>
-      <Select value={roleFilter} onValueChange={setRoleFilter}>
+      <Select value={roleFilter} onValueChange={handleRoleChange}>
         <SelectTrigger className="w-40">
           <SelectValue placeholder="Role" />
         </SelectTrigger>
@@ -54,6 +84,10 @@ const UserFilters = ({
           <SelectItem value="admin">Admin</SelectItem>
         </SelectContent>
       </Select>
+      <Button variant="outline" onClick={handleReset} className="flex items-center space-x-2">
+        <RefreshCw className="w-4 h-4" />
+        <span>Reset</span>
+      </Button>
     </div>
   );
 };

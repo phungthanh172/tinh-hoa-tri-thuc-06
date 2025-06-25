@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -173,7 +173,10 @@ const ChatManagement = () => {
   const allTags = Array.from(new Set(chatUsers.flatMap(user => user.tags)));
 
   const handleSendMessage = () => {
-    if (!message.trim()) return;
+    if (!message.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
 
     const newMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -197,12 +200,20 @@ const ChatManagement = () => {
   };
 
   const handleUpdateUser = () => {
-    if (!editingUser) return;
+    if (!editingUser) {
+      toast.error('No user selected for editing');
+      return;
+    }
+
+    if (!newNickname.trim() && !newTag.trim()) {
+      toast.error('Please provide a nickname or tag to update');
+      return;
+    }
 
     const updatedUser: ChatUser = {
       ...editingUser,
-      nickname: newNickname || editingUser.nickname,
-      tags: newTag ? [...editingUser.tags, newTag] : editingUser.tags
+      nickname: newNickname.trim() || editingUser.nickname,
+      tags: newTag.trim() ? [...editingUser.tags, newTag.trim()] : editingUser.tags
     };
 
     setChatUsers(prev => prev.map(u => u.id === editingUser.id ? updatedUser : u));
@@ -210,7 +221,7 @@ const ChatManagement = () => {
     setEditingUser(null);
     setNewNickname('');
     setNewTag('');
-    toast.success('User updated successfully');
+    toast.success(`User ${updatedUser.name} updated successfully`);
   };
 
   const removeTag = (userId: string, tagToRemove: string) => {
@@ -219,10 +230,14 @@ const ChatManagement = () => {
         ? { ...u, tags: u.tags.filter(tag => tag !== tagToRemove) }
         : u
     ));
+    toast.success('Tag removed successfully');
   };
 
   const sendAnnouncement = () => {
-    if (!message.trim()) return;
+    if (!message.trim()) {
+      toast.error('Please enter an announcement message');
+      return;
+    }
 
     const announcement: ChatMessage = {
       id: Date.now().toString(),
@@ -337,6 +352,9 @@ const ChatManagement = () => {
                       <DialogContent>
                         <DialogHeader>
                           <DialogTitle>Edit User: {chatUser.name}</DialogTitle>
+                          <DialogDescription>
+                            Update user nickname and manage tags for better organization.
+                          </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4">
                           <div>
