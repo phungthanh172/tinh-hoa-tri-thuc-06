@@ -9,7 +9,28 @@ import { toast } from 'sonner';
 
 const CourseEdit = () => {
   const { courseId } = useParams();
-  const [courseData, setCourseData] = useState(null);
+  const [courseData, setCourseData] = useState({
+    title: '',
+    subtitle: '',
+    description: '',
+    category: '',
+    level: '',
+    language: 'English',
+    price: 0,
+    originalPrice: 0,
+    targetAudience: '',
+    learningObjectives: [''],
+    prerequisites: '',
+    thumbnail: null as File | null,
+    promotionalVideo: null as File | null,
+    keywords: '',
+    isDraft: true,
+    instructor: 'Current User',
+    instructorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
+    image: 'https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=300&h=200&fit=crop',
+    duration: '0 hours',
+    lectures: 0
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -18,8 +39,25 @@ const CourseEdit = () => {
     const mockCourseData = {
       id: courseId,
       title: "Sample Course",
+      subtitle: "Learn the fundamentals",
       description: "This is a sample course for editing",
-      price: 99.99
+      category: "Programming",
+      level: "Beginner",
+      language: "English",
+      price: 99.99,
+      originalPrice: 149.99,
+      targetAudience: "Beginners",
+      learningObjectives: ["Learn basics", "Practice coding"],
+      prerequisites: "None",
+      thumbnail: null as File | null,
+      promotionalVideo: null as File | null,
+      keywords: "programming, basics",
+      isDraft: true,
+      instructor: 'Current User',
+      instructorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
+      image: 'https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=300&h=200&fit=crop',
+      duration: '4 hours',
+      lectures: 12
     };
     setCourseData(mockCourseData);
   }, [courseId]);
@@ -57,9 +95,11 @@ const CourseEdit = () => {
           isLoading={isLoading}
         />
         
-        {courseData && (
-          <CourseCreationWizard initialData={courseData} />
-        )}
+        <CourseCreationWizard 
+          courseData={courseData}
+          setCourseData={setCourseData}
+          isEditing={true}
+        />
       </div>
 
       <Footer />

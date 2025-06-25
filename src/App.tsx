@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
@@ -43,10 +44,10 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ProgressProvider>
-          <GamificationProvider>
-            <Router>
+      <Router>
+        <AuthProvider>
+          <ProgressProvider>
+            <GamificationProvider>
               <div className="App">
                 <Routes>
                   <Route path="/" element={<Index />} />
@@ -102,75 +103,75 @@ function App() {
 
                   {/* Student Routes */}
                   <Route path="/student/dashboard" element={
-                    <ProtectedRoute allowedRoles={['student']}>
+                    <ProtectedRoute requiredRole={['student']}>
                       <StudentDashboard />
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/student/messages" element={
-                    <ProtectedRoute allowedRoles={['student']}>
+                    <ProtectedRoute requiredRole={['student']}>
                       <StudentMessages />
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/student/notifications" element={
-                    <ProtectedRoute allowedRoles={['student']}>
+                    <ProtectedRoute requiredRole={['student']}>
                       <StudentNotifications />
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/student/certificates" element={
-                    <ProtectedRoute allowedRoles={['student']}>
+                    <ProtectedRoute requiredRole={['student']}>
                       <StudentCertificates />
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/student/wishlist" element={
-                    <ProtectedRoute allowedRoles={['student']}>
+                    <ProtectedRoute requiredRole={['student']}>
                       <StudentWishlist />
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/student/purchases" element={
-                    <ProtectedRoute allowedRoles={['student']}>
+                    <ProtectedRoute requiredRole={['student']}>
                       <PurchaseHistory />
                     </ProtectedRoute>
                   } />
 
                   {/* Instructor Routes */}
                   <Route path="/instructor/dashboard" element={
-                    <ProtectedRoute allowedRoles={['instructor']}>
+                    <ProtectedRoute requiredRole={['instructor']}>
                       <InstructorDashboard />
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/instructor/course/create" element={
-                    <ProtectedRoute allowedRoles={['instructor']}>
+                    <ProtectedRoute requiredRole={['instructor']}>
                       <CourseCreation />
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/instructor/course/:courseId/edit" element={
-                    <ProtectedRoute allowedRoles={['instructor']}>
+                    <ProtectedRoute requiredRole={['instructor']}>
                       <CourseEdit />
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/course-creator" element={
-                    <ProtectedRoute allowedRoles={['instructor']}>
+                    <ProtectedRoute requiredRole={['instructor']}>
                       <CourseCreator />
                     </ProtectedRoute>
                   } />
                   
                   <Route path="/blog/write" element={
-                    <ProtectedRoute allowedRoles={['instructor', 'admin']}>
+                    <ProtectedRoute requiredRole={['instructor', 'admin']}>
                       <WriteBlog />
                     </ProtectedRoute>
                   } />
 
                   {/* Admin Routes */}
                   <Route path="/admin/dashboard" element={
-                    <ProtectedRoute allowedRoles={['admin']}>
+                    <ProtectedRoute requiredRole={['admin']}>
                       <AdminDashboard />
                     </ProtectedRoute>
                   } />
@@ -187,10 +188,10 @@ function App() {
                 </Routes>
                 <Toaster />
               </div>
-            </Router>
-          </GamificationProvider>
-        </ProgressProvider>
-      </AuthProvider>
+            </GamificationProvider>
+          </ProgressProvider>
+        </AuthProvider>
+      </Router>
     </QueryClientProvider>
   );
 }
