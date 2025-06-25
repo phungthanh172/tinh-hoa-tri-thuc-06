@@ -8,12 +8,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { CreditCard, Building, Smartphone, Save, CheckCircle } from 'lucide-react';
+import { CreditCard, Building, Smartphone, Save, CheckCircle, Loader2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { toast } from 'sonner';
 
 const PayoutSettings = () => {
   const [payoutMethod, setPayoutMethod] = useState('paypal');
   const [autoPayouts, setAutoPayouts] = useState(true);
   const [minThreshold, setMinThreshold] = useState('100');
+  const [isRequestingPayout, setIsRequestingPayout] = useState(false);
+  const [isSavingMethod, setIsSavingMethod] = useState(false);
+  const [currentBalance] = useState(1847.50);
 
   const payoutMethods = [
     {
@@ -65,6 +70,31 @@ const PayoutSettings = () => {
       reference: 'PO-2024-003'
     }
   ];
+
+  const handleSavePayoutMethod = () => {
+    setIsSavingMethod(true);
+    console.log('Saving payout method:', payoutMethod);
+    
+    setTimeout(() => {
+      setIsSavingMethod(false);
+      toast.success('Payout method saved successfully');
+    }, 1000);
+  };
+
+  const handleRequestPayout = () => {
+    if (currentBalance < parseInt(minThreshold)) {
+      toast.error(`Minimum payout threshold is $${minThreshold}`);
+      return;
+    }
+
+    setIsRequestingPayout(true);
+    console.log('Requesting payout for:', currentBalance);
+    
+    setTimeout(() => {
+      setIsRequestingPayout(false);
+      toast.success(`Payout request of $${currentBalance.toFixed(2)} submitted successfully`);
+    }, 2000);
+  };
 
   return (
     <div className="space-y-6">
@@ -128,6 +158,7 @@ const PayoutSettings = () => {
                     type="email"
                     placeholder="your.email@example.com"
                     className="mt-1"
+                    defaultValue="instructor@example.com"
                   />
                 </div>
               </div>
@@ -174,8 +205,40 @@ const PayoutSettings = () => {
               </div>
             )}
 
-            <Button className="w-full">
-              <Save className="w-4 h-4 mr-2" />
+            {payoutMethod === 'wise' && (
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="wise-email">Wise Account Email</Label>
+                  <Input
+                    id="wise-email"
+                    type="email"
+                    placeholder="your.email@wise.com"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="wise-currency">Preferred Currency</Label>
+                  <Select defaultValue="usd">
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="usd">USD - US Dollar</SelectItem>
+                      <SelectItem value="eur">EUR - Euro</SelectItem>
+                      <SelectItem value="gbp">GBP - British Pound</SelectItem>
+                      <SelectItem value="cad">CAD - Canadian Dollar</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
+
+            <Button className="w-full" onClick={handleSavePayoutMethod} disabled={isSavingMethod}>
+              {isSavingMethod ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4 mr-2" />
+              )}
               Save Payout Method
             </Button>
           </CardContent>
@@ -238,11 +301,56 @@ const PayoutSettings = () => {
 
             <div className="space-y-2">
               <h4 className="font-medium">Current Balance</h4>
-              <div className="text-2xl font-bold text-green-600">$1,847.50</div>
+              <div className="text-2xl font-bold text-green-600">${currentBalance.toFixed(2)}</div>
               <p className="text-sm text-gray-600">Available for payout</p>
-              <Button variant="outline" className="w-full">
-                Request Payout
-              </Button>
+              
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    Request Payout
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Request Payout</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Available Balance</p>
+                      <p className="text-2xl font-bold text-green-600">${currentBalance.toFixed(2)}</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm text-gray-600">Payout Method</p>
+                      <p className="font-medium">{payoutMethods.find(m => m.id === payoutMethod)?.name}</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm text-gray-600">Processing Time</p>
+                      <p className="font-medium">{payoutMethods.find(m => m.id === payoutMethod)?.processingTime}</p>
+                    </div>
+                    
+                    <div className="flex space-x-2">
+                      <Button 
+                        className="flex-1" 
+                        onClick={handleRequestPayout}
+                        disabled={isRequestingPayout || currentBalance < parseInt(minThreshold)}
+                      >
+                        {isRequestingPayout ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : null}
+                        Request ${currentBalance.toFixed(2)}
+                      </Button>
+                    </div>
+                    
+                    {currentBalance < parseInt(minThreshold) && (
+                      <p className="text-sm text-red-600">
+                        Minimum threshold of ${minThreshold} not reached
+                      </p>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </CardContent>
         </Card>
