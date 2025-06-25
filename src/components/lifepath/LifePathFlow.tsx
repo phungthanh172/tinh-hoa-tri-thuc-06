@@ -12,13 +12,14 @@ import {
   Edge,
   Node,
   BackgroundVariant,
+  NodeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import LifeDomainNode from './nodes/LifeDomainNode';
 import MilestoneNode from './nodes/MilestoneNode';
 import { toast } from 'sonner';
 
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   lifeDomain: LifeDomainNode,
   milestone: MilestoneNode,
 };

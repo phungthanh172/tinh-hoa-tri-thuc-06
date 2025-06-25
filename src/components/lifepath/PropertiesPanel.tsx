@@ -7,10 +7,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, Star, AlertTriangle, Clock, Target, Zap, Heart, Meh, Frown } from 'lucide-react';
+import { Node } from '@xyflow/react';
 
 interface PropertiesPanelProps {
-  node: any;
-  onUpdate: (node: any) => void;
+  node: Node | null;
+  onUpdate: (node: Node) => void;
   onClose: () => void;
 }
 
@@ -28,13 +29,13 @@ const PropertiesPanel = ({ node, onUpdate, onClose }: PropertiesPanelProps) => {
   useEffect(() => {
     if (node?.data) {
       setFormData({
-        label: node.data.label || '',
-        description: node.data.description || '',
-        priority: node.data.priority || 'medium',
-        deadline: node.data.deadline || '',
-        emotionTag: node.data.emotionTag || 'neutral',
-        icon: node.data.icon || '📌',
-        color: node.data.color || '#3b82f6',
+        label: (node.data as any).label || '',
+        description: (node.data as any).description || '',
+        priority: (node.data as any).priority || 'medium',
+        deadline: (node.data as any).deadline || '',
+        emotionTag: (node.data as any).emotionTag || 'neutral',
+        icon: (node.data as any).icon || '📌',
+        color: (node.data as any).color || '#3b82f6',
       });
     }
   }, [node]);
@@ -43,11 +44,13 @@ const PropertiesPanel = ({ node, onUpdate, onClose }: PropertiesPanelProps) => {
     const updatedData = { ...formData, [field]: value };
     setFormData(updatedData);
     
-    const updatedNode = {
-      ...node,
-      data: { ...node.data, ...updatedData }
-    };
-    onUpdate(updatedNode);
+    if (node) {
+      const updatedNode = {
+        ...node,
+        data: { ...node.data, ...updatedData }
+      };
+      onUpdate(updatedNode);
+    }
   };
 
   const priorityIcons = {
@@ -66,8 +69,10 @@ const PropertiesPanel = ({ node, onUpdate, onClose }: PropertiesPanelProps) => {
 
   const icons = ['💼', '👨‍👩‍👧‍👦', '🏃‍♂️', '📚', '💰', '🎯', '✈️', '🧘‍♀️', '🎨', '🏠', '🚀', '💡', '🌟', '🎉'];
 
-  const PriorityIcon = priorityIcons[formData.priority]?.icon || Target;
-  const EmotionIcon = emotionIcons[formData.emotionTag]?.icon || Meh;
+  const PriorityIcon = priorityIcons[formData.priority as keyof typeof priorityIcons]?.icon || Target;
+  const EmotionIcon = emotionIcons[formData.emotionTag as keyof typeof emotionIcons]?.icon || Meh;
+
+  if (!node) return null;
 
   return (
     <Card className="h-full bg-white shadow-lg">
@@ -127,9 +132,9 @@ const PropertiesPanel = ({ node, onUpdate, onClose }: PropertiesPanelProps) => {
                 <div className="flex items-center space-x-2">
                   <PriorityIcon 
                     className="w-4 h-4" 
-                    style={{ color: priorityIcons[formData.priority]?.color }} 
+                    style={{ color: priorityIcons[formData.priority as keyof typeof priorityIcons]?.color }} 
                   />
-                  <span>{priorityIcons[formData.priority]?.label}</span>
+                  <span>{priorityIcons[formData.priority as keyof typeof priorityIcons]?.label}</span>
                 </div>
               </SelectValue>
             </SelectTrigger>
@@ -154,9 +159,9 @@ const PropertiesPanel = ({ node, onUpdate, onClose }: PropertiesPanelProps) => {
                 <div className="flex items-center space-x-2">
                   <EmotionIcon 
                     className="w-4 h-4" 
-                    style={{ color: emotionIcons[formData.emotionTag]?.color }} 
+                    style={{ color: emotionIcons[formData.emotionTag as keyof typeof emotionIcons]?.color }} 
                   />
-                  <span>{emotionIcons[formData.emotionTag]?.label}</span>
+                  <span>{emotionIcons[formData.emotionTag as keyof typeof emotionIcons]?.label}</span>
                 </div>
               </SelectValue>
             </SelectTrigger>
