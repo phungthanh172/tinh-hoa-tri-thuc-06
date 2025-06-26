@@ -1,4 +1,3 @@
-
 import React, { useCallback, useMemo } from 'react';
 import {
   ReactFlow,
@@ -149,7 +148,7 @@ const LifePathFlow = ({
   }, []);
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl shadow-lg overflow-hidden border-2 border-purple-200">
+    <div className="w-full h-full lifepath-canvas rounded-xl shadow-lg overflow-hidden border-2 border-purple-200">
       <ReactFlow
         nodes={internalNodes}
         edges={internalEdges}
@@ -165,7 +164,7 @@ const LifePathFlow = ({
         connectionMode={ConnectionMode.Loose}
         attributionPosition="bottom-left"
         style={{ backgroundColor: 'transparent' }}
-        className="bg-gradient-to-br from-purple-50 to-pink-50"
+        className="lifepath-canvas"
       >
         <Controls className="bg-white/90 backdrop-blur-sm rounded-lg border border-purple-200" />
         <MiniMap 

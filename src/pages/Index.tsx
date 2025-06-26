@@ -9,6 +9,7 @@ import CallToAction from '@/components/CallToAction';
 import Footer from '@/components/Footer';
 import ProgressNavigation from '@/components/progress/ProgressNavigation';
 import InactivityPopup from '@/components/InactivityPopup';
+import FloatingActionButtons from '@/components/FloatingActionButtons';
 
 const Index = () => {
   return (
@@ -27,6 +28,7 @@ const Index = () => {
       <Footer />
       
       <InactivityPopup />
+      <FloatingActionButtons />
     </div>
   );
 };
