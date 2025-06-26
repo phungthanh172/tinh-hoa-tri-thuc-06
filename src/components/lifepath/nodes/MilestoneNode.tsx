@@ -16,7 +16,9 @@ interface MilestoneNodeData {
   category?: string;
 }
 
-const MilestoneNode = memo(({ data, selected }: NodeProps<MilestoneNodeData>) => {
+const MilestoneNode = memo(({ data, selected }: NodeProps) => {
+  const nodeData = data as MilestoneNodeData;
+  
   const priorityIcons = {
     low: { icon: Clock, color: '#10b981', label: 'Low' },
     medium: { icon: Target, color: '#f59e0b', label: 'Medium' },
@@ -31,8 +33,8 @@ const MilestoneNode = memo(({ data, selected }: NodeProps<MilestoneNodeData>) =>
     stressed: { icon: Zap, color: '#dc2626', label: '😤' },
   };
 
-  const PriorityIcon = priorityIcons[data.priority || 'medium']?.icon || Target;
-  const emotionData = emotionIcons[data.emotionTag || 'neutral'];
+  const PriorityIcon = priorityIcons[nodeData.priority || 'medium']?.icon || Target;
+  const emotionData = emotionIcons[nodeData.emotionTag || 'neutral'];
 
   return (
     <Card className={`w-40 h-40 p-4 cursor-pointer transition-all duration-300 rounded-full flex flex-col items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 border-2 ${
@@ -45,16 +47,16 @@ const MilestoneNode = memo(({ data, selected }: NodeProps<MilestoneNodeData>) =>
       />
       
       {/* Icon */}
-      <div className="text-4xl mb-2">{data.icon}</div>
+      <div className="text-4xl mb-2">{nodeData.icon}</div>
       
       {/* Title */}
       <div className="text-xs font-semibold text-gray-700 text-center leading-tight mb-2">
-        {data.label}
+        {nodeData.label}
       </div>
 
       {/* Type badge */}
       <Badge variant="secondary" className="text-xs mb-1">
-        {data.category || 'Goal'}
+        {nodeData.category || 'Goal'}
       </Badge>
 
       {/* Priority and Emotion row */}
@@ -62,7 +64,7 @@ const MilestoneNode = memo(({ data, selected }: NodeProps<MilestoneNodeData>) =>
         <div className="flex items-center space-x-1">
           <PriorityIcon 
             className="w-3 h-3" 
-            style={{ color: priorityIcons[data.priority || 'medium']?.color }} 
+            style={{ color: priorityIcons[nodeData.priority || 'medium']?.color }} 
           />
         </div>
         <div className="text-sm">
@@ -71,9 +73,9 @@ const MilestoneNode = memo(({ data, selected }: NodeProps<MilestoneNodeData>) =>
       </div>
 
       {/* Deadline */}
-      {data.deadline && (
+      {nodeData.deadline && (
         <div className="text-xs text-gray-500 text-center">
-          {new Date(data.deadline).toLocaleDateString()}
+          {new Date(nodeData.deadline).toLocaleDateString()}
         </div>
       )}
 

@@ -72,8 +72,8 @@ const LifePathContent = ({
             <div className="h-full">
               <PropertiesPanel
                 node={selectedNode}
-                onUpdate={(updatedNode) => {
-                  setNodes(prev => prev.map(n => n.id === updatedNode.id ? updatedNode : n));
+                onUpdate={(updatedNode: Node) => {
+                  setNodes(nodes.map(n => n.id === updatedNode.id ? updatedNode : n));
                 }}
                 onClose={() => onNodeSelect(null)}
               />
