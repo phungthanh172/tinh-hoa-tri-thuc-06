@@ -1,3 +1,4 @@
+
 import React, { useCallback, useMemo } from 'react';
 import {
   ReactFlow,
@@ -12,6 +13,8 @@ import {
   Node,
   BackgroundVariant,
   NodeTypes,
+  ConnectionMode,
+  MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import LifeDomainNode from './nodes/LifeDomainNode';
@@ -64,17 +67,24 @@ const LifePathFlow = ({
   const onConnect = useCallback(
     (params: Connection) => {
       const newEdge: Edge = {
-        id: `edge-${params.source}-${params.target}`,
+        id: `edge-${params.source}-${params.target}-${Date.now()}`,
         source: params.source!,
         target: params.target!,
         sourceHandle: params.sourceHandle,
         targetHandle: params.targetHandle,
         type: 'smoothstep',
         animated: true,
-        style: { stroke: '#8b5cf6', strokeWidth: 2 },
+        style: { 
+          stroke: '#8b5cf6', 
+          strokeWidth: 3,
+        },
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: '#8b5cf6',
+        },
       };
       setInternalEdges((eds) => addEdge(newEdge, eds));
-      toast.success('Connection created!');
+      toast.success('Connection created! 🔗');
     },
     [setInternalEdges]
   );
@@ -139,7 +149,7 @@ const LifePathFlow = ({
   }, []);
 
   return (
-    <div className="w-full h-full bg-white rounded-lg shadow-lg overflow-hidden border">
+    <div className="w-full h-full bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl shadow-lg overflow-hidden border-2 border-purple-200">
       <ReactFlow
         nodes={internalNodes}
         edges={internalEdges}
@@ -152,24 +162,28 @@ const LifePathFlow = ({
         onDragOver={onDragOver}
         nodeTypes={nodeTypes}
         fitView
+        connectionMode={ConnectionMode.Loose}
         attributionPosition="bottom-left"
-        style={{ backgroundColor: '#fefefe' }}
+        style={{ backgroundColor: 'transparent' }}
+        className="bg-gradient-to-br from-purple-50 to-pink-50"
       >
-        <Controls />
+        <Controls className="bg-white/90 backdrop-blur-sm rounded-lg border border-purple-200" />
         <MiniMap 
           style={{
             height: 120,
-            backgroundColor: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            border: '2px solid #e2e8f0',
+            borderRadius: '12px',
           }}
+          className="backdrop-blur-sm"
           zoomable
           pannable
         />
         <Background 
           variant={BackgroundVariant.Dots} 
-          gap={20} 
-          size={1} 
-          color="#e2e8f0"
+          gap={25} 
+          size={1.5} 
+          color="#d8b4fe"
         />
       </ReactFlow>
     </div>
