@@ -1,4 +1,3 @@
-
 import React, { useCallback, useMemo } from 'react';
 import {
   ReactFlow,
@@ -20,8 +19,8 @@ import MilestoneNode from './nodes/MilestoneNode';
 import { toast } from 'sonner';
 
 const nodeTypes: NodeTypes = {
-  lifeDomain: LifeDomainNode,
-  milestone: MilestoneNode,
+  lifeDomain: LifeDomainNode as any,
+  milestone: MilestoneNode as any,
 };
 
 interface LifePathFlowProps {
