@@ -16,9 +16,7 @@ interface LifeDomainNodeData {
   category?: string;
 }
 
-const LifeDomainNode = memo(({ data, selected }: NodeProps) => {
-  const nodeData = data as LifeDomainNodeData;
-  
+const LifeDomainNode = memo(({ data, selected }: NodeProps<LifeDomainNodeData>) => {
   const priorityColors = {
     low: 'border-green-400 bg-green-50',
     medium: 'border-yellow-400 bg-yellow-50',
@@ -40,9 +38,9 @@ const LifeDomainNode = memo(({ data, selected }: NodeProps) => {
     stressed: { icon: Zap, color: '#dc2626', label: '😤' },
   };
 
-  const priorityClass = priorityColors[nodeData.priority || 'medium'];
-  const PriorityIcon = priorityIcons[nodeData.priority || 'medium']?.icon || Target;
-  const emotionData = emotionIcons[nodeData.emotionTag || 'neutral'];
+  const priorityClass = priorityColors[data.priority || 'medium'];
+  const PriorityIcon = priorityIcons[data.priority || 'medium']?.icon || Target;
+  const emotionData = emotionIcons[data.emotionTag || 'neutral'];
 
   return (
     <Card className={`w-48 min-h-32 p-4 cursor-pointer transition-all duration-300 ${priorityClass} ${
@@ -57,15 +55,15 @@ const LifeDomainNode = memo(({ data, selected }: NodeProps) => {
       <div className="flex flex-col h-full">
         {/* Header with icon and category */}
         <div className="flex items-center justify-between mb-2">
-          <div className="text-2xl">{nodeData.icon}</div>
+          <div className="text-2xl">{data.icon}</div>
           <Badge variant="outline" className="text-xs">
-            {nodeData.category || 'Domain'}
+            {data.category || 'Domain'}
           </Badge>
         </div>
 
         {/* Title */}
         <h3 className="font-semibold text-sm text-gray-800 mb-2 line-clamp-2">
-          {nodeData.label}
+          {data.label}
         </h3>
 
         {/* Priority and Emotion */}
@@ -73,10 +71,10 @@ const LifeDomainNode = memo(({ data, selected }: NodeProps) => {
           <div className="flex items-center space-x-1">
             <PriorityIcon 
               className="w-3 h-3" 
-              style={{ color: priorityIcons[nodeData.priority || 'medium']?.color }} 
+              style={{ color: priorityIcons[data.priority || 'medium']?.color }} 
             />
             <span className="text-xs font-medium">
-              {priorityIcons[nodeData.priority || 'medium']?.label}
+              {priorityIcons[data.priority || 'medium']?.label}
             </span>
           </div>
           <div className="text-sm">
@@ -85,16 +83,16 @@ const LifeDomainNode = memo(({ data, selected }: NodeProps) => {
         </div>
 
         {/* Deadline */}
-        {nodeData.deadline && (
+        {data.deadline && (
           <div className="text-xs text-gray-500 mt-auto">
-            📅 {new Date(nodeData.deadline).toLocaleDateString()}
+            📅 {new Date(data.deadline).toLocaleDateString()}
           </div>
         )}
 
         {/* Description preview */}
-        {nodeData.description && (
+        {data.description && (
           <div className="text-xs text-gray-600 mt-1 line-clamp-2">
-            {nodeData.description}
+            {data.description}
           </div>
         )}
       </div>
