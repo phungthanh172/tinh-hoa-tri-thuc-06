@@ -65,8 +65,11 @@ const LifePathFlow = ({
   const onConnect = useCallback(
     (params: Connection) => {
       const newEdge: Edge = {
-        ...params,
         id: `edge-${params.source}-${params.target}`,
+        source: params.source!,
+        target: params.target!,
+        sourceHandle: params.sourceHandle,
+        targetHandle: params.targetHandle,
         type: 'smoothstep',
         animated: true,
         style: { stroke: '#8b5cf6', strokeWidth: 2 },
