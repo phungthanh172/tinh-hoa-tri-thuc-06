@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Minimize2, Send, User, GraduationCap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -31,9 +31,18 @@ const FloatingChatBox = ({ isOpen, onClose }: FloatingChatBoxProps) => {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -109,11 +118,11 @@ const FloatingChatBox = ({ isOpen, onClose }: FloatingChatBoxProps) => {
     );
   }
 
-  // Full chat interface
+  // Full chat interface with improved layout and overflow handling
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <Card className="w-96 h-[500px] shadow-xl border-purple-200 flex flex-col">
-        <CardHeader className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-4 rounded-t-lg">
+    <div className="fixed bottom-6 right-6 z-50 max-h-[90vh] max-w-[400px] w-full">
+      <Card className="h-[600px] max-h-[80vh] shadow-xl border-purple-200 flex flex-col">
+        <CardHeader className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-4 rounded-t-lg flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Avatar className="w-10 h-10 border-2 border-white">
@@ -151,8 +160,8 @@ const FloatingChatBox = ({ isOpen, onClose }: FloatingChatBoxProps) => {
           </div>
         </CardHeader>
         
-        <CardContent className="flex-1 flex flex-col p-4">
-          <ScrollArea className="flex-1 mb-4 pr-4">
+        <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+          <ScrollArea className="flex-1 p-4">
             <div className="space-y-4">
               {messages.map((message) => (
                 <div
@@ -160,7 +169,7 @@ const FloatingChatBox = ({ isOpen, onClose }: FloatingChatBoxProps) => {
                   className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div className={`flex items-start space-x-2 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                    <Avatar className="w-8 h-8">
+                    <Avatar className="w-8 h-8 flex-shrink-0">
                       <AvatarFallback>
                         {message.sender === 'user' ? (
                           <User className="w-4 h-4" />
@@ -170,7 +179,7 @@ const FloatingChatBox = ({ isOpen, onClose }: FloatingChatBoxProps) => {
                       </AvatarFallback>
                     </Avatar>
                     <div
-                      className={`rounded-lg p-3 ${
+                      className={`rounded-lg p-3 break-words ${
                         message.sender === 'user'
                           ? 'bg-purple-600 text-white'
                           : 'bg-gray-100 text-gray-900'
@@ -202,26 +211,29 @@ const FloatingChatBox = ({ isOpen, onClose }: FloatingChatBoxProps) => {
                   </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
           </ScrollArea>
           
-          <div className="flex space-x-2">
-            <Input
-              placeholder="Ask professor anything..."
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={isLoading}
-              className="flex-1"
-            />
-            <Button 
-              onClick={handleSendMessage}
-              disabled={isLoading || !inputMessage.trim()}
-              size="icon"
-              className="bg-purple-600 hover:bg-purple-700"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+          <div className="p-4 border-t bg-white flex-shrink-0">
+            <div className="flex space-x-2">
+              <Input
+                placeholder="Ask professor anything..."
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                disabled={isLoading}
+                className="flex-1"
+              />
+              <Button 
+                onClick={handleSendMessage}
+                disabled={isLoading || !inputMessage.trim()}
+                size="icon"
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
