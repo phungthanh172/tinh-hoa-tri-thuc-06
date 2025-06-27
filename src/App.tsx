@@ -43,10 +43,10 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ProgressProvider>
-          <GamificationProvider>
-            <Router>
+      <Router>
+        <AuthProvider>
+          <ProgressProvider>
+            <GamificationProvider>
               <div className="App">
                 <Routes>
                   <Route path="/" element={<Index />} />
@@ -82,10 +82,10 @@ function App() {
                 </Routes>
               </div>
               <Toaster />
-            </Router>
-          </GamificationProvider>
-        </ProgressProvider>
-      </AuthProvider>
+            </GamificationProvider>
+          </ProgressProvider>
+        </AuthProvider>
+      </Router>
     </QueryClientProvider>
   );
 }
