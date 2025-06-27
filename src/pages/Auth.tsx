@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, Apple, Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,11 +36,11 @@ const Auth = () => {
     setLoginError('');
 
     if (isLogin) {
-      const success = await login(formData.email, formData.password);
-      if (success) {
+      try {
+        await login(formData.email, formData.password);
         toast.success('Login successful!');
         // Redirect will be handled by RoleBasedRedirect component
-      } else {
+      } catch (error) {
         setLoginError('Invalid email or password');
         toast.error('Login failed');
       }
