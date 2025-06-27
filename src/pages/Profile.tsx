@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { User, Settings, BookOpen, Award, Star, Clock, Users, Camera, Edit3, Mail, Phone, MapPin, Calendar, Heart, Share2, Download, Save, X, Route, Brain } from 'lucide-react';
+import { User, Settings, BookOpen, Award, Star, Clock, Users, Camera, Edit3, Mail, Phone, MapPin, Calendar, Heart, Share2, Download, Save, X, Route, Brain, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,10 +11,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Header from '@/components/Header';
 import { Link } from 'react-router-dom';
+import { toast } from '@/hooks/use-toast';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('courses');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [cartItems, setCartItems] = useState<number[]>([]);
 
   const [user, setUser] = useState({
     name: "John Doe",
@@ -27,7 +29,12 @@ const Profile = () => {
     completedCourses: 8,
     certificatesEarned: 6,
     totalHours: 156,
-    bio: "Passionate web developer and lifelong learner. Love exploring new technologies and building amazing projects."
+    bio: "Passionate web developer and lifelong learner. Love exploring new technologies and building amazing projects.",
+    preferences: {
+      emailNotifications: true,
+      smsNotifications: false,
+      marketingEmails: true
+    }
   });
 
   const [editingUser, setEditingUser] = useState(user);
@@ -40,11 +47,54 @@ const Profile = () => {
   const handleSaveProfile = () => {
     setUser(editingUser);
     setIsEditingProfile(false);
+    toast({
+      title: "Profile updated",
+      description: "Your profile has been successfully updated.",
+    });
   };
 
   const handleCancelEdit = () => {
     setEditingUser(user);
     setIsEditingProfile(false);
+  };
+
+  const handleSaveSettings = () => {
+    toast({
+      title: "Settings saved",
+      description: "Your preferences have been saved successfully.",
+    });
+  };
+
+  const handleDownloadCertificate = (certificateId: string, courseName: string) => {
+    // In a real app, this would download the actual certificate
+    toast({
+      title: "Certificate downloaded",
+      description: `Certificate for "${courseName}" has been downloaded.`,
+    });
+  };
+
+  const handleShareCertificate = (certificateId: string, courseName: string) => {
+    // In a real app, this would create a shareable link
+    navigator.clipboard.writeText(`https://example.com/certificate/${certificateId}`);
+    toast({
+      title: "Certificate link copied",
+      description: `Shareable link for "${courseName}" certificate copied to clipboard.`,
+    });
+  };
+
+  const handleAddToCart = (courseId: number, courseTitle: string) => {
+    if (!cartItems.includes(courseId)) {
+      setCartItems([...cartItems, courseId]);
+      toast({
+        title: "Added to cart",
+        description: `"${courseTitle}" has been added to your cart.`,
+      });
+    } else {
+      toast({
+        title: "Already in cart",
+        description: `"${courseTitle}" is already in your cart.`,
+      });
+    }
   };
 
   const enrolledCourses = [
@@ -106,7 +156,7 @@ const Profile = () => {
 
   const wishlist = [
     {
-      id: 1,
+      id: 4,
       title: "Node.js, Express, MongoDB & More",
       instructor: "Jonas Schmedtmann",
       image: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=300&h=200&fit=crop",
@@ -116,7 +166,7 @@ const Profile = () => {
       students: 234567
     },
     {
-      id: 2,
+      id: 5,
       title: "Advanced CSS and Sass",
       instructor: "Jonas Schmedtmann",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop",
@@ -335,11 +385,17 @@ const Profile = () => {
                             </div>
                             
                             <div className="ml-4 flex flex-col space-y-2">
-                              <Button size="sm">
-                                {course.status === 'Completed' ? 'Review' : 'Continue'}
+                              <Button size="sm" asChild>
+                                <Link to={`/course/${course.id}/learn`}>
+                                  {course.status === 'Completed' ? 'Review' : 'Continue'}
+                                </Link>
                               </Button>
                               {course.certificate && (
-                                <Button size="sm" variant="outline">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleDownloadCertificate(course.id.toString(), course.title)}
+                                >
                                   <Download className="w-4 h-4 mr-1" />
                                   Certificate
                                 </Button>
@@ -365,11 +421,21 @@ const Profile = () => {
                         <p className="text-gray-600 text-sm mb-4">Completed: {cert.completedDate}</p>
                         <p className="text-xs text-gray-500 mb-4">Certificate ID: {cert.certificateId}</p>
                         <div className="flex space-x-2">
-                          <Button size="sm" variant="outline" className="flex-1">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="flex-1"
+                            onClick={() => handleDownloadCertificate(cert.certificateId, cert.courseName)}
+                          >
                             <Download className="w-4 h-4 mr-1" />
                             Download
                           </Button>
-                          <Button size="sm" variant="outline" className="flex-1">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="flex-1"
+                            onClick={() => handleShareCertificate(cert.certificateId, cert.courseName)}
+                          >
                             <Share2 className="w-4 h-4 mr-1" />
                             Share
                           </Button>
@@ -417,7 +483,14 @@ const Profile = () => {
                             <span className="text-lg font-bold">${course.price}</span>
                             <span className="text-sm text-gray-500 line-through ml-2">${course.originalPrice}</span>
                           </div>
-                          <Button size="sm">Add to Cart</Button>
+                          <Button 
+                            size="sm"
+                            onClick={() => handleAddToCart(course.id, course.title)}
+                            className={cartItems.includes(course.id) ? 'bg-green-600 hover:bg-green-700' : ''}
+                          >
+                            <ShoppingCart className="w-4 h-4 mr-1" />
+                            {cartItems.includes(course.id) ? 'Added' : 'Add to Cart'}
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>
@@ -437,11 +510,21 @@ const Profile = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium mb-1">Full Name</label>
-                          <input type="text" defaultValue={user.name} className="w-full p-2 border rounded-md" />
+                          <input 
+                            type="text" 
+                            defaultValue={user.name} 
+                            className="w-full p-2 border rounded-md"
+                            onChange={(e) => setUser({...user, name: e.target.value})}
+                          />
                         </div>
                         <div>
                           <label className="block text-sm font-medium mb-1">Email</label>
-                          <input type="email" defaultValue={user.email} className="w-full p-2 border rounded-md" />
+                          <input 
+                            type="email" 
+                            defaultValue={user.email} 
+                            className="w-full p-2 border rounded-md"
+                            onChange={(e) => setUser({...user, email: e.target.value})}
+                          />
                         </div>
                       </div>
                     </div>
@@ -451,21 +534,36 @@ const Profile = () => {
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <span>Email notifications</span>
-                          <input type="checkbox" defaultChecked className="rounded" />
+                          <input 
+                            type="checkbox" 
+                            checked={user.preferences.emailNotifications}
+                            onChange={(e) => setUser({...user, preferences: {...user.preferences, emailNotifications: e.target.checked}})}
+                            className="rounded" 
+                          />
                         </div>
                         <div className="flex items-center justify-between">
                           <span>SMS notifications</span>
-                          <input type="checkbox" className="rounded" />
+                          <input 
+                            type="checkbox" 
+                            checked={user.preferences.smsNotifications}
+                            onChange={(e) => setUser({...user, preferences: {...user.preferences, smsNotifications: e.target.checked}})}
+                            className="rounded" 
+                          />
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Marketing emails</span>
-                          <input type="checkbox" defaultChecked className="rounded" />
+                          <input 
+                            type="checkbox" 
+                            checked={user.preferences.marketingEmails}
+                            onChange={(e) => setUser({...user, preferences: {...user.preferences, marketingEmails: e.target.checked}})}
+                            className="rounded" 
+                          />
                         </div>
                       </div>
                     </div>
 
                     <div className="pt-4 border-t">
-                      <Button>Save Changes</Button>
+                      <Button onClick={handleSaveSettings}>Save Changes</Button>
                     </div>
                   </CardContent>
                 </Card>

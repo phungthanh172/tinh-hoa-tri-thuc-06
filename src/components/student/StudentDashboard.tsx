@@ -18,9 +18,15 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { toast } from '@/hooks/use-toast';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [notifications, setNotifications] = useState([
+    { id: 1, type: "course", message: "New lecture added to JavaScript Course", time: "1 hour ago", read: false },
+    { id: 2, type: "announcement", message: "Course sale: 50% off all Python courses", time: "3 hours ago", read: false },
+    { id: 3, type: "achievement", message: "You earned the 'Consistent Learner' badge!", time: "1 day ago", read: false }
+  ]);
 
   const enrolledCourses = [
     {
@@ -60,12 +66,6 @@ const StudentDashboard = () => {
     { id: 2, course: "React Course", task: "Quiz: React Hooks", dueDate: "Dec 28, 2024", priority: "medium" }
   ];
 
-  const notifications = [
-    { id: 1, type: "course", message: "New lecture added to JavaScript Course", time: "1 hour ago" },
-    { id: 2, type: "announcement", message: "Course sale: 50% off all Python courses", time: "3 hours ago" },
-    { id: 3, type: "achievement", message: "You earned the 'Consistent Learner' badge!", time: "1 day ago" }
-  ];
-
   const learningStats = {
     totalHours: 156,
     coursesCompleted: 8,
@@ -73,6 +73,14 @@ const StudentDashboard = () => {
     currentStreak: 15,
     weeklyGoal: 10,
     weeklyProgress: 7
+  };
+
+  const handleMarkAllNotificationsRead = () => {
+    setNotifications(prev => prev.map(notification => ({ ...notification, read: true })));
+    toast({
+      title: "Notifications marked as read",
+      description: "All notifications have been marked as read.",
+    });
   };
 
   return (
@@ -306,14 +314,16 @@ const StudentDashboard = () => {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 Recent Notifications
-                <Button size="sm" variant="outline">Mark All Read</Button>
+                <Button size="sm" variant="outline" onClick={handleMarkAllNotificationsRead}>
+                  Mark All Read
+                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {notifications.map((notification) => (
-                  <div key={notification.id} className="flex items-start space-x-3 p-3 border rounded-lg">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                  <div key={notification.id} className={`flex items-start space-x-3 p-3 border rounded-lg ${notification.read ? 'bg-gray-50' : 'bg-white'}`}>
+                    <div className={`w-2 h-2 rounded-full mt-2 ${notification.read ? 'bg-gray-300' : 'bg-blue-500'}`}></div>
                     <div className="flex-1">
                       <p className="text-sm">{notification.message}</p>
                       <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
