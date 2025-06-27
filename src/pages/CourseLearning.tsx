@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -58,7 +57,8 @@ const CourseLearning = () => {
     }
   };
 
-  const course = courseData[courseId as keyof typeof courseData];
+  const courseIdNumber = courseId ? parseInt(courseId, 10) : null;
+  const course = courseIdNumber && courseData[courseIdNumber as keyof typeof courseData] ? courseData[courseIdNumber as keyof typeof courseData] : null;
 
   useEffect(() => {
     if (isPlaying) {
