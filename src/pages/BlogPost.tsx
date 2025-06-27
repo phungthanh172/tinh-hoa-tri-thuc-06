@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Clock, Calendar, User } from 'lucide-react';
+import { ArrowLeft, Clock, Calendar, User, Share2, Heart, Bookmark } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -117,7 +118,7 @@ Both SQL and NoSQL databases are important:
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=400&fit=crop"
   };
 
-  // Mock related posts data
+  // Enhanced related posts data with more variety
   const relatedPosts = [
     {
       id: 2,
@@ -145,6 +146,15 @@ Both SQL and NoSQL databases are important:
       date: "2024-01-05",
       readTime: "7 min read",
       category: "Backend"
+    },
+    {
+      id: 5,
+      title: "Mastering Git Workflows for Team Collaboration",
+      excerpt: "Discover advanced Git techniques and workflows that will make your team more productive and reduce merge conflicts.",
+      image: "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=400&h=200&fit=crop",
+      date: "2024-01-03",
+      readTime: "5 min read",
+      category: "DevOps"
     }
   ];
 
@@ -232,19 +242,55 @@ Both SQL and NoSQL databases are important:
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Back Button */}
-          <Link to="/blog" className="inline-block mb-8">
-            <Button variant="outline" className="shadow-sm hover:shadow-md transition-shadow">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Blog
-            </Button>
-          </Link>
+      {/* Hero Section with Background */}
+      <div className="relative bg-gradient-to-r from-purple-900 via-purple-800 to-indigo-900 text-white">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative container mx-auto px-4 py-12">
+          <div className="max-w-4xl mx-auto">
+            <Link to="/blog" className="inline-block mb-6">
+              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Blog
+              </Button>
+            </Link>
+            
+            <div className="mb-6">
+              <Badge className="mb-4 bg-white/20 text-white border-white/30 hover:bg-white/30">
+                {blogPost.category}
+              </Badge>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+              {blogPost.title}
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-purple-100 mb-8 leading-relaxed max-w-3xl">
+              {blogPost.excerpt}
+            </p>
+            
+            <div className="flex flex-wrap items-center gap-6 text-purple-200">
+              <div className="flex items-center">
+                <User className="w-5 h-5 mr-2" />
+                <span className="font-medium">{blogPost.author}</span>
+              </div>
+              <div className="flex items-center">
+                <Calendar className="w-5 h-5 mr-2" />
+                <span>{blogPost.date}</span>
+              </div>
+              <div className="flex items-center">
+                <Clock className="w-5 h-5 mr-2" />
+                <span>{blogPost.readTime}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Table of Contents - Left Sidebar */}
             <div className="lg:col-span-2 order-2 lg:order-1">
@@ -255,51 +301,24 @@ Both SQL and NoSQL databases are important:
 
             {/* Main Content */}
             <div className="lg:col-span-7 order-1 lg:order-2">
-              {/* Article Header */}
-              <div className="mb-8">
-                <div className="mb-4">
-                  <Badge className="mb-4 bg-purple-100 text-purple-800 hover:bg-purple-200">
-                    {blogPost.category}
-                  </Badge>
-                </div>
-                
-                <h1 className="text-4xl lg:text-5xl font-bold mb-6 text-gray-900 leading-tight">
-                  {blogPost.title}
-                </h1>
-                
-                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                  {blogPost.excerpt}
-                </p>
-                
-                <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-8">
-                  <div className="flex items-center">
-                    <User className="w-4 h-4 mr-2" />
-                    <span className="font-medium text-gray-700">{blogPost.author}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    <span>{blogPost.date}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="w-4 h-4 mr-2" />
-                    <span>{blogPost.readTime}</span>
-                  </div>
-                </div>
-                
-                {blogPost.image && (
+              {/* Hero Image */}
+              {blogPost.image && (
+                <div className="mb-8 -mt-20 relative z-10">
                   <img 
                     src={blogPost.image} 
                     alt={blogPost.title}
-                    className="w-full h-64 md:h-96 object-cover rounded-xl mb-8 shadow-lg"
+                    className="w-full h-64 md:h-96 object-cover rounded-2xl shadow-2xl border-4 border-white"
                   />
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Article Actions */}
-              <BlogActions title={blogPost.title} />
+              <div className="mb-8">
+                <BlogActions title={blogPost.title} />
+              </div>
               
               {/* Article Content */}
-              <Card className="shadow-lg border-0 mb-8">
+              <Card className="shadow-xl border-0 mb-8 bg-white/80 backdrop-blur-sm">
                 <CardContent className="p-8 lg:p-12">
                   <BlogPostContent content={blogPost.content} />
                 </CardContent>
@@ -307,32 +326,64 @@ Both SQL and NoSQL databases are important:
 
               {/* Article Tags */}
               {blogPost.tags && blogPost.tags.length > 0 && (
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold mb-4">Tags</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {blogPost.tags.map(tag => (
-                      <Badge key={tag} variant="outline" className="hover:bg-purple-50">
-                        #{tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
+                <Card className="shadow-lg border-0 mb-8 bg-white/60 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4 text-gray-900">Related Topics</h3>
+                    <div className="flex flex-wrap gap-3">
+                      {blogPost.tags.map(tag => (
+                        <Badge 
+                          key={tag} 
+                          variant="outline" 
+                          className="hover:bg-purple-50 hover:border-purple-300 transition-colors cursor-pointer px-4 py-2"
+                        >
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               )}
 
               {/* Comments Section */}
-              <CommentsSection
-                comments={comments}
-                onAddComment={handleAddComment}
-                onAddReply={handleAddReply}
-                isLoggedIn={isLoggedIn}
-                currentUser={currentUser}
-              />
+              <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+                <CardContent className="p-8">
+                  <CommentsSection
+                    comments={comments}
+                    onAddComment={handleAddComment}
+                    onAddReply={handleAddReply}
+                    isLoggedIn={isLoggedIn}
+                    currentUser={currentUser}
+                  />
+                </CardContent>
+              </Card>
             </div>
 
             {/* Related Posts - Right Sidebar */}
             <div className="lg:col-span-3 order-3">
-              <div className="sticky top-8">
-                <RelatedPosts posts={relatedPosts} />
+              <div className="sticky top-8 space-y-6">
+                <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <RelatedPosts posts={relatedPosts} />
+                  </CardContent>
+                </Card>
+                
+                {/* Newsletter Signup */}
+                <Card className="shadow-xl border-0 bg-gradient-to-br from-purple-50 to-indigo-50">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-3 text-gray-900">Stay Updated</h3>
+                    <p className="text-sm text-gray-600 mb-4">Get the latest articles delivered to your inbox</p>
+                    <div className="space-y-3">
+                      <input 
+                        type="email" 
+                        placeholder="Your email address"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                      <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                        Subscribe
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
