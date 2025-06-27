@@ -37,6 +37,7 @@ import StudentCertificates from './pages/StudentCertificates';
 import StudentWishlist from './pages/StudentWishlist';
 import PurchaseHistory from './pages/PurchaseHistory';
 import EliteEducation from './pages/EliteEducation';
+import BecomeTeacher from './pages/BecomeTeacher';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ function App() {
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:id" element={<BlogPost />} />
                   <Route path="/elite-education" element={<EliteEducation />} />
+                  <Route path="/become-teacher" element={<BecomeTeacher />} />
                   
                   {/* Protected routes - require authentication */}
                   <Route path="/cart" element={
