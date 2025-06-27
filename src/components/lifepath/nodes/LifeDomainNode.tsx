@@ -17,7 +17,7 @@ interface LifeDomainNodeData {
 }
 
 const LifeDomainNode = memo(({ data, selected }: NodeProps) => {
-  const nodeData = data as LifeDomainNodeData;
+  const nodeData = data as unknown as LifeDomainNodeData;
   
   const priorityColors = {
     low: 'border-green-400 bg-green-50',

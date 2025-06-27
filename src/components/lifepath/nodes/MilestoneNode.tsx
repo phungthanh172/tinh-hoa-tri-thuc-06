@@ -17,7 +17,7 @@ interface MilestoneNodeData {
 }
 
 const MilestoneNode = memo(({ data, selected }: NodeProps) => {
-  const nodeData = data as MilestoneNodeData;
+  const nodeData = data as unknown as MilestoneNodeData;
   
   const priorityIcons = {
     low: { icon: Clock, color: '#10b981', label: 'Low' },
