@@ -1,24 +1,12 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  BookOpen, 
-  Clock, 
-  Award, 
-  TrendingUp, 
-  Play, 
-  Download,
-  Star,
-  Calendar,
-  Bell,
-  MessageSquare
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
+import OverviewTab from './dashboard/OverviewTab';
+import CoursesTab from './dashboard/CoursesTab';
+import ProgressTab from './dashboard/ProgressTab';
+import AchievementsTab from './dashboard/AchievementsTab';
+import NotificationsTab from './dashboard/NotificationsTab';
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -100,239 +88,23 @@ const StudentDashboard = () => {
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2">
-                  <BookOpen className="w-8 h-8 text-blue-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Active Courses</p>
-                    <p className="text-2xl font-bold">{enrolledCourses.length}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-8 h-8 text-green-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Hours Learned</p>
-                    <p className="text-2xl font-bold">{learningStats.totalHours}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2">
-                  <Award className="w-8 h-8 text-yellow-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Certificates</p>
-                    <p className="text-2xl font-bold">{learningStats.certificatesEarned}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2">
-                  <TrendingUp className="w-8 h-8 text-purple-600" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Learning Streak</p>
-                    <p className="text-2xl font-bold">{learningStats.currentStreak} days</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Continue Learning */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Continue Learning</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {enrolledCourses.slice(0, 2).map((course) => (
-                    <div key={course.id} className="flex items-center space-x-4 p-4 border rounded-lg">
-                      <img 
-                        src={course.thumbnail} 
-                        alt={course.title}
-                        className="w-16 h-12 object-cover rounded"
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-sm">{course.title}</h3>
-                        <p className="text-xs text-gray-600 mb-2">Next: {course.nextLesson}</p>
-                        <Progress value={course.progress} className="h-2" />
-                        <p className="text-xs text-gray-500 mt-1">{course.progress}% complete</p>
-                      </div>
-                      <Button size="sm" asChild>
-                        <Link to={`/course/${course.id}/learn`}>
-                          <Play className="w-4 h-4 mr-1" />
-                          Continue
-                        </Link>
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Weekly Goal */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Weekly Learning Goal</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Progress this week</span>
-                    <span className="text-sm text-gray-600">{learningStats.weeklyProgress}/{learningStats.weeklyGoal} hours</span>
-                  </div>
-                  <Progress value={(learningStats.weeklyProgress / learningStats.weeklyGoal) * 100} className="h-3" />
-                  <p className="text-sm text-gray-600">
-                    You're {learningStats.weeklyGoal - learningStats.weeklyProgress} hours away from your weekly goal!
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <OverviewTab enrolledCourses={enrolledCourses} learningStats={learningStats} />
         </TabsContent>
 
         <TabsContent value="courses" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {enrolledCourses.map((course) => (
-              <Card key={course.id} className="hover:shadow-lg transition-shadow">
-                <div className="relative">
-                  <img 
-                    src={course.thumbnail} 
-                    alt={course.title}
-                    className="w-full h-40 object-cover rounded-t-lg"
-                  />
-                  <Badge className="absolute top-2 right-2 bg-white text-gray-800">
-                    {course.progress}% Complete
-                  </Badge>
-                </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold mb-2">{course.title}</h3>
-                  <p className="text-sm text-gray-600 mb-2">By {course.instructor}</p>
-                  <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
-                    <span>{course.completedLessons}/{course.totalLessons} lessons</span>
-                    <span>{course.duration}</span>
-                  </div>
-                  <Progress value={course.progress} className="mb-3" />
-                  <div className="flex gap-2">
-                    <Button size="sm" className="flex-1" asChild>
-                      <Link to={`/course/${course.id}/learn`}>Continue Learning</Link>
-                    </Button>
-                    <Button size="sm" variant="outline" asChild>
-                      <Link to={`/course/${course.id}`}>Course Details</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <CoursesTab enrolledCourses={enrolledCourses} />
         </TabsContent>
 
         <TabsContent value="progress" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Learning Statistics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Total Learning Hours</span>
-                    <span className="text-lg font-bold">{learningStats.totalHours}h</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Courses Completed</span>
-                    <span className="text-lg font-bold">{learningStats.coursesCompleted}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Certificates Earned</span>
-                    <span className="text-lg font-bold">{learningStats.certificatesEarned}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Current Streak</span>
-                    <span className="text-lg font-bold">{learningStats.currentStreak} days</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Upcoming Deadlines</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {upcomingDeadlines.map((deadline) => (
-                    <div key={deadline.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <p className="font-semibold text-sm">{deadline.task}</p>
-                        <p className="text-xs text-gray-600">{deadline.course}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium">{deadline.dueDate}</p>
-                        <Badge variant={deadline.priority === 'high' ? 'destructive' : 'secondary'} className="text-xs">
-                          {deadline.priority}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <ProgressTab learningStats={learningStats} upcomingDeadlines={upcomingDeadlines} />
         </TabsContent>
 
         <TabsContent value="achievements" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recentAchievements.map((achievement) => (
-              <Card key={achievement.id}>
-                <CardContent className="p-6 text-center">
-                  <div className="text-4xl mb-4">{achievement.icon}</div>
-                  <h3 className="font-semibold mb-2">{achievement.title}</h3>
-                  <p className="text-sm text-gray-600 mb-2">{achievement.description}</p>
-                  <p className="text-xs text-gray-500">{achievement.date}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <AchievementsTab recentAchievements={recentAchievements} />
         </TabsContent>
 
         <TabsContent value="notifications" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                Recent Notifications
-                <Button size="sm" variant="outline" onClick={handleMarkAllNotificationsRead}>
-                  Mark All Read
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {notifications.map((notification) => (
-                  <div key={notification.id} className={`flex items-start space-x-3 p-3 border rounded-lg ${notification.read ? 'bg-gray-50' : 'bg-white'}`}>
-                    <div className={`w-2 h-2 rounded-full mt-2 ${notification.read ? 'bg-gray-300' : 'bg-blue-500'}`}></div>
-                    <div className="flex-1">
-                      <p className="text-sm">{notification.message}</p>
-                      <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <NotificationsTab notifications={notifications} onMarkAllRead={handleMarkAllNotificationsRead} />
         </TabsContent>
       </Tabs>
     </div>

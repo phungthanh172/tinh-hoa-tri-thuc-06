@@ -4,17 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Download, 
-  Eye, 
-  RefreshCw, 
-  Calendar, 
-  CreditCard, 
-  Receipt,
-  AlertCircle,
-  CheckCircle
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Download } from 'lucide-react';
+import PurchaseCard from './purchase/PurchaseCard';
+import RefundCard from './purchase/RefundCard';
+import StatsCards from './purchase/StatsCards';
 
 const PurchaseHistory = () => {
   const [activeTab, setActiveTab] = useState('purchases');
@@ -121,43 +114,11 @@ const PurchaseHistory = () => {
         <p className="text-gray-600">Manage your course purchases, invoices, and refunds</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <CreditCard className="w-8 h-8 text-blue-600" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Spent</p>
-                <p className="text-2xl font-bold">${totalSpent.toFixed(2)}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <Receipt className="w-8 h-8 text-green-600" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Purchases</p>
-                <p className="text-2xl font-bold">{purchases.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <RefreshCw className="w-8 h-8 text-orange-600" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Refund Requests</p>
-                <p className="text-2xl font-bold">{refundRequests.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <StatsCards 
+        totalSpent={totalSpent}
+        totalPurchases={purchases.length}
+        refundRequestsCount={refundRequests.length}
+      />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
@@ -174,37 +135,11 @@ const PurchaseHistory = () => {
             <CardContent>
               <div className="space-y-4">
                 {purchases.map((purchase) => (
-                  <div key={purchase.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold">{purchase.courseTitle}</h3>
-                        {getStatusBadge(purchase.status)}
-                      </div>
-                      <p className="text-sm text-gray-600 mb-1">By {purchase.instructor}</p>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <span className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          {new Date(purchase.purchaseDate).toLocaleDateString()}
-                        </span>
-                        <span>{purchase.paymentMethod}</span>
-                        <span className="font-semibold">${purchase.amount}</span>
-                      </div>
-                    </div>
-                    <div className="flex gap-2 ml-4">
-                      {purchase.status === 'completed' && (
-                        <Button size="sm" variant="outline" asChild>
-                          <Link to={purchase.courseUrl}>
-                            <Eye className="w-4 h-4 mr-1" />
-                            View Course
-                          </Link>
-                        </Button>
-                      )}
-                      <Button size="sm" variant="outline">
-                        <Download className="w-4 h-4 mr-1" />
-                        Invoice
-                      </Button>
-                    </div>
-                  </div>
+                  <PurchaseCard 
+                    key={purchase.id} 
+                    purchase={purchase} 
+                    getStatusBadge={getStatusBadge} 
+                  />
                 ))}
               </div>
             </CardContent>
@@ -219,40 +154,11 @@ const PurchaseHistory = () => {
             <CardContent>
               <div className="space-y-4">
                 {refundRequests.map((refund) => (
-                  <div key={refund.id} className="p-4 border rounded-lg">
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold">{refund.courseTitle}</h3>
-                        <p className="text-sm text-gray-600">Request ID: {refund.id}</p>
-                      </div>
-                      {getStatusBadge(refund.status)}
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <p className="text-gray-600">Request Date: {new Date(refund.requestDate).toLocaleDateString()}</p>
-                        <p className="text-gray-600">Amount: ${refund.amount}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-600">Reason: {refund.reason}</p>
-                        <p className="text-gray-600">Processing Time: {refund.estimatedProcessing}</p>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 flex items-center text-sm">
-                      {refund.status === 'pending' ? (
-                        <div className="flex items-center text-yellow-600">
-                          <AlertCircle className="w-4 h-4 mr-1" />
-                          Your refund request is being reviewed
-                        </div>
-                      ) : (
-                        <div className="flex items-center text-green-600">
-                          <CheckCircle className="w-4 h-4 mr-1" />
-                          Your refund has been approved and will be processed soon
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <RefundCard 
+                    key={refund.id} 
+                    refund={refund} 
+                    getStatusBadge={getStatusBadge} 
+                  />
                 ))}
               </div>
             </CardContent>
