@@ -34,8 +34,8 @@ const LifePathContent = ({
   onClear
 }: LifePathContentProps) => {
   return (
-    <div className="container mx-auto px-4 pb-6">
-      <div className="mb-4">
+    <div className="w-full h-full flex flex-col px-4 pb-6">
+      <div className="mb-4 flex-shrink-0">
         <LifePathToolbar
           onSave={onSave}
           onShare={onShare}
@@ -45,16 +45,16 @@ const LifePathContent = ({
         />
       </div>
 
-      <div className="grid grid-cols-12 gap-6 h-[calc(100vh-320px)]">
+      <div className="flex-1 grid grid-cols-12 gap-6 h-full min-h-0">
         {showBlockLibrary && (
-          <div className="col-span-3">
+          <div className="col-span-3 h-full">
             <div className="h-full">
               <BlockLibrary />
             </div>
           </div>
         )}
         
-        <div className={showBlockLibrary ? "col-span-7" : "col-span-10"}>
+        <div className={showBlockLibrary ? "col-span-7 h-full" : "col-span-10 h-full"}>
           <div className="h-full">
             <LifePathFlow
               nodes={nodes}
@@ -68,7 +68,7 @@ const LifePathContent = ({
         </div>
 
         {selectedNode && (
-          <div className="col-span-2">
+          <div className="col-span-2 h-full">
             <div className="h-full">
               <PropertiesPanel
                 node={selectedNode}
