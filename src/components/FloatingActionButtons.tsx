@@ -1,58 +1,104 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { FileText, HeadphonesIcon } from 'lucide-react';
-import FloatingChatBox from './FloatingChatBox';
-import NoteCreationForm from './NoteCreationForm';
-import { useNotes } from '@/hooks/useNotes';
+import { MessageCircle, Phone, Mail, ChevronUp, BookOpen, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 const FloatingActionButtons = () => {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isNoteFormOpen, setIsNoteFormOpen] = useState(false);
-  const { createNote, selectNote } = useNotes();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSaveNote = (title: string, content: string) => {
-    const newNote = createNote(title, content);
-    selectNote(newNote.id);
+  const handleChatSupport = () => {
+    if (!user) {
+      toast.error('Please log in to access chat support');
+      navigate('/auth');
+      return;
+    }
+    // Simulate opening chat support
+    toast.success('Chat support opened');
   };
 
-  // Don't render buttons if either chat or note form is open
-  if (isChatOpen || isNoteFormOpen) {
-    return (
-      <>
-        {isChatOpen && (
-          <FloatingChatBox 
-            isOpen={isChatOpen} 
-            onClose={() => setIsChatOpen(false)} 
-          />
-        )}
-        <NoteCreationForm
-          isOpen={isNoteFormOpen}
-          onClose={() => setIsNoteFormOpen(false)}
-          onSave={handleSaveNote}
-        />
-      </>
-    );
-  }
+  const handleQuickSearch = () => {
+    navigate('/search');
+  };
+
+  const handleMyLearning = () => {
+    if (!user) {
+      toast.error('Please log in to access your courses');
+      navigate('/auth');
+      return;
+    }
+    navigate('/courses');
+  };
+
+  const handleContactSupport = () => {
+    // Simulate contact support
+    toast.success('Contact form opened');
+  };
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col space-y-3">
-      <Button
-        onClick={() => setIsNoteFormOpen(true)}
-        size="lg"
-        className="rounded-full w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-white"
-        title="Note Anything"
-      >
-        <FileText className="w-6 h-6 text-white" />
-      </Button>
-      <Button
-        onClick={() => setIsChatOpen(true)}
-        size="lg"
-        className="rounded-full w-16 h-16 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-white"
-        title="Chat with Professor"
-      >
-        <HeadphonesIcon className="w-6 h-6 text-white" />
-      </Button>
+    <div className="fixed bottom-6 right-6 z-50">
+      <div className="flex flex-col items-end space-y-3">
+        {/* Expanded Action Buttons */}
+        {isExpanded && (
+          <div className="flex flex-col space-y-2 animate-in slide-in-from-bottom-2">
+            <Button
+              size="icon"
+              className="bg-blue-600 hover:bg-blue-700 shadow-lg"
+              onClick={handleQuickSearch}
+              title="Quick Search"
+            >
+              <Search className="w-5 h-5" />
+            </Button>
+            
+            <Button
+              size="icon"
+              className="bg-green-600 hover:bg-green-700 shadow-lg"
+              onClick={handleMyLearning}
+              title="My Learning"
+            >
+              <BookOpen className="w-5 h-5" />
+            </Button>
+            
+            <Button
+              size="icon"
+              className="bg-purple-600 hover:bg-purple-700 shadow-lg"
+              onClick={handleChatSupport}
+              title="Chat Support"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </Button>
+            
+            <Button
+              size="icon"
+              className="bg-orange-600 hover:bg-orange-700 shadow-lg"
+              onClick={handleContactSupport}
+              title="Contact Support"
+            >
+              <Mail className="w-5 h-5" />
+            </Button>
+          </div>
+        )}
+
+        {/* Main Toggle Button */}
+        <Button
+          size="icon"
+          className={`bg-purple-600 hover:bg-purple-700 shadow-lg transition-transform ${
+            isExpanded ? 'rotate-180' : ''
+          }`}
+          onClick={toggleExpanded}
+          title={isExpanded ? 'Hide Actions' : 'Show Actions'}
+        >
+          <ChevronUp className="w-6 h-6" />
+        </Button>
+      </div>
     </div>
   );
 };

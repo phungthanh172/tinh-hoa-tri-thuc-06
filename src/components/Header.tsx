@@ -27,13 +27,16 @@ const Header = () => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      toast.success(`Searching for: ${searchQuery.trim()}`);
     } else {
       navigate('/search');
+      toast.info('Opening search page');
     }
   };
 
   const handleToggleLanguage = (lang: Language) => {
     setLanguage(lang);
+    toast.success(`Language changed to ${lang === Language.EN ? 'English' : 'Vietnamese'}`);
   };
 
   const handleLogout = () => {
@@ -42,15 +45,55 @@ const Header = () => {
     navigate('/');
   };
 
+  const handleCartClick = () => {
+    if (!user) {
+      toast.error('Please log in to view your cart');
+      navigate('/auth');
+      return;
+    }
+    navigate('/cart');
+  };
+
+  const handleNotificationClick = () => {
+    if (!user) {
+      toast.error('Please log in to view notifications');
+      navigate('/auth');
+      return;
+    }
+    navigate('/student/notifications');
+  };
+
+  const handleMyLearningClick = () => {
+    if (!user) {
+      toast.error('Please log in to access your learning');
+      navigate('/auth');
+      return;
+    }
+    navigate('/courses');
+  };
+
+  const handleBecomeTeacherClick = () => {
+    if (!user) {
+      toast.error('Please log in to become an instructor');
+      navigate('/auth');
+      return;
+    }
+    if (user.role !== 'instructor') {
+      toast.info('Contact support to become an instructor');
+      return;
+    }
+    navigate('/instructor/dashboard');
+  };
+
   const getUserDashboardLink = () => {
     if (!user) return '/';
     switch (user.role) {
       case 'admin':
-        return '/admin/dashboard';
+        return '/admin-dashboard';
       case 'instructor':
-        return '/instructor/dashboard';
+        return '/instructor-dashboard';
       case 'student':
-        return '/student/dashboard';
+        return '/student-dashboard';
       default:
         return '/';
     }
@@ -181,24 +224,26 @@ const Header = () => {
               {t("ELITE_EDUCATION")}
             </Link>
             
-            {user && user.role === 'instructor' && (
-              <Link to="/instructor/dashboard" className="hidden lg:block text-gray-600 hover:text-purple-600">
-                {t("BECOME_TEACHER")}
-              </Link>
-            )}
+            <button 
+              onClick={handleBecomeTeacherClick}
+              className="hidden lg:block text-gray-600 hover:text-purple-600"
+            >
+              {t("BECOME_TEACHER")}
+            </button>
             
             <Link to="/blog" className="hidden lg:block text-gray-600 hover:text-purple-600">
               {t("BLOG")}
             </Link>
             
-            {user && (
-              <Link to="/courses" className="hidden lg:block text-gray-600 hover:text-purple-600">
-                {t("MY_LEARNING")}
-              </Link>
-            )}
+            <button 
+              onClick={handleMyLearningClick}
+              className="hidden lg:block text-gray-600 hover:text-purple-600"
+            >
+              {t("MY_LEARNING")}
+            </button>
 
             {user && (
-              <button className="relative">
+              <button className="relative" onClick={handleNotificationClick}>
                 <Bell className="w-6 h-6 text-gray-600" />
                 <Badge className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center">
                   3
@@ -206,12 +251,12 @@ const Header = () => {
               </button>
             )}
 
-            <Link to="/cart" className="relative">
+            <button onClick={handleCartClick} className="relative">
               <ShoppingCart className="w-6 h-6 text-gray-600" />
               <Badge className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center">
                 2
               </Badge>
-            </Link>
+            </button>
 
             {user ? (
               <DropdownMenu>

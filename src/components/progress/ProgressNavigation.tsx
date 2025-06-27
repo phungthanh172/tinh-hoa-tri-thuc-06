@@ -1,11 +1,25 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BarChart3, Play, Trophy, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 const ProgressNavigation = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleViewProgress = () => {
+    if (!user) {
+      toast.error('Please log in to view your learning progress');
+      navigate('/auth');
+      return;
+    }
+    navigate('/learning-progress');
+  };
+
   return (
     <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
       <CardContent className="p-6">
@@ -38,11 +52,12 @@ const ProgressNavigation = () => {
               </div>
             </div>
             
-            <Link to="/learning-progress">
-              <Button className="bg-purple-600 hover:bg-purple-700">
-                View Progress
-              </Button>
-            </Link>
+            <Button 
+              className="bg-purple-600 hover:bg-purple-700"
+              onClick={handleViewProgress}
+            >
+              View Progress
+            </Button>
           </div>
         </div>
       </CardContent>
