@@ -5,6 +5,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ProgressProvider } from './contexts/ProgressContext';
 import { GamificationProvider } from './contexts/GamificationContext';
 import { Toaster } from './components/ui/sonner';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Import pages
 import Index from './pages/Index';
@@ -49,35 +50,145 @@ function App() {
             <GamificationProvider>
               <div className="App">
                 <Routes>
+                  {/* Public routes */}
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/courses" element={<Courses />} />
                   <Route path="/course/:id" element={<CourseDetail />} />
-                  <Route path="/course/:id/learn" element={<CourseLearning />} />
-                  <Route path="/course/:courseId/lecture/:lectureId" element={<CourseLearner />} />
                   <Route path="/search" element={<Search />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/wishlist" element={<Wishlist />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/student-dashboard" element={<StudentDashboard />} />
-                  <Route path="/instructor-dashboard" element={<InstructorDashboard />} />
-                  <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                  <Route path="/create-course" element={<CourseCreation />} />
-                  <Route path="/course-creator" element={<CourseCreator />} />
-                  <Route path="/course/:id/edit" element={<CourseEdit />} />
-                  <Route path="/learning-progress" element={<LearningProgress />} />
-                  <Route path="/life-path" element={<LifePath />} />
-                  <Route path="/knowledge-management" element={<KnowledgeManagement />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:id" element={<BlogPost />} />
-                  <Route path="/write-blog" element={<WriteBlog />} />
-                  <Route path="/notifications" element={<Notifications />} />
-                  <Route path="/student/notifications" element={<StudentNotifications />} />
-                  <Route path="/student/messages" element={<StudentMessages />} />
-                  <Route path="/student/certificates" element={<StudentCertificates />} />
-                  <Route path="/student/wishlist" element={<StudentWishlist />} />
-                  <Route path="/purchase-history" element={<PurchaseHistory />} />
                   <Route path="/elite-education" element={<EliteEducation />} />
+                  
+                  {/* Protected routes - require authentication */}
+                  <Route path="/cart" element={
+                    <ProtectedRoute>
+                      <Cart />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/wishlist" element={
+                    <ProtectedRoute>
+                      <Wishlist />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/profile" element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/course/:id/learn" element={
+                    <ProtectedRoute>
+                      <CourseLearning />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/course/:courseId/lecture/:lectureId" element={
+                    <ProtectedRoute>
+                      <CourseLearner />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/learning-progress" element={
+                    <ProtectedRoute>
+                      <LearningProgress />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/life-path" element={
+                    <ProtectedRoute>
+                      <LifePath />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/knowledge-management" element={
+                    <ProtectedRoute>
+                      <KnowledgeManagement />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/purchase-history" element={
+                    <ProtectedRoute>
+                      <PurchaseHistory />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/notifications" element={
+                    <ProtectedRoute>
+                      <Notifications />
+                    </ProtectedRoute>
+                  } />
+                  
+                  {/* Student-specific routes */}
+                  <Route path="/student-dashboard" element={
+                    <ProtectedRoute requiredRole="student">
+                      <StudentDashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/student/dashboard" element={
+                    <ProtectedRoute requiredRole="student">
+                      <StudentDashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/student/notifications" element={
+                    <ProtectedRoute requiredRole="student">
+                      <StudentNotifications />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/student/messages" element={
+                    <ProtectedRoute requiredRole="student">
+                      <StudentMessages />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/student/certificates" element={
+                    <ProtectedRoute requiredRole="student">
+                      <StudentCertificates />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/student/wishlist" element={
+                    <ProtectedRoute requiredRole="student">
+                      <StudentWishlist />
+                    </ProtectedRoute>
+                  } />
+                  
+                  {/* Instructor-specific routes */}
+                  <Route path="/instructor-dashboard" element={
+                    <ProtectedRoute requiredRole="instructor">
+                      <InstructorDashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/instructor/dashboard" element={
+                    <ProtectedRoute requiredRole="instructor">
+                      <InstructorDashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/create-course" element={
+                    <ProtectedRoute requiredRole="instructor">
+                      <CourseCreation />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/course-creator" element={
+                    <ProtectedRoute requiredRole="instructor">
+                      <CourseCreator />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/course/:id/edit" element={
+                    <ProtectedRoute requiredRole="instructor">
+                      <CourseEdit />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/write-blog" element={
+                    <ProtectedRoute requiredRole={["instructor", "admin"]}>
+                      <WriteBlog />
+                    </ProtectedRoute>
+                  } />
+                  
+                  {/* Admin-specific routes */}
+                  <Route path="/admin-dashboard" element={
+                    <ProtectedRoute requiredRole="admin">
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/admin/dashboard" element={
+                    <ProtectedRoute requiredRole="admin">
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  } />
+                  
+                  {/* Catch-all route for 404 */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>

@@ -1,119 +1,97 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useBehaviorTracking } from '@/hooks/useBehaviorTracking';
 
-export interface User {
+interface User {
   id: string;
-  email: string;
   name: string;
+  email: string;
   role: 'student' | 'instructor' | 'admin';
   avatar?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
-  hasRole: (role: string | string[]) => boolean;
+  hasRole: (requiredRole: string | string[]) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Sample accounts for testing
-const SAMPLE_ACCOUNTS: Record<string, { password: string; user: User }> = {
-  'student@example.com': {
-    password: 'student123',
-    user: {
-      id: '1',
-      email: 'student@example.com',
-      name: 'John Student',
-      role: 'student',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face'
-    }
-  },
-  'instructor@example.com': {
-    password: 'instructor123',
-    user: {
-      id: '2',
-      email: 'instructor@example.com',
-      name: 'Sarah Instructor',
-      role: 'instructor',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face'
-    }
-  },
-  'admin@example.com': {
-    password: 'admin123',
-    user: {
-      id: '3',
-      email: 'admin@example.com',
-      name: 'Mike Admin',
-      role: 'admin',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face'
-    }
-  }
-};
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { setCookie, getCookie, removeCookie } = useBehaviorTracking();
 
+  // Simulate checking for existing session
   useEffect(() => {
-    // Check for stored session on app load
-    const storedUser = getCookie('auth_user');
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Failed to parse stored user:', error);
-        removeCookie('auth_user');
+    const checkAuth = async () => {
+      setIsLoading(true);
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Check if user is stored in localStorage (demo purposes)
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
       }
-    }
-    setIsLoading(false);
-  }, [getCookie, removeCookie]);
-
-  const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const account = SAMPLE_ACCOUNTS[email.toLowerCase()];
-    
-    if (account && account.password === password) {
-      setUser(account.user);
-      setCookie('auth_user', JSON.stringify(account.user), { expires: 7 }); // 7 days
       setIsLoading(false);
-      return true;
-    }
+    };
+
+    checkAuth();
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    setIsLoading(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
+    // Demo login logic - determine role based on email
+    let role: 'student' | 'instructor' | 'admin' = 'student';
+    if (email.includes('instructor') || email.includes('teacher')) {
+      role = 'instructor';
+    } else if (email.includes('admin')) {
+      role = 'admin';
+    }
+
+    const newUser: User = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: email.split('@')[0],
+      email,
+      role,
+      avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=random`
+    };
+
+    setUser(newUser);
+    localStorage.setItem('user', JSON.stringify(newUser));
     setIsLoading(false);
-    return false;
   };
 
   const logout = () => {
     setUser(null);
-    removeCookie('auth_user');
+    localStorage.removeItem('user');
   };
 
-  const hasRole = (role: string | string[]): boolean => {
+  const hasRole = (requiredRole: string | string[]): boolean => {
     if (!user) return false;
-    if (Array.isArray(role)) {
-      return role.includes(user.role);
+    
+    if (Array.isArray(requiredRole)) {
+      return requiredRole.includes(user.role);
     }
-    return user.role === role;
+    
+    return user.role === requiredRole;
+  };
+
+  const value = {
+    user,
+    login,
+    logout,
+    isLoading,
+    hasRole
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      login,
-      logout,
-      isLoading,
-      hasRole
-    }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
