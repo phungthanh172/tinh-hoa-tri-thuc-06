@@ -104,8 +104,8 @@ const TestimonialsSection = () => {
             </Card>
           ))}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 };
 
