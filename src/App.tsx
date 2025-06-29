@@ -93,7 +93,7 @@ function App() {
                       <LearningProgress />
                     </ProtectedRoute>
                   } />
-                  <Route path="/life-path" element={
+                  <Route path="/lifepath" element={
                     <ProtectedRoute>
                       <LifePath />
                     </ProtectedRoute>
@@ -115,11 +115,6 @@ function App() {
                   } />
                   
                   {/* Student-specific routes */}
-                  <Route path="/student-dashboard" element={
-                    <ProtectedRoute requiredRole="student">
-                      <StudentDashboard />
-                    </ProtectedRoute>
-                  } />
                   <Route path="/student/dashboard" element={
                     <ProtectedRoute requiredRole="student">
                       <StudentDashboard />
@@ -147,11 +142,6 @@ function App() {
                   } />
                   
                   {/* Instructor-specific routes */}
-                  <Route path="/instructor-dashboard" element={
-                    <ProtectedRoute requiredRole="instructor">
-                      <InstructorDashboard />
-                    </ProtectedRoute>
-                  } />
                   <Route path="/instructor/dashboard" element={
                     <ProtectedRoute requiredRole="instructor">
                       <InstructorDashboard />
@@ -179,11 +169,6 @@ function App() {
                   } />
                   
                   {/* Admin-specific routes */}
-                  <Route path="/admin-dashboard" element={
-                    <ProtectedRoute requiredRole="admin">
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  } />
                   <Route path="/admin/dashboard" element={
                     <ProtectedRoute requiredRole="admin">
                       <AdminDashboard />

@@ -89,11 +89,11 @@ const Header = () => {
     if (!user) return '/';
     switch (user.role) {
       case 'admin':
-        return '/admin-dashboard';
+        return '/admin/dashboard';
       case 'instructor':
-        return '/instructor-dashboard';
+        return '/instructor/dashboard';
       case 'student':
-        return '/student-dashboard';
+        return '/student/dashboard';
       default:
         return '/';
     }
