@@ -15,10 +15,7 @@ export const articlesApi = {
       .select(`
         *,
         teachers (
-          id,
-          name,
-          title,
-          image_url
+          *
         )
       `)
       .order('published_at', { ascending: false });
@@ -39,10 +36,7 @@ export const articlesApi = {
       .select(`
         *,
         teachers (
-          id,
-          name,
-          title,
-          image_url
+          *
         )
       `)
       .eq('slug', slug)

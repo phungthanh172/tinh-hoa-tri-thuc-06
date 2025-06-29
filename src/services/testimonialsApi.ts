@@ -15,9 +15,7 @@ export const testimonialsApi = {
       .select(`
         *,
         programs (
-          id,
-          title,
-          slug
+          *
         )
       `)
       .order('created_at', { ascending: false });
