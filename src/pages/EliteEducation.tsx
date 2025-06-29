@@ -10,19 +10,18 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Users, Award, TrendingUp, BookOpen, Globe } from 'lucide-react';
-import { programsApi } from '@/services/programsApi';
-import { teachersApi } from '@/services/teachersApi';
+import { appwriteApi } from '@/services/appwriteApi';
 
 const EliteEducation = () => {
   const { data: programs, isLoading: programsLoading } = useQuery({
     queryKey: ['programs'],
-    queryFn: programsApi.fetchAllPrograms,
+    queryFn: appwriteApi.fetchAllPrograms,
     staleTime: 5 * 60 * 1000,
   });
 
   const { data: teachers, isLoading: teachersLoading } = useQuery({
     queryKey: ['teachers'],
-    queryFn: teachersApi.fetchAllTeachers,
+    queryFn: appwriteApi.fetchAllTeachers,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -111,7 +110,7 @@ const EliteEducation = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {programs?.slice(0, 6).map((program) => (
-                <Card key={program.id} className="hover:shadow-lg transition-shadow">
+                <Card key={program.$id} className="hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
                     <div className="mb-4">
                       <Badge className="bg-purple-100 text-purple-700 mb-2">Elite Program</Badge>
@@ -166,7 +165,7 @@ const EliteEducation = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {teachers?.slice(0, 8).map((teacher) => (
-                <Card key={teacher.id} className="text-center hover:shadow-lg transition-shadow">
+                <Card key={teacher.$id} className="text-center hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
                     <img 
                       src={teacher.image_url}

@@ -3,12 +3,12 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star } from 'lucide-react';
-import { testimonialsApi } from '@/services/testimonialsApi';
+import { appwriteApi } from '@/services/appwriteApi';
 
 const TestimonialsSection = () => {
   const { data: testimonials, isLoading, error } = useQuery({
     queryKey: ['testimonials'],
-    queryFn: testimonialsApi.fetchAllTestimonials,
+    queryFn: appwriteApi.fetchAllTestimonials,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
@@ -72,7 +72,7 @@ const TestimonialsSection = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials?.map((testimonial) => (
-            <Card key={testimonial.id} className="h-full">
+            <Card key={testimonial.$id} className="h-full">
               <CardContent className="p-6 h-full flex flex-col">
                 <div className="flex mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -96,7 +96,7 @@ const TestimonialsSection = () => {
                   <div>
                     <h4 className="font-semibold">{testimonial.student_name}</h4>
                     <p className="text-sm text-gray-600">
-                      {testimonial.programs?.title || "Course Graduate"}
+                      Course Graduate
                     </p>
                   </div>
                 </div>

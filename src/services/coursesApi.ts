@@ -1,6 +1,5 @@
 
-import { supabase } from '@/integrations/supabase/client';
-import { Tables } from '@/integrations/supabase/types';
+import { appwriteApi } from '@/services/appwriteApi';
 
 export type Course = {
   id: string;
@@ -23,47 +22,44 @@ export type Course = {
 
 export const coursesApi = {
   async fetchFeaturedCourses(): Promise<Course[]> {
-    console.log('Fetching featured courses from programs...');
+    console.log('Fetching featured courses from Appwrite programs...');
     
-    // Fetch programs from the database and transform them to match the Course interface
-    const { data: programs, error } = await supabase
-      .from('programs')
-      .select('*')
-      .limit(6);
+    try {
+      // Fetch programs from Appwrite and transform them to match the Course interface
+      const programs = await appwriteApi.fetchAllPrograms();
 
-    if (error) {
-      console.error('Error fetching programs:', error);
-      // Return mock data as fallback
+      if (!programs || programs.length === 0) {
+        console.log('No programs found, returning mock courses');
+        return this.getMockCourses();
+      }
+
+      // Transform programs to courses format
+      const courses: Course[] = programs.map((program, index) => ({
+        id: program.$id,
+        title: program.title,
+        subtitle: program.summary,
+        description: program.full_description,
+        instructor: 'Elite Education Team', // Default instructor since we don't have this relationship yet
+        instructorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
+        image: program.image_url || `https://images.unsplash.com/photo-1517077177078-19b08548${String(index + 1).padStart(2, '0')}0-4ab5b2d4c5c0`,
+        rating: 4.5 + (Math.random() * 0.5), // Random rating between 4.5-5.0
+        studentsCount: Math.floor(Math.random() * 5000) + 1000, // Random students between 1000-6000
+        duration: `${Math.floor(Math.random() * 20) + 10}h ${Math.floor(Math.random() * 60)}m`, // Random duration
+        lectures: Math.floor(Math.random() * 50) + 20, // Random lectures between 20-70
+        price: Math.floor(Math.random() * 200) + 50, // Random price between $50-$250
+        originalPrice: Math.floor(Math.random() * 100) + 200, // Random original price
+        level: ['Beginner', 'Intermediate', 'Advanced'][Math.floor(Math.random() * 3)],
+        language: 'English',
+        category: 'Technology'
+      }));
+
+      console.log('Courses transformed successfully:', courses.length);
+      return courses;
+    } catch (error) {
+      console.error('Error fetching courses from Appwrite:', error);
+      console.log('Falling back to mock courses');
       return this.getMockCourses();
     }
-
-    if (!programs || programs.length === 0) {
-      console.log('No programs found, returning mock courses');
-      return this.getMockCourses();
-    }
-
-    // Transform programs to courses format
-    const courses: Course[] = programs.map((program, index) => ({
-      id: program.id,
-      title: program.title,
-      subtitle: program.summary,
-      description: program.full_description,
-      instructor: 'Elite Education Team', // Default instructor since we don't have this relationship yet
-      instructorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
-      image: program.image_url || `https://images.unsplash.com/photo-1517077177078-19b08548${String(index + 1).padStart(2, '0')}0-4ab5b2d4c5c0`,
-      rating: 4.5 + (Math.random() * 0.5), // Random rating between 4.5-5.0
-      studentsCount: Math.floor(Math.random() * 5000) + 1000, // Random students between 1000-6000
-      duration: `${Math.floor(Math.random() * 20) + 10}h ${Math.floor(Math.random() * 60)}m`, // Random duration
-      lectures: Math.floor(Math.random() * 50) + 20, // Random lectures between 20-70
-      price: Math.floor(Math.random() * 200) + 50, // Random price between $50-$250
-      originalPrice: Math.floor(Math.random() * 100) + 200, // Random original price
-      level: ['Beginner', 'Intermediate', 'Advanced'][Math.floor(Math.random() * 3)],
-      language: 'English',
-      category: 'Technology'
-    }));
-
-    console.log('Courses transformed successfully:', courses.length);
-    return courses;
   },
 
   async fetchCourses(filters: any): Promise<Course[]> {

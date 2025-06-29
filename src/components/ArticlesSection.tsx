@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar, User, ArrowRight } from 'lucide-react';
-import { articlesApi } from '@/services/articlesApi';
+import { appwriteApi } from '@/services/appwriteApi';
 import { format } from 'date-fns';
 
 const ArticlesSection = () => {
   const { data: articles, isLoading, error } = useQuery({
     queryKey: ['articles'],
-    queryFn: articlesApi.fetchAllArticles,
+    queryFn: appwriteApi.fetchAllArticles,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
@@ -68,7 +68,7 @@ const ArticlesSection = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles?.slice(0, 6).map((article) => (
-            <Card key={article.id} className="hover:shadow-lg transition-shadow h-full flex flex-col">
+            <Card key={article.$id} className="hover:shadow-lg transition-shadow h-full flex flex-col">
               <CardHeader className="p-0">
                 <img 
                   src={article.image_url || `https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=250&fit=crop`}
@@ -85,10 +85,10 @@ const ArticlesSection = () => {
                     <Calendar className="w-4 h-4 mr-1" />
                     <span>{format(new Date(article.published_at), 'MMM dd, yyyy')}</span>
                   </div>
-                  {article.teachers && (
+                  {article.author_name && (
                     <div className="flex items-center">
                       <User className="w-4 h-4 mr-1" />
-                      <span>{article.teachers.name}</span>
+                      <span>{article.author_name}</span>
                     </div>
                   )}
                 </div>
