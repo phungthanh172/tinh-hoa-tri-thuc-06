@@ -51,7 +51,7 @@ function App() {
             <GamificationProvider>
               <div className="App">
                 <Routes>
-                  {/* Public routes */}
+                  {/* Public routes - accessible to everyone including guests */}
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/courses" element={<Courses />} />

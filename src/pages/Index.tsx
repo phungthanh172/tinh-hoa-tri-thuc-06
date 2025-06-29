@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import FeaturedCourses from '@/components/FeaturedCourses';
 import Features from '@/components/Features';
-import Testimonials from '@/components/Testimonials';
+import TestimonialsSection from '@/components/TestimonialsSection';
 import CallToAction from '@/components/CallToAction';
 import Footer from '@/components/Footer';
 import ProgressNavigation from '@/components/progress/ProgressNavigation';
@@ -23,7 +23,7 @@ const Index = () => {
       
       <FeaturedCourses />
       <Features />
-      <Testimonials />
+      <TestimonialsSection />
       <CallToAction />
       <Footer />
       
