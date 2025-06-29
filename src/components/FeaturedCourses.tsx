@@ -3,15 +3,29 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Star, Clock, Users } from 'lucide-react';
+import { Star, Clock, Users, Plus } from 'lucide-react';
 import { coursesApi } from '@/services/coursesApi';
+import { sampleDataApi } from '@/services/sampleDataApi';
+import { toast } from 'sonner';
 
 const FeaturedCourses = () => {
-  const { data: courses, isLoading, error } = useQuery({
+  const { data: courses, isLoading, error, refetch } = useQuery({
     queryKey: ['featured-courses'],
     queryFn: coursesApi.fetchFeaturedCourses,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  const handleInsertSampleData = async () => {
+    try {
+      console.log('Starting sample data insertion...');
+      await sampleDataApi.insertSampleData();
+      toast.success('Sample data inserted successfully!');
+      refetch(); // Refresh the courses data
+    } catch (error) {
+      console.error('Failed to insert sample data:', error);
+      toast.error('Failed to insert sample data. Please try again.');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -51,7 +65,14 @@ const FeaturedCourses = () => {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Featured Courses</h2>
-          <p className="text-red-600">Failed to load courses. Please try again later.</p>
+          <p className="text-red-600 mb-4">Failed to load courses. Please try again later.</p>
+          <Button 
+            onClick={handleInsertSampleData}
+            className="bg-purple-600 hover:bg-purple-700"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Insert Sample Data
+          </Button>
         </div>
       </section>
     );
@@ -61,7 +82,18 @@ const FeaturedCourses = () => {
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Featured Courses</h2>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <h2 className="text-3xl font-bold">Featured Courses</h2>
+            <Button 
+              onClick={handleInsertSampleData}
+              size="sm"
+              variant="outline"
+              className="text-purple-600 border-purple-600 hover:bg-purple-50"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Sample Data
+            </Button>
+          </div>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Discover our most popular courses, carefully selected to help you master the skills that matter most in today's tech industry.
           </p>
@@ -84,7 +116,7 @@ const FeaturedCourses = () => {
                 <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
                   <div className="flex items-center">
                     <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                    <span>{course.rating}</span>
+                    <span>{course.rating.toFixed(1)}</span>
                   </div>
                   <div className="flex items-center">
                     <Users className="w-4 h-4 mr-1" />

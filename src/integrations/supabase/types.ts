@@ -9,7 +9,193 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      articles: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string | null
+          id: string
+          image_url: string | null
+          published_at: string | null
+          slug: string
+          summary: string
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          published_at?: string | null
+          slug: string
+          summary: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          published_at?: string | null
+          slug?: string
+          summary?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "articles_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_submissions: {
+        Row: {
+          email: string
+          full_name: string
+          id: string
+          message: string
+          phone: string | null
+          status: Database["public"]["Enums"]["contact_status"] | null
+          submitted_at: string | null
+        }
+        Insert: {
+          email: string
+          full_name: string
+          id?: string
+          message: string
+          phone?: string | null
+          status?: Database["public"]["Enums"]["contact_status"] | null
+          submitted_at?: string | null
+        }
+        Update: {
+          email?: string
+          full_name?: string
+          id?: string
+          message?: string
+          phone?: string | null
+          status?: Database["public"]["Enums"]["contact_status"] | null
+          submitted_at?: string | null
+        }
+        Relationships: []
+      }
+      programs: {
+        Row: {
+          created_at: string | null
+          full_description: string
+          id: string
+          image_url: string | null
+          slug: string
+          summary: string
+          target_audience: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          full_description: string
+          id?: string
+          image_url?: string | null
+          slug: string
+          summary: string
+          target_audience?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          full_description?: string
+          id?: string
+          image_url?: string | null
+          slug?: string
+          summary?: string
+          target_audience?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      teachers: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          id: string
+          image_url: string
+          name: string
+          specialties: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          id?: string
+          image_url: string
+          name: string
+          specialties?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string
+          name?: string
+          specialties?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          course_taken_id: string | null
+          created_at: string | null
+          id: string
+          quote: string
+          student_image_url: string | null
+          student_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          course_taken_id?: string | null
+          created_at?: string | null
+          id?: string
+          quote: string
+          student_image_url?: string | null
+          student_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          course_taken_id?: string | null
+          created_at?: string | null
+          id?: string
+          quote?: string
+          student_image_url?: string | null
+          student_name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "testimonials_course_taken_id_fkey"
+            columns: ["course_taken_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +204,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      contact_status: "NEW" | "READ" | "ARCHIVED"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +319,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      contact_status: ["NEW", "READ", "ARCHIVED"],
+    },
   },
 } as const
