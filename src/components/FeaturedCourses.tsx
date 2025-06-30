@@ -1,30 +1,37 @@
 
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star, Clock, Users, Plus } from 'lucide-react';
-import { coursesApi } from '@/services/coursesApi';
-import { sampleDataApi } from '@/services/sampleDataApi';
+import { sampleCourses } from '@/data/sampleData';
 import { toast } from 'sonner';
 
 const FeaturedCourses = () => {
-  const { data: courses, isLoading, error, refetch } = useQuery({
-    queryKey: ['featured-courses'],
-    queryFn: coursesApi.fetchFeaturedCourses,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  // Temporarily commented out the real data query and using static sample data
+  // const { data: courses, isLoading, error, refetch } = useQuery({
+  //   queryKey: ['featured-courses'],
+  //   queryFn: coursesApi.fetchFeaturedCourses,
+  //   staleTime: 5 * 60 * 1000, // 5 minutes
+  // });
+
+  // Using static sample data for rapid development
+  const courses = sampleCourses;
+  const isLoading = false;
+  const error = null;
 
   const handleInsertSampleData = async () => {
-    try {
-      console.log('Starting sample data insertion...');
-      await sampleDataApi.insertSampleData();
-      toast.success('Sample data inserted successfully!');
-      refetch(); // Refresh the courses data
-    } catch (error) {
-      console.error('Failed to insert sample data:', error);
-      toast.error('Failed to insert sample data. Please try again.');
-    }
+    // Temporarily commented out real sample data insertion
+    // try {
+    //   console.log('Starting sample data insertion...');
+    //   await sampleDataApi.insertSampleData();
+    //   toast.success('Sample data inserted successfully!');
+    //   refetch(); // Refresh the courses data
+    // } catch (error) {
+    //   console.error('Failed to insert sample data:', error);
+    //   toast.error('Failed to insert sample data. Please try again.');
+    // }
+    
+    toast.success('Sample data is already loaded for development!');
   };
 
   if (isLoading) {
@@ -91,7 +98,7 @@ const FeaturedCourses = () => {
               className="text-purple-600 border-purple-600 hover:bg-purple-50"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add Sample Data
+              Sample Data Loaded
             </Button>
           </div>
           <p className="text-gray-600 max-w-2xl mx-auto">

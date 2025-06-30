@@ -1,19 +1,24 @@
 
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar, User, ArrowRight } from 'lucide-react';
-import { appwriteApi } from '@/services/appwriteApi';
 import { format } from 'date-fns';
+import { sampleArticles } from '@/data/sampleData';
 
 const ArticlesSection = () => {
-  const { data: articles, isLoading, error } = useQuery({
-    queryKey: ['articles'],
-    queryFn: appwriteApi.fetchAllArticles,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  // Temporarily commented out the real data query and using static sample data
+  // const { data: articles, isLoading, error } = useQuery({
+  //   queryKey: ['articles'],
+  //   queryFn: appwriteApi.fetchAllArticles,
+  //   staleTime: 5 * 60 * 1000, // 5 minutes
+  // });
+
+  // Using static sample data for rapid development
+  const articles = sampleArticles;
+  const isLoading = false;
+  const error = null;
 
   if (isLoading) {
     return (

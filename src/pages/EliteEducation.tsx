@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FeaturedCourses from '@/components/FeaturedCourses';
@@ -10,20 +9,27 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Users, Award, TrendingUp, BookOpen, Globe } from 'lucide-react';
-import { appwriteApi } from '@/services/appwriteApi';
+import { samplePrograms, sampleTeachers } from '@/data/sampleData';
 
 const EliteEducation = () => {
-  const { data: programs, isLoading: programsLoading } = useQuery({
-    queryKey: ['programs'],
-    queryFn: appwriteApi.fetchAllPrograms,
-    staleTime: 5 * 60 * 1000,
-  });
+  // Temporarily commented out the real data queries and using static sample data
+  // const { data: programs, isLoading: programsLoading } = useQuery({
+  //   queryKey: ['programs'],
+  //   queryFn: appwriteApi.fetchAllPrograms,
+  //   staleTime: 5 * 60 * 1000,
+  // });
 
-  const { data: teachers, isLoading: teachersLoading } = useQuery({
-    queryKey: ['teachers'],
-    queryFn: appwriteApi.fetchAllTeachers,
-    staleTime: 5 * 60 * 1000,
-  });
+  // const { data: teachers, isLoading: teachersLoading } = useQuery({
+  //   queryKey: ['teachers'],
+  //   queryFn: appwriteApi.fetchAllTeachers,
+  //   staleTime: 5 * 60 * 1000,
+  // });
+
+  // Using static sample data for rapid development
+  const programs = samplePrograms;
+  const teachers = sampleTeachers;
+  const programsLoading = false;
+  const teachersLoading = false;
 
   return (
     <div className="min-h-screen bg-white">

@@ -1,16 +1,21 @@
 
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star } from 'lucide-react';
-import { appwriteApi } from '@/services/appwriteApi';
+import { sampleTestimonials } from '@/data/sampleData';
 
 const TestimonialsSection = () => {
-  const { data: testimonials, isLoading, error } = useQuery({
-    queryKey: ['testimonials'],
-    queryFn: appwriteApi.fetchAllTestimonials,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  // Temporarily commented out the real data query and using static sample data
+  // const { data: testimonials, isLoading, error } = useQuery({
+  //   queryKey: ['testimonials'],
+  //   queryFn: appwriteApi.fetchAllTestimonials,
+  //   staleTime: 5 * 60 * 1000, // 5 minutes
+  // });
+
+  // Using static sample data for rapid development
+  const testimonials = sampleTestimonials;
+  const isLoading = false;
+  const error = null;
 
   if (isLoading) {
     return (
