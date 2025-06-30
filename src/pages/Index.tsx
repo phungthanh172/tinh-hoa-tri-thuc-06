@@ -13,10 +13,12 @@ import FloatingActionButtons from '@/components/FloatingActionButtons';
 import SmartRecommendations from '@/components/recommendations/SmartRecommendations';
 import ProgressGamification from '@/components/gamification/ProgressGamification';
 import FloatingChatBox from '@/components/FloatingChatBox';
+import EnhancedNoteCreationForm from '@/components/EnhancedNoteCreationForm';
 
 const Index = () => {
   const [showRecommendations, setShowRecommendations] = useState(true);
   const [showChat, setShowChat] = useState(false);
+  const [showNoteForm, setShowNoteForm] = useState(false);
 
   const handleRecommendationsReady = (courses: any[]) => {
     console.log('Recommendations ready:', courses);
@@ -28,6 +30,18 @@ const Index = () => {
 
   const handleChatClose = () => {
     setShowChat(false);
+  };
+
+  const handleNoteFormOpen = () => {
+    setShowNoteForm(true);
+  };
+
+  const handleNoteFormClose = () => {
+    setShowNoteForm(false);
+  };
+
+  const handleNoteSave = (title: string, content: string) => {
+    console.log('Note saved:', { title, content });
   };
 
   return (
@@ -65,8 +79,16 @@ const Index = () => {
       <Footer />
       
       <InactivityPopup />
-      <FloatingActionButtons onChatOpen={handleChatOpen} />
+      <FloatingActionButtons 
+        onChatOpen={handleChatOpen} 
+        onNoteFormOpen={handleNoteFormOpen} 
+      />
       <FloatingChatBox isOpen={showChat} onClose={handleChatClose} />
+      <EnhancedNoteCreationForm 
+        isOpen={showNoteForm} 
+        onClose={handleNoteFormClose}
+        onSave={handleNoteSave}
+      />
     </div>
   );
 };

@@ -11,7 +11,7 @@ import { Star, Users, Award, TrendingUp, BookOpen, Globe } from 'lucide-react';
 import { samplePrograms, sampleTeachers } from '@/data/sampleData';
 import FloatingActionButtons from '@/components/FloatingActionButtons';
 import FloatingChatBox from '@/components/FloatingChatBox';
-import NoteCreationForm from '@/components/NoteCreationForm';
+import EnhancedNoteCreationForm from '@/components/EnhancedNoteCreationForm';
 
 const EliteEducation = () => {
   const [showChat, setShowChat] = useState(false);
@@ -293,7 +293,7 @@ const EliteEducation = () => {
         onNoteFormOpen={handleNoteFormOpen}
       />
       <FloatingChatBox isOpen={showChat} onClose={handleChatClose} />
-      <NoteCreationForm 
+      <EnhancedNoteCreationForm 
         isOpen={showNoteForm} 
         onClose={handleNoteFormClose}
         onSave={handleNoteSave}
