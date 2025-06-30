@@ -10,19 +10,24 @@ import Footer from '@/components/Footer';
 import ProgressNavigation from '@/components/progress/ProgressNavigation';
 import InactivityPopup from '@/components/InactivityPopup';
 import FloatingActionButtons from '@/components/FloatingActionButtons';
-import WelcomeTour from '@/components/onboarding/WelcomeTour';
 import SmartRecommendations from '@/components/recommendations/SmartRecommendations';
 import ProgressGamification from '@/components/gamification/ProgressGamification';
+import FloatingChatBox from '@/components/FloatingChatBox';
 
 const Index = () => {
-  const [showRecommendations, setShowRecommendations] = useState(false);
-
-  const handleTourComplete = () => {
-    setShowRecommendations(true);
-  };
+  const [showRecommendations, setShowRecommendations] = useState(true);
+  const [showChat, setShowChat] = useState(false);
 
   const handleRecommendationsReady = (courses: any[]) => {
     console.log('Recommendations ready:', courses);
+  };
+
+  const handleChatOpen = () => {
+    setShowChat(true);
+  };
+
+  const handleChatClose = () => {
+    setShowChat(false);
   };
 
   return (
@@ -31,8 +36,6 @@ const Index = () => {
       <Hero />
       
       <div className="container mx-auto px-4 py-12">
-        <WelcomeTour onComplete={handleTourComplete} />
-        
         {showRecommendations && (
           <div className="mb-12">
             <SmartRecommendations onRecommendationsReady={handleRecommendationsReady} />
@@ -62,7 +65,8 @@ const Index = () => {
       <Footer />
       
       <InactivityPopup />
-      <FloatingActionButtons />
+      <FloatingActionButtons onChatOpen={handleChatOpen} />
+      <FloatingChatBox isOpen={showChat} onClose={handleChatClose} />
     </div>
   );
 };

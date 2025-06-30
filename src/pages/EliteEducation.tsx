@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FeaturedCourses from '@/components/FeaturedCourses';
@@ -9,8 +9,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Users, Award, TrendingUp, BookOpen, Globe } from 'lucide-react';
 import { samplePrograms, sampleTeachers } from '@/data/sampleData';
+import FloatingActionButtons from '@/components/FloatingActionButtons';
+import FloatingChatBox from '@/components/FloatingChatBox';
+import NoteCreationForm from '@/components/NoteCreationForm';
 
 const EliteEducation = () => {
+  const [showChat, setShowChat] = useState(false);
+  const [showNoteForm, setShowNoteForm] = useState(false);
+
   // Temporarily commented out the real data queries and using static sample data
   // const { data: programs, isLoading: programsLoading } = useQuery({
   //   queryKey: ['programs'],
@@ -29,6 +35,26 @@ const EliteEducation = () => {
   const teachers = sampleTeachers;
   const programsLoading = false;
   const teachersLoading = false;
+
+  const handleChatOpen = () => {
+    setShowChat(true);
+  };
+
+  const handleChatClose = () => {
+    setShowChat(false);
+  };
+
+  const handleNoteFormOpen = () => {
+    setShowNoteForm(true);
+  };
+
+  const handleNoteFormClose = () => {
+    setShowNoteForm(false);
+  };
+
+  const handleNoteSave = (title: string, content: string) => {
+    console.log('Note saved:', { title, content });
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -261,6 +287,17 @@ const EliteEducation = () => {
       <ArticlesSection />
 
       <Footer />
+      
+      <FloatingActionButtons 
+        onChatOpen={handleChatOpen}
+        onNoteFormOpen={handleNoteFormOpen}
+      />
+      <FloatingChatBox isOpen={showChat} onClose={handleChatClose} />
+      <NoteCreationForm 
+        isOpen={showNoteForm} 
+        onClose={handleNoteFormClose}
+        onSave={handleNoteSave}
+      />
     </div>
   );
 };

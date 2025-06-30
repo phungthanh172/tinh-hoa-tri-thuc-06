@@ -1,12 +1,17 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Phone, Mail, ChevronUp, BookOpen, Search } from 'lucide-react';
+import { MessageCircle, Phone, Mail, ChevronUp, BookOpen, Search, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
-const FloatingActionButtons = () => {
+interface FloatingActionButtonsProps {
+  onChatOpen?: () => void;
+  onNoteFormOpen?: () => void;
+}
+
+const FloatingActionButtons = ({ onChatOpen, onNoteFormOpen }: FloatingActionButtonsProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -17,8 +22,7 @@ const FloatingActionButtons = () => {
       navigate('/auth');
       return;
     }
-    // Simulate opening chat support
-    toast.success('Chat support opened');
+    onChatOpen?.();
   };
 
   const handleQuickSearch = () => {
@@ -35,8 +39,16 @@ const FloatingActionButtons = () => {
   };
 
   const handleContactSupport = () => {
-    // Simulate contact support
     toast.success('Contact form opened');
+  };
+
+  const handleNotes = () => {
+    if (!user) {
+      toast.error('Please log in to create notes');
+      navigate('/auth');
+      return;
+    }
+    onNoteFormOpen?.();
   };
 
   const toggleExpanded = () => {
@@ -44,7 +56,7 @@ const FloatingActionButtons = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-40">
       <div className="flex flex-col items-end space-y-3">
         {/* Expanded Action Buttons */}
         {isExpanded && (
@@ -66,12 +78,21 @@ const FloatingActionButtons = () => {
             >
               <BookOpen className="w-5 h-5" />
             </Button>
+
+            <Button
+              size="icon"
+              className="bg-indigo-600 hover:bg-indigo-700 shadow-lg"
+              onClick={handleNotes}
+              title="Quick Notes"
+            >
+              <FileText className="w-5 h-5" />
+            </Button>
             
             <Button
               size="icon"
               className="bg-purple-600 hover:bg-purple-700 shadow-lg"
               onClick={handleChatSupport}
-              title="Chat Support"
+              title="Chat with Professor"
             >
               <MessageCircle className="w-5 h-5" />
             </Button>
@@ -90,7 +111,7 @@ const FloatingActionButtons = () => {
         {/* Main Toggle Button */}
         <Button
           size="icon"
-          className={`bg-purple-600 hover:bg-purple-700 shadow-lg transition-transform ${
+          className={`bg-gray-800 hover:bg-gray-900 shadow-lg transition-transform ${
             isExpanded ? 'rotate-180' : ''
           }`}
           onClick={toggleExpanded}
