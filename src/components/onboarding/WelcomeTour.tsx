@@ -46,6 +46,7 @@ const tourSteps: TourStep[] = [
     id: 'dashboard',
     title: 'Track Your Progress',
     description: 'Monitor your learning journey with detailed analytics and achievement badges.',
+    position: 'bottom',
     action: 'Visit your dashboard to see progress tracking in action!'
   }
 ];
